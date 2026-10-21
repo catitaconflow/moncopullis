@@ -7,6 +7,7 @@ export const CABECERAS_SEGURIDAD: Readonly<Record<string, string>> = {
   'Referrer-Policy': 'no-referrer',
   'Content-Security-Policy': "default-src 'none'; frame-ancestors 'none'",
   'Cache-Control': 'no-store',
+  'Cross-Origin-Resource-Policy': 'same-origin',
 };
 
 export function conCabecerasSeguridad(res: Response): Response {
