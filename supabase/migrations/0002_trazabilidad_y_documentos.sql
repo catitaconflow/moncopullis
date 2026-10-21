@@ -15,6 +15,8 @@ ALTER TABLE animal
   ADD CONSTRAINT animal_origen_ingreso CHECK (origen_ingreso IN ('NACIDO_EN_PREDIO', 'COMPRA', 'PRESTAMO_RECIBIDO'));
 
 -- Se amplía el motivo de baja con sacrificio sanitario (exigido en la trazabilidad).
+-- La columna era varchar(12); 'SACRIFICIO_SANITARIO' tiene 20 caracteres.
+ALTER TABLE animal ALTER COLUMN motivo_baja TYPE varchar(20);
 ALTER TABLE animal DROP CONSTRAINT animal_motivo_baja;
 ALTER TABLE animal ADD CONSTRAINT animal_motivo_baja
   CHECK (motivo_baja IS NULL OR motivo_baja IN ('VENTA', 'MUERTE', 'DEVOLUCION', 'SACRIFICIO_SANITARIO'));
