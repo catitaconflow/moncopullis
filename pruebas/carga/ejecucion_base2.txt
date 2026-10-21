@@ -1,0 +1,14 @@
+WARNING: package sun.awt.X11 not in java.desktop
+WARN StatusConsoleListener The use of package scanning to locate plugins is deprecated and will be removed in a future release
+WARN StatusConsoleListener The use of package scanning to locate plugins is deprecated and will be removed in a future release
+WARN StatusConsoleListener The use of package scanning to locate plugins is deprecated and will be removed in a future release
+WARN StatusConsoleListener The use of package scanning to locate plugins is deprecated and will be removed in a future release
+Creating summariser <summary>
+Created the tree successfully using plan_carga.jmx
+Starting standalone test @ 2026 Oct 21 19:00:35 CLST (1792620035875)
+Waiting for possible Shutdown/StopTestNow/HeapDump/ThreadDump message on port 4445
+summary +    282 in 00:00:27 =   10.6/s Avg:   362 Min:    74 Max:  6655 Err:   282 (100.00%) Active: 5 Started: 5 Finished: 0
+summary +     93 in 00:00:04 =   26.4/s Avg:   477 Min:    80 Max:  6726 Err:    93 (100.00%) Active: 0 Started: 5 Finished: 5
+summary =    375 in 00:00:30 =   12.4/s Avg:   390 Min:    74 Max:  6726 Err:   375 (100.00%)
+Tidying up ...    @ 2026 Oct 21 19:01:07 CLST (1792620067114)
+... end of run
