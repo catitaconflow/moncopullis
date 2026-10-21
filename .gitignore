@@ -22,3 +22,6 @@ coverage/
 Thumbs.db
 .vscode/
 .idea/
+
+# CLI de Supabase (estado local del proyecto enlazado)
+supabase/.temp/
