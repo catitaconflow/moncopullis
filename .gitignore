@@ -1,0 +1,24 @@
+# Secretos y configuración local: nunca al repositorio
+.env
+.env.*
+!.env.example
+.dev.vars
+*.pem
+*.key
+
+# Dependencias y artefactos de build
+node_modules/
+dist/
+.wrangler/
+coverage/
+.supabase/
+
+# Cachés y logs
+.ruff_cache/
+*.log
+
+# Archivos del sistema y del editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
