@@ -1,0 +1,13 @@
+name = "moncopullis-bot"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+
+# El secreto TELEGRAM_WEBHOOK_SECRET no va aquí: se guarda con `wrangler secret put`.
+
+[[durable_objects.bindings]]
+name = "REGISTRO_UPDATES"
+class_name = "RegistroUpdatesDO"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["RegistroUpdatesDO"]
