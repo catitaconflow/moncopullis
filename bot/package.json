@@ -1,0 +1,8 @@
+{
+  "name": "moncopullis-bot",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/webhook.test.ts"
+  }
+}
