@@ -2,6 +2,7 @@
 // una sola instancia guarda los update_id vistos, así la idempotencia vale entre peticiones.
 import { manejarWebhook, type RegistroUpdates } from './webhook';
 import { importarExportacion } from './importar';
+import { conCabecerasSeguridad } from './cabeceras';
 
 interface Entorno {
   TELEGRAM_WEBHOOK_SECRET: string;
@@ -38,8 +39,7 @@ function registroEnDurableObject(env: Entorno): RegistroUpdates {
   };
 }
 
-export default {
-  async fetch(req: Request, env: Entorno): Promise<Response> {
+async function enrutar(req: Request, env: Entorno): Promise<Response> {
     const url = new URL(req.url);
     if (url.pathname === '/telegram/webhook') {
       return manejarWebhook(req, {
@@ -50,6 +50,11 @@ export default {
     if (url.pathname === '/importar') {
       return importarExportacion(req, { url: env.SUPABASE_URL, anonKey: env.SUPABASE_ANON_KEY });
     }
-    return new Response('No encontrado', { status: 404 });
+  return new Response('No encontrado', { status: 404 });
+}
+
+export default {
+  async fetch(req: Request, env: Entorno): Promise<Response> {
+    return conCabecerasSeguridad(await enrutar(req, env));
   },
 };
