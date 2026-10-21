@@ -1,10 +1,13 @@
 // Punto de entrada del Worker. El registro de updates vive en un Durable Object:
 // una sola instancia guarda los update_id vistos, así la idempotencia vale entre peticiones.
 import { manejarWebhook, type RegistroUpdates } from './webhook';
+import { importarExportacion } from './importar';
 
 interface Entorno {
   TELEGRAM_WEBHOOK_SECRET: string;
   REGISTRO_UPDATES: DurableObjectNamespace;
+  SUPABASE_URL: string;
+  SUPABASE_ANON_KEY: string;
 }
 
 export class RegistroUpdatesDO {
@@ -38,12 +41,15 @@ function registroEnDurableObject(env: Entorno): RegistroUpdates {
 export default {
   async fetch(req: Request, env: Entorno): Promise<Response> {
     const url = new URL(req.url);
-    if (url.pathname !== '/telegram/webhook') {
-      return new Response('No encontrado', { status: 404 });
+    if (url.pathname === '/telegram/webhook') {
+      return manejarWebhook(req, {
+        secretoEsperado: env.TELEGRAM_WEBHOOK_SECRET ?? '',
+        registro: registroEnDurableObject(env),
+      });
     }
-    return manejarWebhook(req, {
-      secretoEsperado: env.TELEGRAM_WEBHOOK_SECRET ?? '',
-      registro: registroEnDurableObject(env),
-    });
+    if (url.pathname === '/importar') {
+      return importarExportacion(req, { url: env.SUPABASE_URL, anonKey: env.SUPABASE_ANON_KEY });
+    }
+    return new Response('No encontrado', { status: 404 });
   },
 };
