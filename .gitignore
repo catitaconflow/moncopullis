@@ -25,3 +25,4 @@ Thumbs.db
 
 # CLI de Supabase (estado local del proyecto enlazado)
 supabase/.temp/
+pruebas/carga/reporte/
