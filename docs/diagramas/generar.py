@@ -408,7 +408,41 @@ def casos_uso() -> None:
     d.guardar()
 
 
+def flujo_bot() -> None:
+    d = Diagrama('flujo_bot', 1000, 1180)
+    titulo(d, 'Flujo de registro por Telegram', 'Vista de procesos. Nada se guarda sin la confirmación del operario; cada paso queda en la auditoría.')
+    paso = CAJA + 'rounded=1;fillColor=#E8F0E9;strokeColor=#1F5C3A;fontStyle=1;'
+    fin = CAJA + 'rounded=1;fillColor=#D9EAD3;strokeColor=#1F5C3A;fontStyle=1;'
+    rombo = f'rhombus;whiteSpace=wrap;html=1;fontSize=12;fillColor=#FFF4D6;strokeColor=#8A5A00;{FUENTE}'
+    error = CAJA + 'rounded=1;fillColor=#FBE9E7;strokeColor=#9B2226;'
+    x, w = 250, 300
+    nodos = [
+        ('paso', '1. Llega el mensaje al webhook', None),
+        ('rombo', '¿secret_token válido?', 'Rechazar con HTTP 403'),
+        ('rombo', '¿Cuenta vinculada y activa?', 'Responder: usar /vincular'),
+        ('paso', '2. Gemini interpreta el texto', None),
+        ('rombo', '¿Animal, medicamento y dosis válidos?', 'Pedir corrección al operario'),
+        ('paso', '3. Mostrar resumen con botones Confirmar y Cancelar', None),
+        ('rombo', '¿El operario confirma?', 'Cancelar: no se guarda nada'),
+        ('rombo', '¿Stock suficiente en el lote?', 'Rechazar: stock insuficiente'),
+        ('fin', '4. Transacción: dosis aplicada, salida del lote y auditoría con origen TELEGRAM', None),
+    ]
+    y, previo = 90, None
+    for tipo, texto, no in nodos:
+        alto = 90 if tipo == 'rombo' else 60
+        estilo = {'paso': paso, 'rombo': rombo, 'fin': fin}[tipo]
+        nid = d.celda(texto, estilo, x, y, w, alto)
+        if previo:
+            d.flecha(previo[0], nid, 'Sí' if previo[1] == 'rombo' else '', anclas='exitX=0.5;exitY=1;entryX=0.5;entryY=0;')
+        if no:
+            eid = d.celda(no, error, 650, y + 15, 280, 60)
+            d.flecha(nid, eid, 'No', anclas='exitX=1;exitY=0.5;entryX=0;entryY=0.5;')
+        previo = (nid, tipo)
+        y += alto + 40
+    d.guardar()
+
+
 if __name__ == '__main__':
-    for f in (er1, er2, er3, er4, despliegue, componentes, casos_uso):
+    for f in (er1, er2, er3, er4, despliegue, componentes, casos_uso, flujo_bot):
         f()
     print('Diagramas generados en', DIR)
