@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Insignia, Vista } from '../components/Estado'
+import { BarraStock, Filtros } from '../components/Filtros'
 import { Tabla, type Columna } from '../components/Tabla'
 import { listarLotes, listarMedicamentos } from '../data/consultas'
 import type { Lote, Medicamento } from '../data/tipos'
@@ -11,6 +13,7 @@ const colsMedicamento: Columna<Medicamento>[] = [
   { titulo: 'Medicamento', render: (m) => m.nombre_comercial },
   { titulo: 'Stock actual', numerica: true, render: (m) => formatoNumero(m.stock_actual) },
   { titulo: 'Stock mínimo', numerica: true, render: (m) => formatoNumero(m.stock_minimo) },
+  { titulo: 'Nivel', render: (m) => <BarraStock actual={m.stock_actual} minimo={m.stock_minimo} /> },
   { titulo: 'Unidad', render: (m) => m.unidad_base },
   {
     titulo: 'Estado',
@@ -47,9 +50,26 @@ function Lotes({ med }: { med: Medicamento }) {
   )
 }
 
+type FiltroStock = 'todos' | 'bajo' | 'ok'
+
+export function filtrarMedicamentos(meds: Medicamento[], filtro: FiltroStock, texto: string): Medicamento[] {
+  const t = texto.trim().toLowerCase()
+  return meds.filter(
+    (m) =>
+      (filtro === 'todos' || estadoStock(m.stock_actual, m.stock_minimo) === filtro) &&
+      (!t || m.nombre_comercial.toLowerCase().includes(t) || (m.principio_activo ?? '').toLowerCase().includes(t)),
+  )
+}
+
 export function Inventario() {
   const q = useConsulta(listarMedicamentos, [])
+  const [params, setParams] = useSearchParams()
+  const filtro: FiltroStock = params.get('filtro') === 'bajo' ? 'bajo' : params.get('filtro') === 'ok' ? 'ok' : 'todos'
+  const [texto, setTexto] = useState('')
   const [sel, setSel] = useState<Medicamento | null>(null)
+  const meds = q.datos ?? []
+  const nBajo = meds.filter((m) => estadoStock(m.stock_actual, m.stock_minimo) === 'bajo').length
+  const filtrados = useMemo(() => filtrarMedicamentos(q.datos ?? [], filtro, texto), [q.datos, filtro, texto])
   const detalle = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -60,23 +80,57 @@ export function Inventario() {
     <>
       <h1>Inventario</h1>
       <Vista q={q} mensajeVacio="Aún no hay medicamentos registrados.">
-        {(meds) => (
+        {() => (
           <>
-            <p className="muted">Selecciona un medicamento para ver sus lotes.</p>
-            <Tabla
-              caption="Medicamentos"
-              columnas={colsMedicamento}
-              filas={meds}
-              clave={(m) => m.id}
-              onSeleccionar={setSel}
-              seleccionada={sel?.id}
-            />
+            <div className="barra-herramientas">
+              <Filtros
+                etiqueta="Filtrar por stock"
+                valor={filtro}
+                onCambiar={(f) => setParams(f === 'todos' ? {} : { filtro: f }, { replace: true })}
+                opciones={[
+                  { clave: 'todos', texto: 'Todos', cantidad: meds.length },
+                  { clave: 'bajo', texto: 'Bajo mínimo', cantidad: nBajo },
+                  { clave: 'ok', texto: 'OK', cantidad: meds.length - nBajo },
+                ]}
+              />
+              <div className="buscador">
+                <label htmlFor="buscar-med">Buscar medicamento</label>
+                <input
+                  id="buscar-med"
+                  type="search"
+                  autoComplete="off"
+                  placeholder="Nombre o principio activo"
+                  value={texto}
+                  onChange={(e) => setTexto(e.target.value)}
+                />
+              </div>
+            </div>
+            <p className="muted" aria-live="polite">
+              {filtrados.length} {filtrados.length === 1 ? 'medicamento' : 'medicamentos'}. Pulsa uno para ver sus lotes.
+            </p>
+            {filtrados.length === 0 ? (
+              <p className="vacio">Ningún medicamento coincide con el filtro.</p>
+            ) : (
+              <Tabla
+                caption="Medicamentos"
+                columnas={colsMedicamento}
+                filas={filtrados}
+                clave={(m) => m.id}
+                onSeleccionar={setSel}
+                seleccionada={sel?.id}
+              />
+            )}
           </>
         )}
       </Vista>
       {sel && (
         <section ref={detalle} tabIndex={-1} className="detalle" aria-labelledby="titulo-lotes">
-          <h2 id="titulo-lotes">Lotes de {sel.nombre_comercial}</h2>
+          <div className="detalle-cabecera">
+            <h2 id="titulo-lotes">Lotes de {sel.nombre_comercial}</h2>
+            <button type="button" className="btn btn-chico" onClick={() => setSel(null)}>
+              Cerrar
+            </button>
+          </div>
           <Lotes med={sel} />
         </section>
       )}

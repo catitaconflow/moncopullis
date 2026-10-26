@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Vista } from '../components/Estado'
+import { Insignia, Vista } from '../components/Estado'
+import { Filtros } from '../components/Filtros'
 import { Tabla, type Columna } from '../components/Tabla'
 import { TablaTratamientos } from '../components/TablaTratamientos'
 import { listarAnimales, listarTratamientosDeAnimal } from '../data/consultas'
@@ -13,17 +14,31 @@ const columnas: Columna<Animal>[] = [
   { titulo: 'DIIO', render: (a) => a.diio.trim() },
   { titulo: 'Categoría', render: (a) => a.categoria ?? '—' },
   { titulo: 'Estado productivo', render: (a) => a.estado_productivo ?? '—' },
-  { titulo: 'Fecha de baja', render: (a) => formatoFecha(a.fecha_baja) },
+  {
+    titulo: 'Situación',
+    render: (a) =>
+      a.fecha_baja ? <Insignia tono="neutro">Baja {formatoFecha(a.fecha_baja)}</Insignia> : <Insignia tono="ok">Activo</Insignia>,
+  },
 ]
 
 function normalizar(s: string): string {
   return s.trim().toLowerCase()
 }
 
-export function filtrarAnimales(animales: Animal[], texto: string): Animal[] {
+type FiltroAnimal = 'activos' | 'baja' | 'todos'
+
+function cumpleFiltro(a: Animal, filtro: FiltroAnimal): boolean {
+  if (filtro === 'todos') return true
+  return filtro === 'activos' ? a.fecha_baja === null : a.fecha_baja !== null
+}
+
+export function filtrarAnimales(animales: Animal[], texto: string, filtro: FiltroAnimal = 'todos'): Animal[] {
   const t = normalizar(texto)
-  if (!t) return animales
-  return animales.filter((a) => normalizar(a.diio).includes(t) || normalizar(a.categoria ?? '').includes(t))
+  return animales.filter(
+    (a) =>
+      cumpleFiltro(a, filtro) &&
+      (!t || normalizar(a.diio).includes(t) || normalizar(a.categoria ?? '').includes(t)),
+  )
 }
 
 function TratamientosDe({ animal }: { animal: Animal }) {
@@ -38,6 +53,7 @@ function TratamientosDe({ animal }: { animal: Animal }) {
 export function Animales() {
   const q = useConsulta(listarAnimales, [])
   const [texto, setTexto] = useState('')
+  const [filtro, setFiltro] = useState<FiltroAnimal>('activos')
   const [sel, setSel] = useState<Animal | null>(null)
   const detalle = useRef<HTMLElement>(null)
 
@@ -45,7 +61,12 @@ export function Animales() {
     if (sel) detalle.current?.focus()
   }, [sel])
 
-  const filtrados = useMemo(() => (q.datos ? filtrarAnimales(q.datos, texto) : []), [q.datos, texto])
+  const filtrados = useMemo(
+    () => (q.datos ? filtrarAnimales(q.datos, texto, filtro) : []),
+    [q.datos, texto, filtro],
+  )
+  const total = q.datos?.length ?? 0
+  const activos = q.datos?.filter((a) => a.fecha_baja === null).length ?? 0
 
   return (
     <>
@@ -53,15 +74,28 @@ export function Animales() {
       <Vista q={q} mensajeVacio="Aún no hay animales registrados.">
         {() => (
           <>
-            <div className="buscador">
-              <label htmlFor="buscar">Buscar por DIIO o categoría</label>
-              <input
-                id="buscar"
-                type="search"
-                autoComplete="off"
-                value={texto}
-                onChange={(e) => setTexto(e.target.value)}
+            <div className="barra-herramientas">
+              <Filtros
+                etiqueta="Filtrar por situación"
+                valor={filtro}
+                onCambiar={setFiltro}
+                opciones={[
+                  { clave: 'activos', texto: 'Activos', cantidad: activos },
+                  { clave: 'baja', texto: 'De baja', cantidad: total - activos },
+                  { clave: 'todos', texto: 'Todos', cantidad: total },
+                ]}
               />
+              <div className="buscador">
+                <label htmlFor="buscar">Buscar por DIIO o categoría</label>
+                <input
+                  id="buscar"
+                  type="search"
+                  autoComplete="off"
+                  placeholder="Ej.: 0123 o vaca"
+                  value={texto}
+                  onChange={(e) => setTexto(e.target.value)}
+                />
+              </div>
             </div>
             <p className="muted" aria-live="polite">
               {filtrados.length} {filtrados.length === 1 ? 'animal' : 'animales'}
@@ -84,7 +118,12 @@ export function Animales() {
       </Vista>
       {sel && (
         <section ref={detalle} tabIndex={-1} className="detalle" aria-labelledby="titulo-trat">
-          <h2 id="titulo-trat">Tratamientos del animal {sel.diio.trim()}</h2>
+          <div className="detalle-cabecera">
+            <h2 id="titulo-trat">Tratamientos del animal {sel.diio.trim()}</h2>
+            <button type="button" className="btn btn-chico" onClick={() => setSel(null)}>
+              Cerrar
+            </button>
+          </div>
           <TratamientosDe animal={sel} />
         </section>
       )}

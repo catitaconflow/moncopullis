@@ -50,11 +50,11 @@ export async function listarTratamientosDeAnimal(animalId: number): Promise<Trat
   return comprobar(res) as unknown as Tratamiento[]
 }
 
-export async function listarTratamientos(): Promise<Tratamiento[]> {
+export async function listarTratamientos(limite = 500): Promise<Tratamiento[]> {
   const res = await getSupabase()
     .from('tratamiento').select(COLS_TRAT)
     .order('fecha_creacion', { ascending: false })
-    .limit(500)
+    .limit(limite)
   return comprobar(res) as unknown as Tratamiento[]
 }
 
@@ -67,6 +67,23 @@ export async function listarAuditoria(pagina: number): Promise<RegistroAuditoria
     .order('fecha', { ascending: false })
     .range(desde, desde + FILAS_POR_PAGINA)
   return comprobar(res) as unknown as RegistroAuditoria[]
+}
+
+export interface LotePorVencer extends Lote {
+  medicamento: { nombre_comercial: string } | null
+}
+
+/** Lotes con stock que vencen dentro del umbral de alerta (incluye vencidos), del más urgente al menos. */
+export async function listarLotesPorVencer(limite: number): Promise<LotePorVencer[]> {
+  const res = await getSupabase()
+    .from('lote')
+    .select('id, medicamento_id, numero_lote, fecha_vencimiento, stock_lote, activo, medicamento:medicamento_id(nombre_comercial)')
+    .eq('activo', true)
+    .gt('stock_lote', 0)
+    .lte('fecha_vencimiento', fechaISOMasDias(DIAS_ALERTA))
+    .order('fecha_vencimiento')
+    .limit(limite)
+  return comprobar(res) as unknown as LotePorVencer[]
 }
 
 // Cifras del resumen: cada una es una consulta independiente.
