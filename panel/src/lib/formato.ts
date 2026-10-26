@@ -22,3 +22,8 @@ export function formatoFechaHora(valor: string | null): string {
 export function formatoNumero(n: number | null): string {
   return n === null || Number.isNaN(n) ? '—' : numeroFmt.format(n)
 }
+
+/** DIIO para mostrar: los animales sin caravana no tienen DIIO. */
+export function textoDiio(diio: string | null | undefined): string {
+  return diio?.trim() || 'Sin DIIO'
+}

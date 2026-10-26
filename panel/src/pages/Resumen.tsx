@@ -4,6 +4,7 @@ import { ErrorCarga, Esqueleto, Insignia, Vista } from '../components/Estado'
 import { BarraStock } from '../components/Filtros'
 import { useSesion } from '../auth/SesionProvider'
 import {
+  contarAlertasAbiertas,
   contarAnimalesActivos,
   contarLotesPorVencer,
   contarMedicamentosBajoMinimo,
@@ -13,7 +14,8 @@ import {
   listarTratamientos,
 } from '../data/consultas'
 import { useConsulta } from '../data/useConsulta'
-import { formatoFecha, formatoFechaHora, formatoNumero } from '../lib/formato'
+import { formatoFecha, formatoFechaHora, formatoNumero, textoDiio } from '../lib/formato'
+import { puedeOperar } from '../lib/permisos'
 import { DIAS_ALERTA, diasParaVencer, estadoStock } from '../lib/vencimiento'
 
 const MAX_LISTA = 5
@@ -138,7 +140,7 @@ function UltimosTratamientos() {
           <ul className="lista">
             {filas.map((t) => (
               <li key={t.id}>
-                <span className="lista-principal">Animal {t.animal?.diio.trim() ?? '—'}</span>
+                <span className="lista-principal">Animal {textoDiio(t.animal?.diio)}</span>
                 <span className="lista-dato">
                   {t.motivo ?? 'Sin motivo'} · {formatoFechaHora(t.fecha_creacion)}
                 </span>
@@ -182,6 +184,16 @@ export function Resumen() {
           cargar={contarLotesPorVencer}
           alerta
         />
+        {puedeOperar(perfil?.rol) && (
+          <Cifra
+            titulo="Alertas abiertas"
+            ayuda="Stock bajo, vencimientos y dosis atrasadas por revisar."
+            vacio="No hay alertas abiertas."
+            a="/alertas"
+            cargar={contarAlertasAbiertas}
+            alerta
+          />
+        )}
         <Cifra
           titulo="Animales activos"
           ayuda="Animales sin fecha de baja."

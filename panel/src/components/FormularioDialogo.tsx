@@ -1,0 +1,75 @@
+import { useState, type FormEvent, type ReactNode } from 'react'
+import { Dialogo } from './Dialogo'
+import { useAviso } from './Avisos'
+
+interface FormularioDialogoProps {
+  titulo: string
+  /** Texto del botón principal. */
+  textoEnviar?: string
+  /** Aviso que se muestra al guardar. */
+  exito: string
+  /** Botón principal en rojo (anular, dar de baja). */
+  peligro?: boolean
+  /** Validación mínima en el cliente: devuelve el mensaje de error o null. */
+  validar?: () => string | null
+  /** Llama a la RPC; debe lanzar Error con un mensaje comprensible si falla. */
+  enviar: () => Promise<unknown>
+  /** Se ejecuta tras guardar: normalmente recargar las consultas afectadas. */
+  alExito: () => void
+  onCerrar: () => void
+  children: ReactNode
+}
+
+function mensajeDe(e: unknown): string {
+  return e instanceof Error ? e.message : 'No se pudo guardar. Revisa tu conexión e inténtalo de nuevo.'
+}
+
+/** Diálogo con formulario: estado "Guardando…", error visible, y al éxito aviso + recarga + cierre. */
+export function FormularioDialogo(p: FormularioDialogoProps) {
+  const mostrarAviso = useAviso()
+  const [enviando, setEnviando] = useState(false)
+  const [error, setError] = useState('')
+
+  async function alEnviar(ev: FormEvent) {
+    ev.preventDefault()
+    if (enviando) return
+    const invalido = p.validar?.() ?? null
+    if (invalido) {
+      setError(invalido)
+      return
+    }
+    setError('')
+    setEnviando(true)
+    try {
+      await p.enviar()
+    } catch (e: unknown) {
+      setError(mensajeDe(e))
+      setEnviando(false)
+      return
+    }
+    mostrarAviso(p.exito)
+    p.alExito()
+    p.onCerrar()
+  }
+
+  return (
+    <Dialogo titulo={p.titulo} onCerrar={p.onCerrar}>
+      <form onSubmit={(ev) => void alEnviar(ev)} noValidate>
+        {p.children}
+        {error && (
+          <p role="alert" className="form-error">
+            {error}
+          </p>
+        )}
+        <div className="form-acciones">
+          <button type="button" className="btn" onClick={p.onCerrar}>
+            Cancelar
+          </button>
+          <button type="submit" className={`btn ${p.peligro ? 'btn-peligro' : 'btn-primario'}`} disabled={enviando}>
+            {enviando ? 'Guardando…' : (p.textoEnviar ?? 'Guardar')}
+          </button>
+        </div>
+      </form>
+    </Dialogo>
+  )
+}

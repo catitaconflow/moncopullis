@@ -5,14 +5,16 @@ import { filtrarMedicamentos } from './Inventario'
 import { filtrarTratamientos } from './Tratamientos'
 
 const med = (id: number, nombre: string, actual: number, minimo: number): Medicamento => ({
-  id, nombre_comercial: nombre, principio_activo: 'oxitetraciclina', unidad_base: 'ml',
-  stock_actual: actual, stock_minimo: minimo, activo: true,
+  id, nombre_comercial: nombre, principio_activo: 'oxitetraciclina', tipo: null, via_administracion: null, unidad_base: 'ml',
+  contenido_envase: 100, requiere_receta: false, resguardo_leche_dias: 0, stock_actual: actual, stock_minimo: minimo, activo: true,
 })
 const animal = (id: number, diio: string, baja: string | null): Animal => ({
-  id, diio, categoria: 'Vaca', estado_productivo: null, fecha_baja: baja,
+  id, diio, categoria: 'Vaca', estado_productivo: null, fecha_baja: baja, motivo_baja: null, propietario_id: null,
+  fecha_nacimiento: null, madre_id: null, origen_ingreso: null, observaciones: null,
 })
 const trat = (id: number, diio: string, anulado: boolean): Tratamiento => ({
-  id, animal_id: id, motivo: 'Mastitis', fecha_creacion: '2026-10-01T10:00:00Z',
+  id, animal_id: id, motivo: 'Mastitis', indicado_por: null, numero_receta: null, observaciones: null,
+  motivo_anulacion: null, fecha_creacion: '2026-10-01T10:00:00Z',
   fecha_anulacion: anulado ? '2026-10-02T10:00:00Z' : null, animal: { diio },
 })
 

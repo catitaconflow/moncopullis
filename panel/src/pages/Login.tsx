@@ -38,7 +38,7 @@ export function Login() {
       <Pagina>
         <main className="login">
           <h1>Moncopulli</h1>
-          <p className="muted">Panel de consulta. Ingresa con tu cuenta.</p>
+          <p className="muted">Registro y control de tratamientos e inventario. Ingresa con tu cuenta.</p>
           <form onSubmit={(e) => void enviar(e)} noValidate>
             <label htmlFor="email">Correo electrónico</label>
             <input

@@ -2,12 +2,18 @@ import { getSupabase } from '../lib/supabase'
 import { DIAS_ALERTA, estadoStock, fechaISOMasDias } from '../lib/vencimiento'
 import { comprobar, comprobarConteo } from './base'
 import type {
-  Animal, Lote, Medicamento, PerfilUsuario, RegistroAuditoria, Tratamiento,
+  Alerta, Animal, Dosis, Lote, Medicamento, Movimiento, PerfilUsuario, Propietario, Proveedor,
+  RegistroAuditoria, Tratamiento, Usuario,
 } from './tipos'
 
 export const FILAS_POR_PAGINA = 50
 
-const COLS_TRAT = 'id, animal_id, motivo, fecha_creacion, fecha_anulacion, animal:animal_id(diio)'
+const COLS_TRAT =
+  'id, animal_id, motivo, indicado_por, numero_receta, observaciones, fecha_creacion, fecha_anulacion, motivo_anulacion, animal:animal_id(diio)'
+const COLS_MED =
+  'id, nombre_comercial, principio_activo, tipo, via_administracion, unidad_base, contenido_envase, requiere_receta, resguardo_leche_dias, stock_actual, stock_minimo, activo'
+const COLS_ANIMAL =
+  'id, diio, categoria, estado_productivo, fecha_baja, motivo_baja, propietario_id, fecha_nacimiento, madre_id, origen_ingreso, observaciones'
 
 export async function obtenerPerfil(authUserId: string): Promise<PerfilUsuario | null> {
   const res = await getSupabase()
@@ -16,12 +22,16 @@ export async function obtenerPerfil(authUserId: string): Promise<PerfilUsuario |
   return res.data as PerfilUsuario | null
 }
 
+/** Solo medicamentos activos (resumen y selectores). */
 export async function listarMedicamentos(): Promise<Medicamento[]> {
   const res = await getSupabase()
-    .from('medicamento')
-    .select('id, nombre_comercial, principio_activo, unidad_base, stock_actual, stock_minimo, activo')
-    .eq('activo', true)
-    .order('nombre_comercial')
+    .from('medicamento').select(COLS_MED).eq('activo', true).order('nombre_comercial')
+  return comprobar(res) as Medicamento[]
+}
+
+/** Activos e inactivos (pantalla de inventario para ADMIN). */
+export async function listarTodosMedicamentos(): Promise<Medicamento[]> {
+  const res = await getSupabase().from('medicamento').select(COLS_MED).order('nombre_comercial')
   return comprobar(res) as Medicamento[]
 }
 
@@ -37,7 +47,7 @@ export async function listarLotes(medicamentoId: number): Promise<Lote[]> {
 export async function listarAnimales(): Promise<Animal[]> {
   const res = await getSupabase()
     .from('animal')
-    .select('id, diio, categoria, estado_productivo, fecha_baja')
+    .select(COLS_ANIMAL)
     .order('diio')
     .limit(5000)
   return comprobar(res) as Animal[]
@@ -116,4 +126,95 @@ export async function contarTratamientosAbiertos(): Promise<number> {
     .is('fecha_anulacion', null)
     .eq('dosis.estado', 'PROGRAMADA')
   return comprobarConteo(res)
+}
+
+const LIMITE_MOVIMIENTOS = 50
+
+/** Últimos movimientos de un medicamento, con número de lote y usuario (si el rol puede leerlo). */
+export async function listarMovimientos(medicamentoId: number): Promise<Movimiento[]> {
+  const sb = getSupabase()
+  const res = await sb
+    .from('movimiento_inventario')
+    .select('id, lote_id, tipo, cantidad, motivo, observaciones, fecha_evento, usuario:usuario_id(nombres, apellidos)')
+    .eq('medicamento_id', medicamentoId)
+    .order('fecha_evento', { ascending: false })
+    .limit(LIMITE_MOVIMIENTOS)
+  const movs = comprobar(res) as unknown as Omit<Movimiento, 'lote'>[]
+  const lotes = await listarLotes(medicamentoId)
+  const numeros = new Map(lotes.map((l) => [l.id, l.numero_lote]))
+  return movs.map((m) => ({ ...m, lote: numeros.has(m.lote_id) ? { numero_lote: numeros.get(m.lote_id) as string } : null }))
+}
+
+/** Dosis de un tratamiento con medicamento y lote (el lote se une aparte: la clave foránea es compuesta). */
+export async function listarDosisDeTratamiento(tratamientoId: number): Promise<Dosis[]> {
+  const res = await getSupabase()
+    .from('dosis')
+    .select('id, tratamiento_id, medicamento_id, lote_id, cantidad, estado, fecha_programada, fecha_aplicada, fin_resguardo_leche, motivo_estado, medicamento:medicamento_id(nombre_comercial, unidad_base)')
+    .eq('tratamiento_id', tratamientoId)
+    .order('fecha_programada')
+  const dosis = comprobar(res) as unknown as Omit<Dosis, 'lote'>[]
+  const ids = [...new Set(dosis.map((d) => d.lote_id).filter((x): x is number => x !== null))]
+  const numeros = new Map<number, string>()
+  if (ids.length > 0) {
+    const r = await getSupabase().from('lote').select('id, numero_lote').in('id', ids)
+    for (const l of comprobar(r) as { id: number; numero_lote: string }[]) numeros.set(l.id, l.numero_lote)
+  }
+  return dosis.map((d) => ({ ...d, lote: d.lote_id !== null && numeros.has(d.lote_id) ? { numero_lote: numeros.get(d.lote_id) as string } : null }))
+}
+
+export async function listarAlertas(estado: 'ABIERTA' | 'RESUELTA'): Promise<Alerta[]> {
+  const res = await getSupabase()
+    .from('alerta')
+    .select(
+      'id, tipo, estado, fecha_creacion, fecha_resolucion, comentario, medicamento:medicamento_id(nombre_comercial), lote:lote_id(numero_lote, medicamento:medicamento_id(nombre_comercial)), dosis:dosis_id(medicamento:medicamento_id(nombre_comercial), tratamiento:tratamiento_id(animal:animal_id(diio)))',
+    )
+    .eq('estado', estado)
+    .order('fecha_creacion', { ascending: false })
+    .limit(500)
+  return comprobar(res) as unknown as Alerta[]
+}
+
+export async function contarAlertasAbiertas(): Promise<number> {
+  const res = await getSupabase()
+    .from('alerta').select('id', { count: 'exact', head: true }).eq('estado', 'ABIERTA')
+  return comprobarConteo(res)
+}
+
+export async function listarPropietarios(): Promise<Propietario[]> {
+  const res = await getSupabase()
+    .from('propietario').select('id, rut, nombre_completo, telefono, activo').order('nombre_completo')
+  return comprobar(res) as Propietario[]
+}
+
+/** Solo ADMIN puede leerlos (RLS). */
+export async function listarProveedores(): Promise<Proveedor[]> {
+  const res = await getSupabase()
+    .from('proveedor').select('id, rut, razon_social, nombre_contacto, telefono, email, activo').order('razon_social')
+  return comprobar(res) as Proveedor[]
+}
+
+/** Solo ADMIN ve a todos (RLS). No se pide ningún dato de contacto sensible ni de Telegram salvo si está vinculado. */
+export async function listarUsuarios(): Promise<Usuario[]> {
+  const res = await getSupabase()
+    .from('usuario').select('id, nombres, apellidos, email, rol, activo, telegram_user_id').order('apellidos')
+  return comprobar(res) as Usuario[]
+}
+
+const TAMANO_PAGINA = 1000
+
+/**
+ * Lee hasta `limite` filas de una tabla, de a páginas (la API recorta cada respuesta a su máximo).
+ * Para usuario se piden columnas explícitas y se omiten los secretos de vinculación con Telegram.
+ */
+export async function leerTabla(tabla: string, columnas: string, limite: number): Promise<Record<string, unknown>[]> {
+  const filas: Record<string, unknown>[] = []
+  while (filas.length < limite) {
+    const desde = filas.length
+    const hasta = Math.min(desde + TAMANO_PAGINA, limite) - 1
+    const res = await getSupabase().from(tabla).select(columnas).order('id').range(desde, hasta)
+    const pagina = comprobar(res) as unknown as Record<string, unknown>[]
+    filas.push(...pagina)
+    if (pagina.length < hasta - desde + 1) break
+  }
+  return filas
 }

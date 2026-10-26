@@ -1,7 +1,8 @@
 export interface OpcionFiltro<K extends string> {
   clave: K
   texto: string
-  cantidad: number
+  /** Si se omite, el botón no muestra contador. */
+  cantidad?: number
 }
 
 interface FiltrosProps<K extends string> {
@@ -23,7 +24,8 @@ export function Filtros<K extends string>({ etiqueta, opciones, valor, onCambiar
           aria-pressed={valor === o.clave}
           onClick={() => onCambiar(o.clave)}
         >
-          {o.texto} <span className="filtro-cantidad">{o.cantidad}</span>
+          {o.texto}
+          {o.cantidad !== undefined && <span className="filtro-cantidad">{o.cantidad}</span>}
         </button>
       ))}
     </div>

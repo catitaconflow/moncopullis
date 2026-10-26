@@ -1,12 +1,17 @@
+import type { ReactElement } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { SesionProvider, useSesion } from './auth/SesionProvider'
 import { Layout } from './components/Layout'
 import { Esqueleto } from './components/Estado'
 import { faltanVariables, MENSAJE_CONFIG } from './lib/supabase'
+import { puedeAuditar, puedeOperar } from './lib/permisos'
+import { Alertas } from './pages/Alertas'
 import { Animales } from './pages/Animales'
 import { Auditoria } from './pages/Auditoria'
+import { Exportar } from './pages/Exportar'
 import { Inventario } from './pages/Inventario'
 import { Login } from './pages/Login'
+import { Maestros } from './pages/Maestros'
 import { NoEncontrado } from './pages/NoEncontrado'
 import { Resumen } from './pages/Resumen'
 import { Tratamientos } from './pages/Tratamientos'
@@ -21,6 +26,14 @@ function RequiereSesion() {
     )
   }
   return usuario ? <Layout /> : <Navigate to="/login" replace />
+}
+
+/** Oculta la pantalla a los roles sin permiso (el servidor igual lo impide). */
+function Protegida({ permitido, children }: { permitido: (rol: string) => boolean; children: ReactElement }) {
+  const { perfil, errorPerfil } = useSesion()
+  if (errorPerfil) return <Navigate to="/" replace />
+  if (!perfil) return <Esqueleto filas={3} />
+  return permitido(perfil.rol) ? children : <Navigate to="/" replace />
 }
 
 function PantallaConfig() {
@@ -45,7 +58,10 @@ export default function App() {
           <Route path="inventario" element={<Inventario />} />
           <Route path="animales" element={<Animales />} />
           <Route path="tratamientos" element={<Tratamientos />} />
-          <Route path="auditoria" element={<Auditoria />} />
+          <Route path="alertas" element={<Protegida permitido={puedeOperar}><Alertas /></Protegida>} />
+          <Route path="maestros" element={<Protegida permitido={puedeOperar}><Maestros /></Protegida>} />
+          <Route path="auditoria" element={<Protegida permitido={puedeAuditar}><Auditoria /></Protegida>} />
+          <Route path="exportar" element={<Protegida permitido={puedeAuditar}><Exportar /></Protegida>} />
           <Route path="*" element={<NoEncontrado />} />
         </Route>
       </Routes>

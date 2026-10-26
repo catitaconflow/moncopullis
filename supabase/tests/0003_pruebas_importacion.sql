@@ -8,7 +8,7 @@ BEGIN;
 ALTER TABLE usuario DROP CONSTRAINT IF EXISTS usuario_auth_user_id_fkey;
 
 INSERT INTO usuario (auth_user_id, rut, nombres, apellidos, email, rol) VALUES
-  ('aaaaaaaa-0000-4000-8000-000000000001', '44444444-4', 'Admin', 'Importa', 'admin@prueba.cl', 'ADMIN'),
+  ('aaaaaaaa-0000-4000-8000-000000000001', '40000044-4', 'Admin', 'Importa', 'admin@prueba.cl', 'ADMIN'),
   ('aaaaaaaa-0000-4000-8000-000000000002', '55555555-5', 'Operario', 'Importa', 'operario@prueba.cl', 'OPERARIO');
 
 -- Sesión de ADMIN (auth.uid() lee este claim)
