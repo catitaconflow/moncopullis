@@ -1,0 +1,58 @@
+# Respaldo diario de la base (R3): dump, prueba de restauración y copia cifrada.
+# Secretos necesarios en GitHub (Settings > Secrets > Actions):
+#   SUPABASE_DB_URL  cadena de conexión del pooler de sesión (puerto 5432), con la contraseña de la base
+#   AGE_PUBLIC_KEY   clave pública age (age1...); la privada queda fuera de GitHub, con el responsable
+name: respaldo
+
+on:
+  schedule:
+    - cron: '0 7 * * *' # 04:00 en Chile
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  respaldo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.122.0
+
+      - name: Dump de esquema, datos y roles
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          mkdir respaldo
+          supabase db dump --db-url "$DB_URL" -f respaldo/esquema.sql
+          supabase db dump --db-url "$DB_URL" --data-only -f respaldo/datos.sql
+          supabase db dump --db-url "$DB_URL" --role-only -f respaldo/roles.sql
+
+      - name: Restaurar en un contenedor limpio y comparar filas por tabla
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          docker run -d --name restaura -e POSTGRES_PASSWORD=solo-ci -v "$PWD/respaldo:/r:ro" public.ecr.aws/supabase/postgres:17.11.0.003
+          until docker exec restaura pg_isready -U postgres -h localhost; do sleep 2; done; sleep 10
+          for f in roles esquema datos; do docker exec restaura psql -U supabase_admin -h localhost -d postgres -q -f /r/$f.sql > /dev/null 2>&1 || true; done
+          docker exec -i restaura psql -U supabase_admin -h localhost -d postgres -At -F= < pruebas/respaldo/contar_filas.sql > restaurado.txt
+          docker run --rm -i postgres:17 psql "$DB_URL" -At -F= < pruebas/respaldo/contar_filas.sql > origen.txt
+          diff origen.txt restaurado.txt
+          echo "Restauración verificada: $(wc -l < origen.txt) tablas con las mismas filas"
+
+      - name: Cifrar con age
+        env:
+          AGE_PUBLIC_KEY: ${{ secrets.AGE_PUBLIC_KEY }}
+        run: |
+          sudo apt-get install -y age > /dev/null
+          tar czf - respaldo | age -r "$AGE_PUBLIC_KEY" > respaldo-$(date -u +%Y%m%d).tar.gz.age
+          rm -rf respaldo
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: respaldo-cifrado
+          path: respaldo-*.tar.gz.age
+          retention-days: 30
