@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   respaldo:
@@ -42,6 +43,27 @@ jobs:
           docker run --rm -i postgres:17 psql "$DB_URL" -At -F= < pruebas/respaldo/contar_filas.sql > origen.txt
           diff origen.txt restaurado.txt
           echo "Restauración verificada: $(wc -l < origen.txt) tablas con las mismas filas"
+
+      # R4: si alguien borró o cambió filas de auditoría desde el respaldo anterior, falla aquí
+      - name: Verificar la huella de auditoría anterior y guardar la nueva
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          previa=$(gh run list --workflow respaldo.yml --status success -L 1 --json databaseId -q '.[0].databaseId')
+          if [ -n "$previa" ] && gh run download "$previa" -n huella-auditoria -D previa; then
+            read -r id huella < previa/huella.txt
+            actual=$(docker run --rm postgres:17 psql "$DB_URL" -At -c "SELECT fn_huella_auditoria($id)")
+            if [ "$actual" != "$huella" ]; then echo "La auditoría hasta el id $id fue alterada"; exit 1; fi
+            echo "Auditoría hasta el id $id sin cambios"
+          fi
+          docker run --rm postgres:17 psql "$DB_URL" -At -F' ' -c "SELECT max(id), fn_huella_auditoria(max(id)) FROM auditoria" > huella.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: huella-auditoria
+          path: huella.txt
+          retention-days: 90
 
       - name: Cifrar con age
         env:
