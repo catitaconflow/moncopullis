@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useSesion } from '../auth/SesionProvider'
 import { Pagina } from './Animaciones'
 import { AvisoProvider } from './Avisos'
+import { Esqueleto } from './Estado'
 
 // Trazos de 24x24 (estilo línea), dibujados con currentColor.
 interface Enlace {
@@ -109,7 +110,9 @@ export function Layout() {
 
       <main className="principal">
         <Pagina key={pathname}>
-          <Outlet />
+          <Suspense fallback={<Esqueleto filas={4} />}>
+            <Outlet />
+          </Suspense>
         </Pagina>
       </main>
 

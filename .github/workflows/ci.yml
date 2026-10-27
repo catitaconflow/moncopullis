@@ -35,6 +35,7 @@ jobs:
           cache: npm
           cache-dependency-path: panel/package-lock.json
       - run: npm ci
+      - run: npm run lint
       - run: npm run build
       - run: npm test
       - name: Auditoría de dependencias de producción (falla con severidad alta)

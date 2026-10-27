@@ -1,20 +1,22 @@
-import type { ReactElement } from 'react'
+import { lazy, type ReactElement } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { SesionProvider, useSesion } from './auth/SesionProvider'
 import { Layout } from './components/Layout'
 import { Esqueleto } from './components/Estado'
 import { faltanVariables, MENSAJE_CONFIG } from './lib/supabase'
 import { puedeAuditar, puedeOperar } from './lib/permisos'
-import { Alertas } from './pages/Alertas'
-import { Animales } from './pages/Animales'
-import { Auditoria } from './pages/Auditoria'
-import { Exportar } from './pages/Exportar'
-import { Inventario } from './pages/Inventario'
 import { Login } from './pages/Login'
-import { Maestros } from './pages/Maestros'
 import { NoEncontrado } from './pages/NoEncontrado'
 import { Resumen } from './pages/Resumen'
-import { Tratamientos } from './pages/Tratamientos'
+
+// Las pantallas se cargan al abrirlas, para que el inicio descargue menos código
+const Alertas = lazy(() => import('./pages/Alertas').then((m) => ({ default: m.Alertas })))
+const Animales = lazy(() => import('./pages/Animales').then((m) => ({ default: m.Animales })))
+const Auditoria = lazy(() => import('./pages/Auditoria').then((m) => ({ default: m.Auditoria })))
+const Exportar = lazy(() => import('./pages/Exportar').then((m) => ({ default: m.Exportar })))
+const Inventario = lazy(() => import('./pages/Inventario').then((m) => ({ default: m.Inventario })))
+const Maestros = lazy(() => import('./pages/Maestros').then((m) => ({ default: m.Maestros })))
+const Tratamientos = lazy(() => import('./pages/Tratamientos').then((m) => ({ default: m.Tratamientos })))
 
 function RequiereSesion() {
   const { usuario, cargando } = useSesion()
