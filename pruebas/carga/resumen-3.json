@@ -1,0 +1,147 @@
+{
+    "metrics": {
+        "http_req_failed": {
+            "passes": 113234,
+            "fails": 56617,
+            "value": 0.6666666666666666
+        },
+        "vus_max": {
+            "value": 50,
+            "min": 50,
+            "max": 50
+        },
+        "iterations": {
+            "count": 56617,
+            "rate": 942.5915396281583
+        },
+        "vus": {
+            "value": 50,
+            "min": 50,
+            "max": 50
+        },
+        "http_req_duration": {
+            "med": 16.013849,
+            "max": 408.184459,
+            "p(90)": 24.418538,
+            "p(95)": 28.112458500000002,
+            "avg": 17.5527797473376,
+            "min": 8.734392,
+            "thresholds": {
+                "p(95)<500": false
+            }
+        },
+        "http_req_waiting": {
+            "p(90)": 24.242127,
+            "p(95)": 27.9292245,
+            "avg": 17.389564937680714,
+            "min": 8.496237,
+            "med": 15.852668,
+            "max": 408.102195
+        },
+        "http_req_blocked": {
+            "avg": 0.05365270355786634,
+            "min": 0.00015,
+            "med": 0.000321,
+            "max": 188.034038,
+            "p(90)": 0.000401,
+            "p(95)": 0.000421
+        },
+        "checks": {
+            "fails": 0,
+            "passes": 169851,
+            "thresholds": {
+                "rate>0.99": false
+            },
+            "value": 1
+        },
+        "http_reqs": {
+            "count": 169851,
+            "rate": 2827.774618884475
+        },
+        "http_req_connecting": {
+            "p(95)": 0,
+            "avg": 0.008375282429894439,
+            "min": 0,
+            "med": 0,
+            "max": 44.946275,
+            "p(90)": 0
+        },
+        "iteration_duration": {
+            "avg": 53.002994226928756,
+            "min": 35.333645,
+            "med": 50.876641,
+            "max": 456.242415,
+            "p(90)": 63.7447254,
+            "p(95)": 69.36685439999998
+        },
+        "http_req_tls_handshaking": {
+            "avg": 0.03544247827802015,
+            "min": 0,
+            "med": 0,
+            "max": 149.626623,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "http_req_sending": {
+            "max": 5.916253,
+            "p(90)": 0.057768,
+            "p(95)": 0.0683835,
+            "avg": 0.04126090959723514,
+            "min": 0.012754,
+            "med": 0.038082
+        },
+        "http_req_duration{expected_response:true}": {
+            "med": 20.559955,
+            "max": 272.055515,
+            "p(90)": 29.109701400000002,
+            "p(95)": 32.9782388,
+            "avg": 22.071741991751683,
+            "min": 12.093287
+        },
+        "http_req_receiving": {
+            "avg": 0.12195390005946762,
+            "min": 0.011723,
+            "med": 0.081565,
+            "max": 220.389973,
+            "p(90)": 0.235962,
+            "p(95)": 0.29261099999999995
+        },
+        "data_received": {
+            "count": 92216207,
+            "rate": 1535267.0847059884
+        },
+        "data_sent": {
+            "count": 10486406,
+            "rate": 174583.56282929078
+        }
+    },
+    "root_group": {
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {},
+        "checks": {
+                "panel 200": {
+                    "name": "panel 200",
+                    "path": "::panel 200",
+                    "id": "d17d2b602d0870d46df2604d6d9f91c4",
+                    "passes": 56617,
+                    "fails": 0
+                },
+                "webhook sin secreto 403": {
+                    "name": "webhook sin secreto 403",
+                    "path": "::webhook sin secreto 403",
+                    "id": "3f70a4618758b1080817ee1ea861d4d7",
+                    "passes": 56617,
+                    "fails": 0
+                },
+                "importar sin token 401": {
+                    "path": "::importar sin token 401",
+                    "id": "1e210eaf1fe34b124dbb1d0923dc9f19",
+                    "passes": 56617,
+                    "fails": 0,
+                    "name": "importar sin token 401"
+                }
+            },
+        "name": ""
+    }
+}
