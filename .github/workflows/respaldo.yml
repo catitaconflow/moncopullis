@@ -36,7 +36,7 @@ jobs:
         env:
           DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
-          docker run -d --name restaura -e POSTGRES_PASSWORD=solo-ci -v "$PWD/respaldo:/r:ro" public.ecr.aws/supabase/postgres:17.11.0.003
+          docker run -d --name restaura -e POSTGRES_PASSWORD=solo-ci -v "$PWD/respaldo:/r:ro" supabase/postgres:17.11.0.003
           until docker exec restaura pg_isready -U postgres -h localhost; do sleep 2; done; sleep 10
           for f in roles esquema datos; do docker exec restaura psql -U supabase_admin -h localhost -d postgres -q -f /r/$f.sql > /dev/null 2>&1 || true; done
           docker exec -i restaura psql -U supabase_admin -h localhost -d postgres -At -F= < pruebas/respaldo/contar_filas.sql > restaurado.txt
