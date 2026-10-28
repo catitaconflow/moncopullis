@@ -161,3 +161,28 @@ test('Cancelar en cualquier paso no guarda nada', async () => {
   await procesarUpdate({ update_id: 5, callback_query: { id: 'q', from: { id: 1 }, data: 'x0', message: { message_id: 1, chat: { id: 2 } } } }, d);
   assert.match(editados[0], /No se guardó nada/);
 });
+
+test('cualquier texto que no se entiende abre el panel de opciones', async () => {
+  for (const texto of ['hola', '?', 'ayuda po', '/cualquiercosa']) {
+    const { d, enviados } = falsas(async () => undefined);
+    await procesarUpdate(mensaje(texto), d);
+    assert.equal(enviados[0].texto, '¿Qué quieres hacer?', texto);
+    assert.deepEqual((enviados[0].teclado as { inline: { datos: string }[][] }).inline.flat().map((b) => b.datos), ['r', 'va', 's', 'h']);
+  }
+});
+
+test('si el registro escrito falla, explica y ofrece los botones', async () => {
+  const { d, enviados } = falsas(async (fn) => {
+    if (fn === 'fn_bot_preparar') throw new ErrorUsuario('No encontré el medicamento «xyz».');
+    return undefined;
+  });
+  await procesarUpdate(mensaje('5 ml de xyz a la 123456789'), d);
+  assert.match(enviados[0].texto, /No encontré el medicamento[\s\S]*botones/);
+  assert.ok('inline' in (enviados[0].teclado as object));
+});
+
+test('el botón Registrar dosis del panel abre la lista de animales', async () => {
+  const { d, enviados } = falsas(async () => ({ animales: [{ diio: '123456789', categoria: 'VACA' }], medicamentos: [] }));
+  await procesarUpdate({ update_id: 6, callback_query: { id: 'q', from: { id: 1 }, data: 'r', message: { message_id: 1, chat: { id: 2 } } } }, d);
+  assert.match(enviados[0].texto, /¿A qué animal/);
+});

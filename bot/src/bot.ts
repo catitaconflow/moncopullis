@@ -65,6 +65,15 @@ function textoResumen(r: Resumen): string {
     r.resguardo_dias > 0 ? `Resguardo de leche: ${r.resguardo_dias} días` : 'Sin resguardo de leche',
   ].join('\n');
 }
+// Panel de opciones con botones grandes: lo que ve quien escribe algo que el bot no entiende
+const OPCIONES: Botones[][] = [
+  [{ texto: 'Registrar dosis', datos: 'r' }],
+  [{ texto: 'Consultar animal', datos: 'va' }, { texto: 'Stock bajo', datos: 's' }],
+  [{ texto: 'Ayuda', datos: 'h' }],
+];
+const mostrarOpciones = (chat: number, d: Dependencias, antes = '¿Qué quieres hacer?') =>
+  d.enviar(chat, antes, { inline: OPCIONES });
+
 const botonesConfirmar = (id: number): Botones[][] => [[{ texto: 'Confirmar', datos: `c:${id}` }, { texto: 'Cancelar', datos: `x:${id}` }]];
 
 async function stock(chat: number, tg: number, d: Dependencias): Promise<void> {
@@ -93,6 +102,10 @@ async function elegirAnimal(chat: number, tg: number, prefijo: 'a' | 'v', d: Dep
   return d.enviar(chat, `${pregunta}\nSi no aparece, escribe su DIIO.`, { inline: [...enFilas(botones, 2), [CANCELAR]] });
 }
 
+async function ofrecerAnimal(chat: number, tg: number, diio: string, d: Dependencias): Promise<void> {
+  return d.enviar(chat, await textoAnimal(tg, diio, false, d), { inline: [[{ texto: 'Registrar dosis a este animal', datos: `a:${diio}` }]] });
+}
+
 async function comando(chat: number, tg: number, updateId: number, texto: string, d: Dependencias): Promise<void> {
   const [cmd, ...args] = texto.trim().split(/\s+/);
   switch (cmd.toLowerCase().replace(/@.*$/, '')) {
@@ -115,7 +128,7 @@ async function comando(chat: number, tg: number, updateId: number, texto: string
       if (!args.length) return elegirAnimal(chat, tg, 'a', d);
       return registrarTexto(chat, tg, updateId, args.join(' '), d);
     default:
-      return d.enviar(chat, 'No conozco ese comando.', TECLADO_MENU);
+      return mostrarOpciones(chat, d);
   }
 }
 
@@ -123,11 +136,21 @@ async function registrarTexto(chat: number, tg: number, updateId: number, texto:
   // Primero la vinculación, para no gastar Gemini en mensajes de desconocidos
   await d.rpc('fn_bot_verificar', { p_tg: tg });
   const i = await d.interpretar(texto);
-  const r = (await d.rpc('fn_bot_preparar', {
-    p_tg: tg, p_chat: chat, p_update: updateId, p_texto: texto,
-    p_diio: i.diio, p_medicamento: i.medicamento, p_cantidad: i.cantidad,
-  })) as Resumen;
-  return d.enviar(chat, textoResumen(r), { inline: botonesConfirmar(r.mensaje_id) });
+  if (!i.diio || !i.medicamento || !i.cantidad) {
+    if (i.diio) return ofrecerAnimal(chat, tg, i.diio, d);
+    return mostrarOpciones(chat, d);
+  }
+  try {
+    const r = (await d.rpc('fn_bot_preparar', {
+      p_tg: tg, p_chat: chat, p_update: updateId, p_texto: texto,
+      p_diio: i.diio, p_medicamento: i.medicamento, p_cantidad: i.cantidad,
+    })) as Resumen;
+    return d.enviar(chat, textoResumen(r), { inline: botonesConfirmar(r.mensaje_id) });
+  } catch (e) {
+    if (!(e instanceof ErrorUsuario)) throw e;
+    return mostrarOpciones(chat, d, `${e.message}
+Puedes hacerlo con los botones:`);
+  }
 }
 
 async function mensaje(msg: Mensaje & { from: { id: number }; text: string }, updateId: number, d: Dependencias): Promise<void> {
@@ -138,9 +161,6 @@ async function mensaje(msg: Mensaje & { from: { id: number }; text: string }, up
   if (text === MENU.stock) return stock(chat, tg, d);
   if (text === MENU.ayuda) return d.enviar(chat, AYUDA, TECLADO_MENU);
   // Un DIIO solo: mostrar el animal y ofrecer registrar
-  if (/^\d{9}$/.test(text.trim())) {
-    return d.enviar(chat, await textoAnimal(tg, text.trim(), false, d), { inline: [[{ texto: 'Registrar dosis a este animal', datos: `a:${text.trim()}` }]] });
-  }
   return registrarTexto(chat, tg, updateId, text, d);
 }
 
@@ -151,9 +171,16 @@ async function boton(q: NonNullable<Update['callback_query']>, updateId: number,
   const tg = q.from.id;
   const [tipo, ...partes] = (q.data ?? '').split(':');
 
+  if (tipo === 'r' || tipo === 'va' || tipo === 's' || tipo === 'h') {
+    await d.responderBoton(q.id);
+    if (tipo === 'r') return elegirAnimal(chat, tg, 'a', d);
+    if (tipo === 'va') return elegirAnimal(chat, tg, 'v', d);
+    if (tipo === 's') return stock(chat, tg, d);
+    return d.enviar(chat, AYUDA, TECLADO_MENU);
+  }
   if (tipo === 'x0') {
     await d.responderBoton(q.id);
-    return d.editar(chat, msg, 'Cancelado. No se guardó nada.');
+    return d.editar(chat, msg, 'Cancelado. No se guardó nada.', OPCIONES);
   }
   if (tipo === 'v' && partes[0]) {
     await d.responderBoton(q.id);
