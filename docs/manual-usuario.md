@@ -1,4 +1,4 @@
-# Manual de usuario — Panel Moncopulli
+# Manual de usuario del panel Moncopulli
 
 Dirección: https://moncopulli-panel.itskay666.workers.dev
 Funciona en computador y en celular. Cada persona entra con su correo y contraseña.
@@ -59,7 +59,7 @@ Si una dosis no se aplicó, use **Omitir** y escriba el motivo. El ADMIN puede *
 
 ## Alertas
 
-Se crean solas cuando un medicamento baja del mínimo, un lote vence en 60 días o menos, o una dosis se atrasa. Se cierran solas cuando el problema se resuelve. También se pueden cerrar a mano con **Resolver** y un comentario. Si el problema sigue (por ejemplo, el stock sigue bajo), la alerta se vuelve a abrir en el siguiente cálculo, para que no se olvide.
+Se crean solas cuando un medicamento baja del mínimo, un lote vence en 60 días o menos, o una dosis se atrasa. El sistema las revisa después de cada registro y además cada hora, aunque nadie esté usando el panel. Se cierran solas cuando el problema se resuelve. También se pueden cerrar a mano con **Resolver** y un comentario. Si el problema sigue (por ejemplo, el stock sigue bajo), la alerta se vuelve a abrir en el siguiente cálculo, para que no se olvide.
 
 ## Maestros
 
@@ -75,4 +75,9 @@ Elija la tabla y el formato (CSV para Excel o JSON). El sistema guarda quién ex
 |---------|-----------|
 | Stock insuficiente | Elija otro lote o registre la entrada pendiente |
 | No tienes permiso para esta acción | Pida al administrador que revise su rol |
+| La pantalla muestra un recuadro gris un momento al cambiar de sección | Es normal: se está cargando esa pantalla. Si no termina, revise la señal |
 | No se pudo guardar. Revisa tu conexión | Revise la señal y vuelva a intentarlo; no se guardó nada a medias |
+
+## Sus datos están respaldados
+
+Todas las noches se guarda una copia cifrada de la información y se comprueba que se puede recuperar. Si algo se borra por error, avise al administrador con la fecha y lo que se perdió. Además, el registro de auditoría no se puede cambiar: si alguien lo intentara, el sistema lo detecta al día siguiente.

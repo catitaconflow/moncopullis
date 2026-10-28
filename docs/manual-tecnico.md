@@ -1,4 +1,4 @@
-# Manual técnico — Sistema de trazabilidad Moncopulli
+# Manual técnico del sistema de trazabilidad Moncopulli
 
 Este documento explica cómo está construido el sistema, cómo instalarlo desde cero y cómo mantenerlo.
 Los diagramas están en `docs/diagramas/` (archivos `.drawio` editables y `.png`).
@@ -7,12 +7,14 @@ Los diagramas están en `docs/diagramas/` (archivos `.drawio` editables y `.png`
 
 | Carpeta | Qué contiene | Tecnología |
 |---------|--------------|------------|
-| `supabase/migrations/` | Esquema de la base: tablas, restricciones, RLS, triggers y funciones (0001 a 0005) | PostgreSQL 17 en Supabase |
+| `supabase/migrations/` | Esquema de la base: tablas, restricciones, RLS, triggers y funciones (0001 a 0007) | PostgreSQL 17 en Supabase |
 | `supabase/tests/` | Pruebas SQL que terminan en ROLLBACK | SQL |
 | `bot/` | Worker de la API: webhook de Telegram e importación | TypeScript, Cloudflare Workers |
-| `panel/` | Panel web para administración, operación y auditoría | React 18, Vite, TypeScript |
-| `pruebas/` | Carga (JMeter), seguridad (ZAP), datos de prueba y E2E del panel | — |
-| `.github/workflows/ci.yml` | Integración continua | GitHub Actions |
+| `panel/` | Panel web para administración, operación y auditoría | React 18, React Router 7, Vite, TypeScript |
+| `pruebas/` | Carga (k6 y JMeter), seguridad (ZAP), respaldo, datos de prueba y E2E del panel | SQL, k6, Playwright |
+| `.github/workflows/ci.yml` | Integración continua en cada push | GitHub Actions |
+| `.github/workflows/respaldo.yml` | Respaldo diario cifrado con prueba de restauración y huella de auditoría | GitHub Actions, Docker, age |
+| `.github/workflows/carga.yml` | Prueba de carga a pedido (3 corridas) | GitHub Actions, k6 |
 
 ## 2. Requisitos
 
@@ -44,7 +46,7 @@ La clave del panel es la `anon`. La clave `service_role` nunca va en el panel ni
 
 ## 4. Base de datos
 
-### 4.1 Reglas que garantiza el motor
+### 4.1 Reglas que aplica el motor
 
 - El stock (`medicamento.stock_actual` y `lote.stock_lote`) solo cambia insertando en `movimiento_inventario`. Un trigger actualiza ambos en la misma transacción y otro impide escribir el stock a mano.
 - `movimiento_inventario`, `auditoria`, `auditoria_detalle`, `intercambio`, `documento_veterinario` e `importacion` son de solo inserción.
@@ -71,9 +73,15 @@ La clave del panel es la `anon`. La clave `service_role` nunca va en el panel ni
 | `fn_actualizar_usuario(...)` | ADMIN | Cambia rol o estado (no permite quitarse el propio rol) |
 | `fn_registrar_exportacion(...)` | ADMIN, AUDITOR | Registra la exportación con su SHA-256 |
 
-Las alertas (`STOCK_BAJO`, `VENCIMIENTO_PROXIMO` a 60 días y `DOSIS_ATRASADA`) se recalculan solas después de cada operación que cambia stock o dosis, y se cierran cuando la condición deja de cumplirse.
+Las alertas (`STOCK_BAJO`, `VENCIMIENTO_PROXIMO` a 60 días y `DOSIS_ATRASADA`) se recalculan después de cada operación que cambia stock o dosis y, desde la migración 0006, también cada hora con pg_cron (tarea `moncopulli-alertas`). Se cierran solas cuando la condición deja de cumplirse.
 
-### 4.3 Cambiar el esquema
+Para revisar la tarea programada: `select jobname, schedule, active from cron.job;`. Para pausarla: `select cron.unschedule('moncopulli-alertas');`.
+
+### 4.3 Huella de auditoría (migración 0007)
+
+`fn_huella_auditoria(p_hasta)` encadena con SHA-256 cada fila de `auditoria` (con su detalle) hasta el id indicado. El trigger de solo inserción no corre si alguien usa `session_replication_role = replica`; la huella no lo impide, pero lo detecta: si una fila se borra o se cambia, la huella ya no coincide. Solo la puede ejecutar la conexión de administración, no el panel.
+
+### 4.4 Cambiar el esquema
 
 1. Crear `supabase/migrations/000N_descripcion.sql` dentro de `BEGIN; ... COMMIT;`. Nunca editar una migración ya aplicada.
 2. Escribir su prueba en `supabase/tests/000N_*.sql`, terminando en `ROLLBACK`.
@@ -92,6 +100,8 @@ panel/src/
   lib/           reglas puras con pruebas: vencimiento, RUT, CSV, dosis repetidas, permisos
 ```
 
+- Cada pantalla se descarga al abrirla (`lazy` en `App.tsx`) y las librerías van en archivos aparte (`vite.config.ts`), para que el inicio sea liviano.
+- `npm run lint` revisa el código con ESLint (`eslint.config.js`), con reglas que prohíben `eval`, `innerHTML` y HTML sin escapar.
 - Los botones se muestran según el rol (`lib/permisos.ts`), pero quien autoriza es la base de datos.
 - `ejecutar()` convierte los errores en mensajes para el usuario: el texto de la función si es una validación, "No tienes permiso" si el rol no alcanza y un mensaje de conexión en cualquier otro caso.
 - Exportar genera el archivo en el navegador (CSV con `;` y BOM para Excel, con protección contra fórmulas), calcula el SHA-256 y lo registra antes de descargar.
@@ -100,14 +110,16 @@ panel/src/
 
 | Qué | Comando | Resultado esperado |
 |-----|---------|--------------------|
-| Funciones puras del panel | `cd panel && npm test` | Todas pasan |
+| Funciones puras del panel | `cd panel && npm test` | 31 de 31 |
+| Calidad del código del panel | `cd panel && npm run lint` | Sin errores |
 | Bot | `cd bot && npm test` | 19 de 19 |
-| Base de datos | `npx supabase db query --linked -f supabase/tests/0005_pruebas_operaciones.sql` | "Pruebas O1 a O20: TODAS PASAN" y "O21 PASA" |
+| Base de datos | `npx supabase db query --linked -f supabase/tests/<archivo>.sql` (0001, 0002, 0003, 0005 y 0007) | Cada archivo informa que todas sus pruebas pasan |
 | Interfaz | Playwright (ver `pruebas/panel/resultados_e2e.md`) | Todos los casos pasan |
-| Carga | JMeter, `pruebas/carga/plan_carga.jmx` | Ver informe, sección 9 |
+| Carga | GitHub, Actions, carga, Run workflow (`pruebas/carga/carga.k6.js`) | p95 menor a 500 ms y 0 fallas en las 3 corridas |
+| Permisos por rol en la interfaz | Iniciar sesión con las cuentas OPERARIO y AUDITOR de prueba | Cada rol ve solo sus pantallas |
 | Seguridad | ZAP baseline, `npm audit`, Gitleaks | Sin alertas medias o altas |
 
-Cada push a `main` ejecuta las pruebas del bot y del panel, el build, `npm audit` y Gitleaks (`.github/workflows/ci.yml`).
+Cada push a `main` ejecuta las pruebas del bot y del panel, ESLint, el build, `npm audit` y Gitleaks (`.github/workflows/ci.yml`).
 
 ## 7. Despliegue
 
@@ -122,21 +134,57 @@ npx wrangler deploy
 
 Verificación después de desplegar: `/inventario` sin sesión redirige a `/login`; `POST /telegram/webhook` sin secreto responde 403; `POST /importar` sin token responde 401.
 
-## 8. Datos de prueba
+## 8. Respaldo y restauración
 
-`pruebas/datos/datos_falsos.sql` carga registros marcados con `[FALSO]` y `pruebas/datos/limpiar_datos_falsos.sql` los elimina en orden de dependencias. Se deben limpiar antes de cargar datos reales.
+**Automático.** `.github/workflows/respaldo.yml` corre todos los días a las 04:00 (hora de Chile) y también a mano desde Actions, respaldo, Run workflow. Hace cuatro cosas:
 
-## 9. Cuentas de usuario
+1. Descarga esquema, datos y roles con `supabase db dump`.
+2. Los restaura en un contenedor `supabase/postgres` limpio y compara las filas de las 17 tablas con producción (`pruebas/respaldo/contar_filas.sql`). Si no coinciden, falla.
+3. Recalcula la huella de auditoría guardada el día anterior. Si cambió, falla: alguien borró o alteró la auditoría.
+4. Cifra el respaldo con age y lo guarda 30 días como artefacto `respaldo-cifrado`. La huella nueva queda 90 días como `huella-auditoria`.
+
+Secretos del repositorio: `SUPABASE_DB_URL` (cadena del Session pooler, `aws-1-us-west-2.pooler.supabase.com:5432`, con la contraseña de la base) y `AGE_PUBLIC_KEY`. La clave privada no está en GitHub; la guarda el responsable del equipo. Sin ella los respaldos no se pueden abrir.
+
+**Manual.**
+
+```bash
+npx supabase db dump --linked -f esquema.sql
+npx supabase db dump --linked --data-only -f datos.sql
+npx supabase db dump --linked --role-only -f roles.sql
+```
+
+**Restaurar un respaldo cifrado.**
+
+```bash
+gh run download <id-de-la-ejecución> -R catitaconflow/moncopullis -n respaldo-cifrado
+age -d -i <clave-privada.txt> respaldo-AAAAMMDD.tar.gz.age | tar xzf -
+# en el proyecto de destino, en este orden:
+psql "<cadena-de-conexión>" -f respaldo/roles.sql
+psql "<cadena-de-conexión>" -f respaldo/esquema.sql
+psql "<cadena-de-conexión>" -f respaldo/datos.sql
+```
+
+Las cuentas de Supabase Auth se restauran solo en un proyecto de Supabase. En un PostgreSQL vacío se restauran las 17 tablas, pero no las cuentas.
+
+## 9. Datos de prueba
+
+`pruebas/datos/datos_falsos.sql` carga registros marcados con `[FALSO]`. Antes del piloto se respalda la base y se ejecuta `pruebas/datos/reiniciar_preproduccion.sql`, que vacía las tablas de operación, conserva las cuentas y deja el reinicio en la auditoría.
+
+## 10. Cuentas de usuario
 
 1. Crear la cuenta en Supabase → Authentication → Users (correo y contraseña temporal).
 2. Insertar su fila en `usuario` con el `auth_user_id` de esa cuenta y el rol.
-3. Después, el ADMIN cambia el rol o desactiva la cuenta desde Maestros → Usuarios.
+3. Después, el ADMIN cambia el rol o desactiva la cuenta desde Maestros, Usuarios.
 
-## 10. Problemas frecuentes
+Hay dos cuentas de prueba, `operario.prueba@moncopulli.prueba` y `auditor.prueba@moncopulli.prueba`, para probar los permisos de cada rol. Se desactivan antes del piloto.
+
+## 11. Problemas frecuentes
 
 | Síntoma | Causa | Solución |
 |---------|-------|----------|
+| El respaldo falla en "Dump" con "failed to parse connection string" | `SUPABASE_DB_URL` incompleta o con símbolos sin codificar | Volver a cargarla con `gh secret set SUPABASE_DB_URL` usando la cadena completa del Session pooler |
+| El respaldo falla en "Verificar la huella" | La auditoría cambió desde el respaldo anterior | Revisar quién tiene la contraseña de la base y comparar con el respaldo del día anterior |
 | "Configuración incompleta" al abrir el panel | Falta `.env.local` | Copiar `.env.example` y completar las dos variables |
-| "No tienes permiso para esta acción" | El rol no tiene esa operación o la cuenta está inactiva | Revisar el rol en Maestros → Usuarios |
+| "No tienes permiso para esta acción" | El rol no tiene esa operación o la cuenta está inactiva | Revisar el rol en Maestros, Usuarios |
 | "Stock insuficiente" al aplicar una dosis | El lote elegido no alcanza | Elegir otro lote o registrar una entrada |
 | `db push` responde 403 | La CLI está conectada con otra cuenta | `npx supabase logout` y `npx supabase login` con la cuenta del proyecto |
