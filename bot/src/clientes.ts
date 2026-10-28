@@ -1,5 +1,5 @@
 // Clientes HTTP del bot: funciones de Supabase (PostgREST) y Bot API de Telegram.
-import { ErrorUsuario, type Botones, type Dependencias } from './bot.ts';
+import { ErrorUsuario, type Botones, type Dependencias, type Teclado } from './bot.ts';
 import { interpretar } from './interpretar.ts';
 
 export interface ConfigBot {
@@ -19,8 +19,11 @@ export function crearDependencias(c: ConfigBot, fetcher: typeof fetch = fetch): 
     });
     if (!res.ok) throw new Error(`Telegram ${metodo} respondió ${res.status}`);
   };
-  const teclado = (b?: Botones[]) =>
-    b ? { reply_markup: { inline_keyboard: [b.map((x) => ({ text: x.texto, callback_data: x.datos }))] } } : {};
+  const enLinea = (filas: Botones[][]) => ({ inline_keyboard: filas.map((f) => f.map((x) => ({ text: x.texto, callback_data: x.datos }))) });
+  const teclado = (t?: Teclado) =>
+    !t ? {} : 'inline' in t
+      ? { reply_markup: enLinea(t.inline) }
+      : { reply_markup: { keyboard: t.menu.map((f) => f.map((text) => ({ text }))), resize_keyboard: true, is_persistent: true } };
 
   return {
     async rpc(funcion, args) {
@@ -35,8 +38,9 @@ export function crearDependencias(c: ConfigBot, fetcher: typeof fetch = fetch): 
       if (datos?.code === 'P0001' && datos.message) throw new ErrorUsuario(datos.message);
       throw new Error(`Supabase ${funcion} respondió ${res.status} ${datos?.code ?? ''}`);
     },
-    enviar: (chat, texto, botones) => telegram('sendMessage', { chat_id: chat, text: texto, ...teclado(botones) }),
-    editar: (chat, mensaje, texto) => telegram('editMessageText', { chat_id: chat, message_id: mensaje, text: texto }),
+    enviar: (chat, texto, t) => telegram('sendMessage', { chat_id: chat, text: texto, ...teclado(t) }),
+    editar: (chat, mensaje, texto, inline) =>
+      telegram('editMessageText', { chat_id: chat, message_id: mensaje, text: texto, ...(inline ? { reply_markup: enLinea(inline) } : {}) }),
     responderBoton: (id, texto) => telegram('answerCallbackQuery', { callback_query_id: id, ...(texto ? { text: texto } : {}) }),
     interpretar: (texto) => interpretar(texto, c.claveGemini, fetcher),
   };

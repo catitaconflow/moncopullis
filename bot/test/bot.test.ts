@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { interpretar, interpretarLocal } from '../src/interpretar.ts';
-import { ErrorUsuario, procesarUpdate, type Dependencias, type Update } from '../src/bot.ts';
+import { ErrorUsuario, MENU, procesarUpdate, type Dependencias, type Update } from '../src/bot.ts';
 import { crearDependencias } from '../src/clientes.ts';
 import { manejarWebhook } from '../src/webhook.ts';
 
@@ -27,16 +27,17 @@ test('Gemini interpreta y el DIIO escrito manda', async () => {
 });
 
 function falsas(rpc: Dependencias['rpc']) {
-  const enviados: { chat: number; texto: string; botones?: unknown }[] = [];
+  const enviados: { chat: number; texto: string; teclado?: unknown }[] = [];
   const editados: string[] = [];
+  const botonesEditados: unknown[] = [];
   const d: Dependencias = {
     rpc,
-    enviar: async (chat, texto, botones) => { enviados.push({ chat, texto, botones }); },
-    editar: async (_c, _m, texto) => { editados.push(texto); },
+    enviar: async (chat, texto, teclado) => { enviados.push({ chat, texto, teclado }); },
+    editar: async (_c, _m, texto, inline) => { editados.push(texto); botonesEditados.push(inline); },
     responderBoton: async () => undefined,
     interpretar: async (t) => interpretarLocal(t),
   };
-  return { d, enviados, editados };
+  return { d, enviados, editados, botonesEditados };
 }
 const mensaje = (texto: string, update_id = 1): Update =>
   ({ update_id, message: { message_id: 9, chat: { id: 50 }, from: { id: 808 }, text: texto } });
@@ -45,6 +46,7 @@ test('/ayuda responde sin consultar la base', async () => {
   const { d, enviados } = falsas(async () => assert.fail('no debe llamar a la base'));
   await procesarUpdate(mensaje('/ayuda'), d);
   assert.match(enviados[0].texto, /Confirmar/);
+  assert.deepEqual(enviados[0].teclado, { menu: [[MENU.registrar, MENU.stock], [MENU.animal, MENU.ayuda]] });
 });
 
 test('un texto libre prepara el registro y ofrece Confirmar y Cancelar', async () => {
@@ -61,7 +63,7 @@ test('un texto libre prepara el registro y ofrece Confirmar y Cancelar', async (
   assert.equal(llamada.p_update, 44);
   assert.equal(llamada.p_diio, '123456789');
   assert.match(enviados[0].texto, /Resguardo de leche: 3 días/);
-  assert.deepEqual(enviados[0].botones, [{ texto: 'Confirmar', datos: 'c:7' }, { texto: 'Cancelar', datos: 'x:7' }]);
+  assert.deepEqual(enviados[0].teclado, { inline: [[{ texto: 'Confirmar', datos: 'c:7' }, { texto: 'Cancelar', datos: 'x:7' }]] });
 });
 
 test('Confirmar guarda y muestra el resguardo; Cancelar no guarda', async () => {
@@ -72,6 +74,7 @@ test('Confirmar guarda y muestra el resguardo; Cancelar no guarda', async () => 
   await procesarUpdate(boton('c:7'), d);
   await procesarUpdate(boton('x:7'), d);
   assert.match(editados[0], /Guardado.*L1[\s\S]*NO entregar leche/);
+  assert.doesNotMatch(editados[0], /\.\.$/);
   assert.match(editados[1], /No se guardó nada/);
 });
 
@@ -124,4 +127,37 @@ test('el webhook procesa solo updates nuevos', async () => {
   await manejarWebhook(req(), deps);
   await manejarWebhook(req(), deps);
   assert.equal(procesados, 1);
+});
+
+test('registro solo con botones: animal, medicamento, cantidad y resumen', async () => {
+  const llamadas: { fn: string; args: Record<string, unknown> }[] = [];
+  const { d, enviados, editados, botonesEditados } = falsas(async (fn, args) => {
+    llamadas.push({ fn, args });
+    if (fn === 'fn_bot_opciones') {
+      return { animales: [{ diio: '123456789', categoria: 'VACA' }], medicamentos: [{ id: 3, nombre: 'OXI', unidad: 'ML', stock: 40 }] };
+    }
+    return { mensaje_id: 9, diio: '123456789', categoria: 'VACA', medicamento: 'OXI', cantidad: 5, unidad: 'ML',
+             lote: 'L1', vence: '2030-01-31', resguardo_dias: 0 };
+  });
+  const toque = (datos: string, update_id: number): Update =>
+    ({ update_id, callback_query: { id: 'q', from: { id: 808 }, data: datos, message: { message_id: 9, chat: { id: 50 } } } });
+
+  await procesarUpdate(mensaje(MENU.registrar), d);
+  assert.deepEqual((enviados[0].teclado as { inline: unknown[][] }).inline[0], [{ texto: '123456789 vaca', datos: 'a:123456789' }]);
+  await procesarUpdate(toque('a:123456789', 2), d);
+  assert.deepEqual((botonesEditados[0] as unknown[][])[0], [{ texto: 'OXI (40 ML)', datos: 'm:123456789:3' }]);
+  await procesarUpdate(toque('m:123456789:3', 3), d);
+  assert.equal((botonesEditados[1] as { datos: string }[][])[0][2].datos, 'q:123456789:3:5');
+  await procesarUpdate(toque('q:123456789:3:5', 4), d);
+  const preparar = llamadas.find((l) => l.fn === 'fn_bot_preparar_id')!;
+  assert.deepEqual([preparar.args.p_diio, preparar.args.p_medicamento_id, preparar.args.p_cantidad, preparar.args.p_update],
+    ['123456789', 3, 5, 4]);
+  assert.match(editados[2], /Revisa antes de guardar/);
+  assert.deepEqual((botonesEditados[2] as { datos: string }[][])[0].map((b) => b.datos), ['c:9', 'x:9']);
+});
+
+test('Cancelar en cualquier paso no guarda nada', async () => {
+  const { d, editados } = falsas(async () => assert.fail('no debe llamar a la base'));
+  await procesarUpdate({ update_id: 5, callback_query: { id: 'q', from: { id: 1 }, data: 'x0', message: { message_id: 1, chat: { id: 2 } } } }, d);
+  assert.match(editados[0], /No se guardó nada/);
 });
