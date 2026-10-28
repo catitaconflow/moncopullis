@@ -80,6 +80,8 @@ async function comando(chat: number, tg: number, updateId: number, texto: string
 
 async function registrar(chat: number, tg: number, updateId: number, texto: string, d: Dependencias): Promise<void> {
   if (!texto.trim()) return d.enviar(chat, 'Escribe lo que aplicaste, por ejemplo «5 ml de oxitetraciclina a la 123456789».');
+  // Primero la vinculación, para no gastar Gemini en mensajes de desconocidos
+  await d.rpc('fn_bot_verificar', { p_tg: tg });
   const i = await d.interpretar(texto);
   const r = (await d.rpc('fn_bot_preparar', {
     p_tg: tg, p_chat: chat, p_update: updateId, p_texto: texto,

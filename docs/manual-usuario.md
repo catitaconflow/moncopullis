@@ -78,6 +78,16 @@ Elija la tabla y el formato (CSV para Excel o JSON). El sistema guarda quién ex
 | La pantalla muestra un recuadro gris un momento al cambiar de sección | Es normal: se está cargando esa pantalla. Si no termina, revise la señal |
 | No se pudo guardar. Revisa tu conexión | Revise la señal y vuelva a intentarlo; no se guardó nada a medias |
 
+## Registrar desde Telegram
+
+**Vincular su cuenta (una vez):**
+1. En el panel pulse **Vincular Telegram** (arriba a la derecha; en el celular está en el menú **Más**).
+2. Abra @moncopulli_registro_bot en Telegram y envíe el mensaje que muestra el panel: `/vincular su-correo código`.
+
+**Registrar una dosis:** escriba lo que aplicó, por ejemplo «apliqué 5 ml de oxitetraciclina a la 123456789». El bot muestra el animal, el medicamento, la cantidad, el lote y el resguardo de leche. Nada se guarda hasta que pulse **Confirmar**. Si algo está mal, pulse **Cancelar** y escríbalo de nuevo.
+
+**Consultas:** `/stock` (medicamentos bajo el mínimo), `/animal DIIO` (últimas dosis), `/resguardo DIIO` (si puede entregar leche) y `/ayuda`.
+
 ## Sus datos están respaldados
 
 Todas las noches se guarda una copia cifrada de la información y se comprueba que se puede recuperar. Si algo se borra por error, avise al administrador con la fecha y lo que se perdió. Además, el registro de auditoría no se puede cambiar: si alguien lo intentara, el sistema lo detecta al día siguiente.

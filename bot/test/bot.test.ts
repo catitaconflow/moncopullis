@@ -49,13 +49,15 @@ test('/ayuda responde sin consultar la base', async () => {
 
 test('un texto libre prepara el registro y ofrece Confirmar y Cancelar', async () => {
   let llamada: Record<string, unknown> = {};
+  const funciones: string[] = [];
   const { d, enviados } = falsas(async (fn, args) => {
+    funciones.push(fn);
     llamada = { fn, ...args };
     return { mensaje_id: 7, diio: '123456789', categoria: 'VACA', medicamento: 'OXI', cantidad: 5, unidad: 'ML',
              lote: 'L1', vence: '2030-01-31', resguardo_dias: 3 };
   });
   await procesarUpdate(mensaje('5 ml de oxi a la 123456789', 44), d);
-  assert.equal(llamada.fn, 'fn_bot_preparar');
+  assert.deepEqual(funciones, ['fn_bot_verificar', 'fn_bot_preparar']);
   assert.equal(llamada.p_update, 44);
   assert.equal(llamada.p_diio, '123456789');
   assert.match(enviados[0].texto, /Resguardo de leche: 3 días/);
@@ -71,6 +73,15 @@ test('Confirmar guarda y muestra el resguardo; Cancelar no guarda', async () => 
   await procesarUpdate(boton('x:7'), d);
   assert.match(editados[0], /Guardado.*L1[\s\S]*NO entregar leche/);
   assert.match(editados[1], /No se guardó nada/);
+});
+
+test('un desconocido no llega a Gemini', async () => {
+  let interpreto = false;
+  const { d, enviados } = falsas(async () => { throw new ErrorUsuario('Tu cuenta de Telegram no está vinculada.'); });
+  d.interpretar = async () => { interpreto = true; return { diio: null, medicamento: null, cantidad: null }; };
+  await procesarUpdate(mensaje('hola'), d);
+  assert.equal(interpreto, false);
+  assert.match(enviados[0].texto, /no está vinculada/);
 });
 
 test('los errores de validación se muestran; los demás no', async () => {

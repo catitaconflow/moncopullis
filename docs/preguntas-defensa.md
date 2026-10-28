@@ -28,7 +28,7 @@ RLS activo en las 17 tablas. Cada tabla tiene al menos una política; las de lec
 El webhook exige el encabezado `X-Telegram-Bot-Api-Secret-Token`. Sin secreto o con secreto falso responde 403, y lo comprobamos en producción. Las cuentas se vinculan con un código de un solo uso.
 
 **¿Dónde están las claves?**
-Fuera del repositorio. El secreto del webhook y las claves de Supabase están en `wrangler secret`. El Worker usa la clave anon con el token del usuario; la clave service_role no se despliega. El `.gitignore` excluye `.env*`.
+Fuera del repositorio. El secreto del webhook y las claves de Supabase están en `wrangler secret`. El Worker llama a la base con la clave anon (pública) más una clave propia del bot (`BOT_CLAVE_DB`, 32 bytes aleatorios); la base guarda solo su SHA-256. La clave service_role no se despliega. El `.gitignore` excluye `.env*`.
 
 **¿Qué pruebas de seguridad hicieron?**
 Pasivas: OWASP ZAP baseline, sin hallazgos de riesgo alto ni medio; una alerta de riesgo bajo (CORP), ya corregida. Activas básicas: tokens falsos, payload de inyección sin token y RLS como `anon`. **No hay pentest completo**; lo declaramos como pendiente.

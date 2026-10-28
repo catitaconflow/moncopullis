@@ -3,6 +3,8 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useSesion } from '../auth/SesionProvider'
 import { Pagina } from './Animaciones'
 import { AvisoProvider } from './Avisos'
+import { VincularTelegram } from './VincularTelegram'
+import { puedeOperar } from '../lib/permisos'
 import { Esqueleto } from './Estado'
 
 // Trazos de 24x24 (estilo línea), dibujados con currentColor.
@@ -58,7 +60,7 @@ function Enlaces({ enlaces, corto }: { enlaces: Enlace[]; corto?: boolean }) {
 }
 
 export function Layout() {
-  const { perfil, errorPerfil, salir } = useSesion()
+  const { usuario, perfil, errorPerfil, salir } = useSesion()
   const { pathname } = useLocation()
   const [menuAbierto, setMenuAbierto] = useState(false)
   const [masAbierto, setMasAbierto] = useState(false)
@@ -99,6 +101,7 @@ export function Layout() {
           {perfil && <span className="usuario-nombre">{perfil.nombres} · </span>}
           Rol: <strong>{rol}</strong>
         </p>
+        {puedeOperar(rol) && usuario?.email && <VincularTelegram correo={usuario.email} />}
         <button type="button" className="btn btn-salir-cabecera" onClick={() => void salir()}>
           Cerrar sesión
         </button>
@@ -132,6 +135,7 @@ export function Layout() {
       {masAbierto && (
         <div id="menu-mas" className="menu-mas" role="group" aria-label="Más opciones">
           <Enlaces enlaces={enlaces.filter((e) => !e.principal)} />
+          {puedeOperar(rol) && usuario?.email && <VincularTelegram correo={usuario.email} clase="" />}
           <button type="button" onClick={() => void salir()}>
             Cerrar sesión
           </button>

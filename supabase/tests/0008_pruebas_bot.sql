@@ -12,7 +12,7 @@ INSERT INTO usuario (auth_user_id, rut, nombres, apellidos, email, rol) VALUES
   ('00000000-0000-0000-0000-0000000008b2', '10000082-2', 'Omar', 'Operario', 'bot.operario@prueba.cl', 'OPERARIO'),
   ('00000000-0000-0000-0000-0000000008c3', '10000083-0', 'Aurora', 'Auditora', 'bot.auditor@prueba.cl', 'AUDITOR');
 
--- Clave de prueba del bot (la real no se toca fuera de esta transacción)
+-- Clave de prueba del bot. OJO: este archivo debe correr completo; el ROLLBACK final restaura la clave real.
 DELETE FROM bot_clave;
 INSERT INTO bot_clave (hash) VALUES (sha256(convert_to('clave-prueba', 'UTF8')));
 
@@ -55,16 +55,21 @@ BEGIN
   -- B2: una cuenta de Telegram sin vincular no puede consultar
   PERFORM pg_temp.debe_fallar('B2', $q$SELECT fn_bot_stock('clave-prueba', 808)$q$, 'no está vinculada');
 
-  -- B3: solo ADMIN genera códigos
-  PERFORM pg_temp.como('00000000-0000-0000-0000-0000000008b2');
-  PERFORM pg_temp.debe_fallar('B3', format('SELECT fn_generar_codigo_telegram(%s)', v_op), 'No tienes permiso');
+  -- B3: el auditor no genera códigos; cada usuario genera solo el suyo (0009)
+  PERFORM pg_temp.como('00000000-0000-0000-0000-0000000008c3');
+  PERFORM pg_temp.debe_fallar('B3', 'SELECT fn_generar_codigo_telegram()', 'No tienes permiso');
 
-  -- B4: código incorrecto descuenta intentos; el correcto vincula y queda auditado con origen TELEGRAM
-  PERFORM pg_temp.como(v_admin);
-  v_cod := fn_generar_codigo_telegram(v_op);
+  -- B4: código incorrecto descuenta intentos sin revelar nada; el correcto vincula y queda auditado con origen TELEGRAM
+  PERFORM pg_temp.como('00000000-0000-0000-0000-0000000008b2');
+  v_cod := fn_generar_codigo_telegram();
   PERFORM set_config('request.jwt.claims', '', true);
   v_txt := fn_bot_vincular('clave-prueba', 808, 'BOT.OPERARIO@prueba.cl', '000000x');
-  IF position('Te quedan 2' IN v_txt) = 0 THEN RAISE EXCEPTION 'B4 FALLA: %', v_txt; END IF;
+  IF position('incorrecto o vencido' IN v_txt) = 0 OR (SELECT telegram_codigo_intentos FROM usuario WHERE id = v_op) <> 1 THEN
+    RAISE EXCEPTION 'B4 FALLA: %', v_txt;
+  END IF;
+  IF fn_bot_vincular('clave-prueba', 808, 'nadie@prueba.cl', '123456') <> v_txt THEN
+    RAISE EXCEPTION 'B4 FALLA: el mensaje cambia si el correo no existe';
+  END IF;
   v_txt := fn_bot_vincular('clave-prueba', 808, 'bot.operario@prueba.cl', v_cod);
   IF position('vinculada' IN v_txt) = 0 OR (SELECT telegram_user_id FROM usuario WHERE id = v_op) <> 808 THEN
     RAISE EXCEPTION 'B4 FALLA: no vinculó: %', v_txt;
@@ -73,9 +78,15 @@ BEGIN
     RAISE EXCEPTION 'B4 FALLA: la vinculación no quedó auditada con origen TELEGRAM';
   END IF;
 
-  -- B5: el código ya usado no sirve otra vez
-  PERFORM pg_temp.debe_fallar('B5', format('SELECT fn_bot_vincular(%L, 909, %L, %L)', 'clave-prueba', 'bot.operario@prueba.cl', v_cod),
-                              'Código inválido o vencido');
+  -- B5: el código ya usado no sirve otra vez, y quien ya está vinculado no genera otro
+  IF position('incorrecto o vencido' IN fn_bot_vincular('clave-prueba', 909, 'bot.operario@prueba.cl', v_cod)) = 0 THEN
+    RAISE EXCEPTION 'B5 FALLA: el código se usó dos veces';
+  END IF;
+  PERFORM pg_temp.como('00000000-0000-0000-0000-0000000008b2');
+  PERFORM pg_temp.debe_fallar('B5', 'SELECT fn_generar_codigo_telegram()', 'ya tiene Telegram vinculado');
+  PERFORM set_config('request.jwt.claims', '', true);
+  PERFORM fn_bot_verificar('clave-prueba', 808);
+  PERFORM pg_temp.debe_fallar('B5', $q$SELECT fn_bot_verificar('clave-prueba', 909)$q$, 'no está vinculada');
 
   -- B6: consultas del animal
   v_r := fn_bot_animal('clave-prueba', 808, '999000808');
@@ -131,7 +142,7 @@ BEGIN
   -- B13: anon puede llamar a las funciones del bot, pero no a las internas
   IF NOT has_function_privilege('anon', 'fn_bot_stock(text, bigint)', 'EXECUTE')
      OR has_function_privilege('anon', 'fn_bot_actuar_como(usuario)', 'EXECUTE')
-     OR has_function_privilege('anon', 'fn_generar_codigo_telegram(bigint)', 'EXECUTE')
+     OR has_function_privilege('anon', 'fn_generar_codigo_telegram()', 'EXECUTE')
      OR has_function_privilege('authenticated', 'fn_bot_validar(text)', 'EXECUTE') THEN
     RAISE EXCEPTION 'B13 FALLA: permisos de ejecución incorrectos';
   END IF;

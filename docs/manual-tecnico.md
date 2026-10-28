@@ -166,7 +166,28 @@ psql "<cadena-de-conexión>" -f respaldo/datos.sql
 
 Las cuentas de Supabase Auth se restauran solo en un proyecto de Supabase. En un PostgreSQL vacío se restauran las 17 tablas, pero no las cuentas.
 
-## 9. Datos de prueba
+## 9. Bot de Telegram
+
+El bot es @moncopulli_registro_bot. El Worker (`bot/src/bot.ts`) recibe los mensajes y llama a las funciones `fn_bot_*` de las migraciones 0008 y 0009.
+
+| Secreto del Worker | Qué es |
+|--------------------|--------|
+| `TELEGRAM_BOT_TOKEN` | Token de BotFather. Si se filtra: `/revoke` en BotFather y `npx wrangler secret put TELEGRAM_BOT_TOKEN` |
+| `TELEGRAM_WEBHOOK_SECRET` | Lo envía Telegram en cada mensaje; sin él el Worker responde 403 |
+| `BOT_CLAVE_DB` | Clave del bot ante la base. La base guarda solo su SHA-256 en `bot_clave` |
+| `GEMINI_API_KEY` | Opcional. Sin ella el bot usa un lector simple de texto |
+
+Rotar `BOT_CLAVE_DB`: generar una clave aleatoria (`openssl rand -hex 32`), guardarla con `npx wrangler secret put BOT_CLAVE_DB` y en la base ejecutar `UPDATE bot_clave SET hash = sha256(convert_to('<clave>', 'UTF8'));`. No usar una clave inventada a mano.
+
+Registrar el webhook (después de cambiar el secreto del webhook):
+
+```bash
+curl "https://api.telegram.org/bot<token>/setWebhook" -d "url=https://moncopullis-bot.itskay666.workers.dev/telegram/webhook" -d "secret_token=<secreto>"
+```
+
+Seguridad del diseño: cada usuario genera su propio código de vinculación desde el panel (botón "Vincular Telegram"), así nadie puede vincular su Telegram a la cuenta de otro. Al confirmar un registro, la base ejecuta las mismas funciones del panel como el usuario vinculado y con origen TELEGRAM. El bot comprueba la vinculación antes de llamar a Gemini.
+
+## 9b. Datos de prueba
 
 `pruebas/datos/datos_falsos.sql` carga registros marcados con `[FALSO]`. Antes del piloto se respalda la base y se ejecuta `pruebas/datos/reiniciar_preproduccion.sql`, que vacía las tablas de operación, conserva las cuentas y deja el reinicio en la auditoría.
 
