@@ -579,3 +579,17 @@ h3 { font-size: 1rem; margin: 1.25rem 0 0.5rem; }
 .menu-mas a[aria-current='page'] { font-weight: 700; color: var(--accent); }
 .menu-mas button { border-top: 1px solid var(--border); border-radius: 0; margin-top: 4px; }
 @media (min-width: 641px) { .menu-mas { display: none; } }
+
+/* Maestros > Usuarios: varias acciones por fila y código de vinculación de Telegram */
+.acciones-fila { display: flex; flex-wrap: wrap; gap: 8px; }
+.codigo-telegram {
+  margin: 8px 0 16px;
+  font: 600 2.25rem/1.2 ui-monospace, Consolas, monospace;
+  letter-spacing: 0.3em;
+  color: var(--text);
+  background: var(--accent-suave);
+  border: 1px solid var(--border);
+  border-radius: var(--radio);
+  padding: 12px 16px;
+  text-align: center;
+}

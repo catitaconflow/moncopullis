@@ -3,12 +3,17 @@
 import { manejarWebhook, type RegistroUpdates } from './webhook';
 import { importarExportacion } from './importar';
 import { conCabecerasSeguridad } from './cabeceras';
+import { procesarUpdate, type Update } from './bot';
+import { crearDependencias } from './clientes';
 
 interface Entorno {
   TELEGRAM_WEBHOOK_SECRET: string;
   REGISTRO_UPDATES: DurableObjectNamespace;
   SUPABASE_URL: string;
   SUPABASE_ANON_KEY: string;
+  TELEGRAM_BOT_TOKEN: string;
+  BOT_CLAVE_DB: string;
+  GEMINI_API_KEY?: string;
 }
 
 export class RegistroUpdatesDO {
@@ -39,12 +44,18 @@ function registroEnDurableObject(env: Entorno): RegistroUpdates {
   };
 }
 
-async function enrutar(req: Request, env: Entorno): Promise<Response> {
+async function enrutar(req: Request, env: Entorno, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(req.url);
     if (url.pathname === '/telegram/webhook') {
       return manejarWebhook(req, {
         secretoEsperado: env.TELEGRAM_WEBHOOK_SECRET ?? '',
         registro: registroEnDurableObject(env),
+        procesar: (u) =>
+          procesarUpdate(u as Update, crearDependencias({
+            supabaseUrl: env.SUPABASE_URL, anonKey: env.SUPABASE_ANON_KEY, claveBot: env.BOT_CLAVE_DB,
+            tokenTelegram: env.TELEGRAM_BOT_TOKEN, claveGemini: env.GEMINI_API_KEY,
+          })),
+        enSegundoPlano: (tarea) => ctx.waitUntil(tarea),
       });
     }
     if (url.pathname === '/importar') {
@@ -54,7 +65,7 @@ async function enrutar(req: Request, env: Entorno): Promise<Response> {
 }
 
 export default {
-  async fetch(req: Request, env: Entorno): Promise<Response> {
-    return conCabecerasSeguridad(await enrutar(req, env));
+  async fetch(req: Request, env: Entorno, ctx: ExecutionContext): Promise<Response> {
+    return conCabecerasSeguridad(await enrutar(req, env, ctx));
   },
 };

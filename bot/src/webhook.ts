@@ -1,5 +1,5 @@
 // Webhook de Telegram: valida el secreto, descarta duplicados y acepta el update.
-// El procesamiento de comandos queda fuera de este módulo.
+// Los comandos los procesa bot.ts, a través de deps.procesar.
 
 export interface TelegramUpdate {
   update_id: number;
@@ -13,6 +13,9 @@ export interface RegistroUpdates {
 export interface Dependencias {
   secretoEsperado: string;
   registro: RegistroUpdates;
+  // Procesa el update fuera de la respuesta, para contestar 200 a Telegram de inmediato
+  procesar?: (update: TelegramUpdate) => Promise<void>;
+  enSegundoPlano?: (tarea: Promise<void>) => void;
 }
 
 export function secretoValido(recibido: string | null, esperado: string): boolean {
@@ -55,5 +58,10 @@ export async function manejarWebhook(req: Request, deps: Dependencias): Promise<
   }
 
   const esNuevo = await deps.registro.registrar(cuerpo.update_id);
+  if (esNuevo && deps.procesar) {
+    const tarea = deps.procesar(cuerpo);
+    if (deps.enSegundoPlano) deps.enSegundoPlano(tarea);
+    else await tarea;
+  }
   return new Response(esNuevo ? 'Aceptado' : 'Duplicado ignorado', { status: 200 });
 }

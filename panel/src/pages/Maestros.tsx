@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import { useSesion } from '../auth/SesionProvider'
+import { useAviso } from '../components/Avisos'
+import { Dialogo } from '../components/Dialogo'
 import { Insignia, Vista } from '../components/Estado'
 import { Filtros } from '../components/Filtros'
 import { Tabla, type Columna } from '../components/Tabla'
 import { listarPropietarios, listarProveedores, listarUsuarios } from '../data/consultas'
 import type { Propietario, Proveedor, Usuario } from '../data/tipos'
+import { ejecutar } from '../data/ejecutar'
 import { useConsulta } from '../data/useConsulta'
 import { FormPropietario, FormProveedor, FormUsuario } from '../formularios/FormMaestros'
 import { etiqueta, ROLES } from '../lib/etiquetas'
@@ -74,13 +77,41 @@ function Proveedores() {
 function Usuarios() {
   const q = useConsulta(listarUsuarios, [])
   const [edicion, setEdicion] = useState<Usuario | null>(null)
+  const [codigo, setCodigo] = useState<{ usuario: Usuario; codigo: string } | null>(null)
+  const [generando, setGenerando] = useState<number | null>(null)
+  const avisar = useAviso()
+
+  async function generarCodigo(u: Usuario) {
+    setGenerando(u.id)
+    try {
+      setCodigo({ usuario: u, codigo: await ejecutar<string>('fn_generar_codigo_telegram', { p_usuario_id: u.id }) })
+    } catch (e) {
+      avisar(e instanceof Error ? e.message : 'No se pudo generar el código.')
+    } finally {
+      setGenerando(null)
+    }
+  }
+
+  const puedeVincular = (u: Usuario) => u.activo && u.telegram_user_id === null && u.rol !== 'AUDITOR'
   const columnas: Columna<Usuario>[] = [
     { titulo: 'Nombre', render: (u) => `${u.nombres} ${u.apellidos}` },
     { titulo: 'Correo', render: (u) => u.email },
     { titulo: 'Rol', render: (u) => etiqueta(ROLES, u.rol) },
     { titulo: 'Estado', render: (u) => estadoActivo(u.activo) },
     { titulo: 'Telegram', render: (u) => (u.telegram_user_id !== null ? 'Vinculado' : 'No vinculado') },
-    { titulo: 'Acciones', render: (u) => <BotonEditar nombre={`${u.nombres} ${u.apellidos}`} onClick={() => setEdicion(u)} /> },
+    {
+      titulo: 'Acciones',
+      render: (u) => (
+        <div className="acciones-fila">
+          <BotonEditar nombre={`${u.nombres} ${u.apellidos}`} onClick={() => setEdicion(u)} />
+          {puedeVincular(u) && (
+            <button type="button" className="btn btn-chico" disabled={generando === u.id} onClick={() => generarCodigo(u)}>
+              {generando === u.id ? 'Generando…' : 'Código Telegram'}
+            </button>
+          )}
+        </div>
+      ),
+    },
   ]
   return (
     <section aria-labelledby="t-usr">
@@ -90,6 +121,16 @@ function Usuarios() {
         {(filas) => <Tabla caption="Usuarios" columnas={columnas} filas={filas} clave={(u) => u.id} />}
       </Vista>
       {edicion && <FormUsuario usuario={edicion} onCerrar={() => setEdicion(null)} alExito={q.recargar} />}
+      {codigo && (
+        <Dialogo titulo="Código para vincular Telegram" onCerrar={() => { setCodigo(null); q.recargar() }}>
+          <p className="codigo-telegram" aria-label={`Código ${codigo.codigo.split('').join(' ')}`}>{codigo.codigo}</p>
+          <p>
+            Dale este código a {codigo.usuario.nombres}. En Telegram, en @moncopulli_registro_bot, debe enviar:
+          </p>
+          <p><code>/vincular {codigo.usuario.email} {codigo.codigo}</code></p>
+          <p className="muted">Vale 10 minutos y admite 3 intentos. Si vence, genera otro.</p>
+        </Dialogo>
+      )}
     </section>
   )
 }
