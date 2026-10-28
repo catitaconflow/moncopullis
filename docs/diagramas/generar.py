@@ -420,7 +420,7 @@ def flujo_bot() -> None:
         ('paso', '1. Llega el mensaje al webhook', None),
         ('rombo', '¿secret_token válido?', 'Rechazar con HTTP 403'),
         ('rombo', '¿Cuenta vinculada y activa?', 'Responder: usar /vincular'),
-        ('paso', '2. Gemini interpreta el texto', None),
+        ('paso', '2. Botones: animal, medicamento y cantidad (o texto leído por Gemini o reglas)', None),
         ('rombo', '¿Animal, medicamento y dosis válidos?', 'Pedir corrección al operario'),
         ('paso', '3. Mostrar resumen con botones Confirmar y Cancelar', None),
         ('rombo', '¿El operario confirma?', 'Cancelar: no se guarda nada'),
