@@ -69,6 +69,10 @@ Propietarios (ADMIN y OPERARIO), proveedores y usuarios (solo ADMIN). El RUT se 
 
 Elija la tabla y el formato (CSV para Excel o JSON). El sistema guarda quién exportó, cuántas filas y la huella SHA-256 del archivo, que permite comprobar después que no fue modificado.
 
+## Importar (solo ADMIN)
+
+Sirve para traer datos de otro sistema. Pulse **Importar**, elija el archivo JSON y revise la vista previa: cuántos registros trae de cada tipo. Si el archivo tiene problemas, el panel los lista por número de registro y no importa nada. Si todo está bien, pulse **Importar**. Importar dos veces el mismo archivo no duplica datos. Hay un archivo de ejemplo en `pruebas/datos/ejemplo_importacion.json`.
+
 ## Mensajes comunes
 
 | Mensaje | Qué hacer |

@@ -116,6 +116,7 @@ panel/src/
 | Base de datos | `npx supabase db query --linked -f supabase/tests/<archivo>.sql` (0001, 0002, 0003, 0005 y 0007) | Cada archivo informa que todas sus pruebas pasan |
 | Interfaz | Playwright (ver `pruebas/panel/resultados_e2e.md`) | Todos los casos pasan |
 | Carga | GitHub, Actions, carga, Run workflow (`pruebas/carga/carga.k6.js`) | p95 menor a 500 ms y 0 fallas en las 3 corridas |
+| Estrés | GitHub, Actions, estres, Run workflow (`pruebas/carga/estres.k6.js`) | Sin fallas con 100, 200 y 400 usuarios |
 | Permisos por rol en la interfaz | Iniciar sesión con las cuentas OPERARIO y AUDITOR de prueba | Cada rol ve solo sus pantallas |
 | Seguridad | ZAP baseline, `npm audit`, Gitleaks | Sin alertas medias o altas |
 
