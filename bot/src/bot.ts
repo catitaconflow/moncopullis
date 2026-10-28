@@ -31,7 +31,7 @@ export const AYUDA = [
   '/stock  medicamentos bajo el mínimo',
   '/animal DIIO  últimas dosis del animal',
   '/resguardo DIIO  si la vaca puede entregar leche',
-  '/vincular correo código  vincular tu cuenta (el código te lo da el administrador)',
+  '/vincular correo código  vincular tu cuenta (el código sale en el panel, botón Vincular Telegram)',
   '/ayuda  esta ayuda',
 ].join('\n');
 
