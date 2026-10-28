@@ -200,6 +200,14 @@ export async function listarUsuarios(): Promise<Usuario[]> {
   return comprobar(res) as Usuario[]
 }
 
+export interface Importacion { id: number; export_id: string; cantidad_registros: number; fecha: string }
+
+export async function listarImportaciones(): Promise<Importacion[]> {
+  const res = await getSupabase()
+    .from('importacion').select('id, export_id, cantidad_registros, fecha').order('fecha', { ascending: false }).limit(20)
+  return comprobar(res) as Importacion[]
+}
+
 const TAMANO_PAGINA = 1000
 
 /**

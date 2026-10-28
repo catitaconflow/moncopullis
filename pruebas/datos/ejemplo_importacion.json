@@ -1,0 +1,40 @@
+{
+  "export_id": "FALSO-DEMO-IMPORTACION-001",
+  "registros": [
+    {
+      "uuid": "1848471e-a548-461a-b012-1cd120eedf56",
+      "entidad": "animal",
+      "datos": {
+        "diio": "900000101",
+        "categoria": "VACA",
+        "observaciones": "[FALSO] importado de otro predio"
+      }
+    },
+    {
+      "uuid": "3e86b618-373e-4f05-9ad2-487892ae83d3",
+      "entidad": "animal",
+      "datos": {
+        "diio": "900000102",
+        "categoria": "VACA",
+        "observaciones": "[FALSO] importado de otro predio"
+      }
+    },
+    {
+      "uuid": "7012ac54-40a6-4509-855d-0043e3c4dd87",
+      "entidad": "animal",
+      "datos": {
+        "diio": "900000103",
+        "categoria": "VACA",
+        "observaciones": "[FALSO] importado de otro predio"
+      }
+    },
+    {
+      "uuid": "7f79735d-c497-4864-8264-445cae539079",
+      "entidad": "medicamento",
+      "datos": {
+        "nombre_comercial": "[FALSO] Importado Prueba",
+        "unidad_base": "ML"
+      }
+    }
+  ]
+}

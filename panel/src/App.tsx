@@ -4,7 +4,7 @@ import { SesionProvider, useSesion } from './auth/SesionProvider'
 import { Layout } from './components/Layout'
 import { Esqueleto } from './components/Estado'
 import { faltanVariables, MENSAJE_CONFIG } from './lib/supabase'
-import { puedeAuditar, puedeOperar } from './lib/permisos'
+import { esAdmin, puedeAuditar, puedeOperar } from './lib/permisos'
 import { Login } from './pages/Login'
 import { NoEncontrado } from './pages/NoEncontrado'
 import { Resumen } from './pages/Resumen'
@@ -14,6 +14,7 @@ const Alertas = lazy(() => import('./pages/Alertas').then((m) => ({ default: m.A
 const Animales = lazy(() => import('./pages/Animales').then((m) => ({ default: m.Animales })))
 const Auditoria = lazy(() => import('./pages/Auditoria').then((m) => ({ default: m.Auditoria })))
 const Exportar = lazy(() => import('./pages/Exportar').then((m) => ({ default: m.Exportar })))
+const Importar = lazy(() => import('./pages/Importar').then((m) => ({ default: m.Importar })))
 const Inventario = lazy(() => import('./pages/Inventario').then((m) => ({ default: m.Inventario })))
 const Maestros = lazy(() => import('./pages/Maestros').then((m) => ({ default: m.Maestros })))
 const Tratamientos = lazy(() => import('./pages/Tratamientos').then((m) => ({ default: m.Tratamientos })))
@@ -63,6 +64,7 @@ export default function App() {
           <Route path="alertas" element={<Protegida permitido={puedeOperar}><Alertas /></Protegida>} />
           <Route path="maestros" element={<Protegida permitido={puedeOperar}><Maestros /></Protegida>} />
           <Route path="auditoria" element={<Protegida permitido={puedeAuditar}><Auditoria /></Protegida>} />
+          <Route path="importar" element={<Protegida permitido={esAdmin}><Importar /></Protegida>} />
           <Route path="exportar" element={<Protegida permitido={puedeAuditar}><Exportar /></Protegida>} />
           <Route path="*" element={<NoEncontrado />} />
         </Route>

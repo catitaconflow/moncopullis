@@ -1,0 +1,22 @@
+# Prueba de estrés a pedido: 100, 200 y 400 usuarios simultáneos.
+name: estres
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  estres:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: grafana/setup-k6-action@v1
+      # Los umbrales pueden fallar: justamente buscamos el punto de quiebre, así que el resultado se guarda igual
+      - run: k6 run --summary-export resumen-estres.json pruebas/carga/estres.k6.js || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: estres
+          path: resumen-estres.json

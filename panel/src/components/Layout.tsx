@@ -28,6 +28,7 @@ const ENLACES: Enlace[] = [
   { a: '/alertas', texto: 'Alertas', corto: 'Alertas', icono: 'M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 21h4', roles: ['ADMIN', 'OPERARIO'] },
   { a: '/maestros', texto: 'Maestros', corto: 'Maestros', icono: 'M5 4h14v16H5zM9 9h6M9 13h6M9 17h3', roles: ['ADMIN', 'OPERARIO'] },
   { a: '/auditoria', texto: 'Auditoría', corto: 'Auditoría', icono: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM9 12l2 2 4-4', roles: ['ADMIN', 'AUDITOR'] },
+  { a: '/importar', texto: 'Importar', corto: 'Importar', icono: 'M12 20V9M7 13l5-5 5 5M5 4h14', roles: ['ADMIN'] },
   { a: '/exportar', texto: 'Exportar', corto: 'Exportar', icono: 'M12 4v11M7 11l5 5 5-5M5 20h14', roles: ['ADMIN', 'AUDITOR'] },
 ]
 
