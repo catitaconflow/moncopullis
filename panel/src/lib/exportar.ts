@@ -61,7 +61,6 @@ export async function sha256Hex(contenido: string): Promise<string> {
   return [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, '0')).join('')
 }
 
-/** Descarga el contenido como archivo. */
 export function descargar(contenido: string, nombre: string, formato: Formato): void {
   const tipo = formato === 'CSV' ? 'text/csv;charset=utf-8' : 'application/json;charset=utf-8'
   const url = URL.createObjectURL(new Blob([contenido], { type: tipo }))

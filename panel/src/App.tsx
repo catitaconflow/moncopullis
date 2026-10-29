@@ -5,6 +5,7 @@ import { Layout } from './components/Layout'
 import { Esqueleto } from './components/Estado'
 import { faltanVariables, MENSAJE_CONFIG } from './lib/supabase'
 import { esAdmin, puedeAuditar, puedeOperar } from './lib/permisos'
+import { CambiarClave } from './pages/CambiarClave'
 import { Login } from './pages/Login'
 import { NoEncontrado } from './pages/NoEncontrado'
 import { Resumen } from './pages/Resumen'
@@ -28,7 +29,9 @@ function RequiereSesion() {
       </div>
     )
   }
-  return usuario ? <Layout /> : <Navigate to="/login" replace />
+  if (!usuario) return <Navigate to="/login" replace />
+  // Marca que pone la función crear-usuario; el propio usuario la limpia al cambiar la contraseña
+  return usuario.user_metadata?.debe_cambiar_clave === true ? <CambiarClave /> : <Layout />
 }
 
 /** Oculta la pantalla a los roles sin permiso (el servidor igual lo impide). */

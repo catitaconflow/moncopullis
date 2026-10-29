@@ -1,6 +1,5 @@
 export interface PropsForm {
   onCerrar: () => void
-  /** Se llama tras guardar: recarga las consultas afectadas. */
   alExito: () => void
 }
 

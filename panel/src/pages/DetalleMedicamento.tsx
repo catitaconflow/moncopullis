@@ -61,7 +61,6 @@ interface Props {
   esAdmin: boolean
   puedeOperar: boolean
   onCerrar: () => void
-  /** Recarga la lista de medicamentos (el stock cambió). */
   recargarLista: () => void
 }
 

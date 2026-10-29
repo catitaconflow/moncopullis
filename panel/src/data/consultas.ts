@@ -96,7 +96,6 @@ export async function listarLotesPorVencer(limite: number): Promise<LotePorVence
   return comprobar(res) as unknown as LotePorVencer[]
 }
 
-// Cifras del resumen: cada una es una consulta independiente.
 
 export async function contarMedicamentosBajoMinimo(): Promise<number> {
   // PostgREST no compara columna con columna: se filtra en cliente con la misma regla que Inventario.
@@ -193,7 +192,7 @@ export async function listarProveedores(): Promise<Proveedor[]> {
   return comprobar(res) as Proveedor[]
 }
 
-/** Solo ADMIN ve a todos (RLS). No se pide ningún dato de contacto sensible ni de Telegram salvo si está vinculado. */
+/** Solo ADMIN ve a todos (RLS). De Telegram solo se pide si está vinculado. */
 export async function listarUsuarios(): Promise<Usuario[]> {
   const res = await getSupabase()
     .from('usuario').select('id, nombres, apellidos, email, rol, activo, telegram_user_id').order('apellidos')

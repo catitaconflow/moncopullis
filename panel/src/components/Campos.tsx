@@ -57,7 +57,6 @@ export function CampoCasilla({ etiqueta, ...resto }: { etiqueta: string } & Omit
   )
 }
 
-/** <option> por cada entrada de un mapa código -> texto. */
 export function Opciones({ mapa }: { mapa: Mapa }) {
   return (
     <>

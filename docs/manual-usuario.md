@@ -13,7 +13,10 @@ Funciona en computador y en celular. Cada persona entra con su correo y contrase
 | Aplicar u omitir dosis | Sí | Sí | No |
 | Ver y resolver alertas | Sí | Sí | No |
 | Crear o editar medicamentos y proveedores | Sí | No | No |
-| Anular tratamientos y gestionar usuarios | Sí | No | No |
+| Anular tratamientos | Sí | No | No |
+| Crear usuarios y cambiar su rol o estado | Sí | No | No |
+| Importar datos | Sí | No | No |
+| Vincular su propio Telegram | Sí | Sí | No |
 | Ver auditoría y exportar datos | Sí | No | Sí |
 
 Si un botón no aparece, es porque su rol no tiene esa acción.
@@ -65,6 +68,17 @@ Se crean solas cuando un medicamento baja del mínimo, un lote vence en 60 días
 
 Propietarios (ADMIN y OPERARIO), proveedores y usuarios (solo ADMIN). El RUT se valida con su dígito verificador.
 
+**Crear un usuario (ADMIN)**
+1. Maestros → **Usuarios** → **Nuevo usuario**.
+2. Escriba RUT, nombres, apellidos, correo, teléfono (opcional) y elija el rol.
+3. Pulse **Crear usuario**. El panel muestra una contraseña temporal. Cópiela con **Copiar** y entréguela a la persona por un medio privado. No se vuelve a mostrar: si se pierde, hay que pedir al responsable técnico que la restablezca.
+
+Para cambiar el rol o desactivar a alguien, pulse **Editar** en su fila. No puede quitarse su propio rol de administrador ni desactivar su propia cuenta.
+
+## Primer ingreso
+
+La persona entra con su correo y la contraseña temporal. Antes de ver el panel tiene que elegir una contraseña nueva de al menos 10 caracteres y escribirla dos veces. Desde ahí entra siempre con la nueva.
+
 ## Exportar (ADMIN y AUDITOR)
 
 Elija la tabla y el formato (CSV para Excel o JSON). El sistema guarda quién exportó, cuántas filas y la huella SHA-256 del archivo, que permite comprobar después que no fue modificado.
@@ -79,6 +93,7 @@ Sirve para traer datos de otro sistema. Pulse **Importar**, elija el archivo JSO
 |---------|-----------|
 | Stock insuficiente | Elija otro lote o registre la entrada pendiente |
 | No tienes permiso para esta acción | Pida al administrador que revise su rol |
+| Ya existe un usuario con ese RUT / correo | Esa persona ya tiene cuenta; búsquela en Usuarios y edítela |
 | La pantalla muestra un recuadro gris un momento al cambiar de sección | Es normal: se está cargando esa pantalla. Si no termina, revise la señal |
 | No se pudo guardar. Revisa tu conexión | Revise la señal y vuelva a intentarlo; no se guardó nada a medias |
 

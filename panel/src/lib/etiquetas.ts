@@ -53,7 +53,6 @@ export const ESTADOS_DOSIS: Mapa = {
 export const ROLES: Mapa = { ADMIN: 'Administrador', OPERARIO: 'Operario', AUDITOR: 'Auditor' }
 export const UNIDADES: Mapa = { ML: 'ML', G: 'G', UNIDAD: 'UNIDAD' }
 
-/** Traduce un código; si no se conoce, lo devuelve tal cual. */
 export function etiqueta(mapa: Mapa, clave: string | null | undefined): string {
   if (!clave) return '—'
   return mapa[clave] ?? clave

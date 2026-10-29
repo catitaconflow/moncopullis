@@ -6,7 +6,8 @@ import { Tabla, type Columna } from '../components/Tabla'
 import { listarPropietarios, listarProveedores, listarUsuarios } from '../data/consultas'
 import type { Propietario, Proveedor, Usuario } from '../data/tipos'
 import { useConsulta } from '../data/useConsulta'
-import { FormPropietario, FormProveedor, FormUsuario } from '../formularios/FormMaestros'
+import { Dialogo } from '../components/Dialogo'
+import { FormNuevoUsuario, FormPropietario, FormProveedor, FormUsuario } from '../formularios/FormMaestros'
 import { etiqueta, ROLES } from '../lib/etiquetas'
 import { esAdmin } from '../lib/permisos'
 
@@ -71,9 +72,33 @@ function Proveedores() {
   )
 }
 
+function ClaveTemporal({ email, clave, onCerrar }: { email: string; clave: string; onCerrar: () => void }) {
+  const [copiada, setCopiada] = useState(false)
+  async function copiar() {
+    try {
+      await navigator.clipboard.writeText(clave)
+      setCopiada(true)
+    } catch {
+      setCopiada(false)
+    }
+  }
+  return (
+    <Dialogo titulo="Contraseña temporal" onCerrar={onCerrar}>
+      <p>Entrega esta contraseña a <strong>{email}</strong>. Al entrar por primera vez tendrá que cambiarla.</p>
+      <p className="codigo-telegram clave-temporal">{clave}</p>
+      <p className="advertencia advertencia-fuerte">No se volverá a mostrar. Cópiala antes de cerrar.</p>
+      <div className="form-acciones">
+        <button type="button" className="btn" onClick={() => void copiar()}>{copiada ? 'Copiada' : 'Copiar'}</button>
+        <button type="button" className="btn btn-primario" onClick={onCerrar}>Listo</button>
+      </div>
+    </Dialogo>
+  )
+}
+
 function Usuarios() {
   const q = useConsulta(listarUsuarios, [])
-  const [edicion, setEdicion] = useState<Usuario | null>(null)
+  const [edicion, setEdicion] = useState<Usuario | 'nuevo' | null>(null)
+  const [creado, setCreado] = useState<{ email: string; clave: string } | null>(null)
   const columnas: Columna<Usuario>[] = [
     { titulo: 'Nombre', render: (u) => `${u.nombres} ${u.apellidos}` },
     { titulo: 'Correo', render: (u) => u.email },
@@ -84,12 +109,22 @@ function Usuarios() {
   ]
   return (
     <section aria-labelledby="t-usr">
-      <h2 id="t-usr">Usuarios</h2>
-      <p className="muted">Las cuentas nuevas se crean en Supabase Auth y luego se les asigna el rol aquí.</p>
+      <div className="detalle-cabecera">
+        <h2 id="t-usr">Usuarios</h2>
+        <button type="button" className="btn btn-primario" onClick={() => setEdicion('nuevo')}>Nuevo usuario</button>
+      </div>
       <Vista q={q} mensajeVacio="Aún no hay usuarios registrados.">
         {(filas) => <Tabla caption="Usuarios" columnas={columnas} filas={filas} clave={(u) => u.id} />}
       </Vista>
-      {edicion && <FormUsuario usuario={edicion} onCerrar={() => setEdicion(null)} alExito={q.recargar} />}
+      {edicion === 'nuevo' && (
+        <FormNuevoUsuario
+          onCerrar={() => setEdicion(null)}
+          alExito={q.recargar}
+          alCrear={(email, clave) => setCreado({ email, clave })}
+        />
+      )}
+      {edicion && edicion !== 'nuevo' && <FormUsuario usuario={edicion} onCerrar={() => setEdicion(null)} alExito={q.recargar} />}
+      {creado && <ClaveTemporal email={creado.email} clave={creado.clave} onCerrar={() => setCreado(null)} />}
     </section>
   )
 }

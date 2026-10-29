@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { CampoCasilla, CampoSelect, CampoTexto, Opciones } from '../components/Campos'
 import { FormularioDialogo } from '../components/FormularioDialogo'
-import { ejecutar } from '../data/ejecutar'
+import { crearUsuario, ejecutar } from '../data/ejecutar'
 import type { Propietario, Proveedor, Usuario } from '../data/tipos'
 import { ROLES } from '../lib/etiquetas'
 import { normalizarRut, validarRut } from '../lib/rut'
@@ -103,6 +103,59 @@ export function FormUsuario({ usuario, onCerrar, alExito }: { usuario: Usuario }
         <Opciones mapa={ROLES} />
       </CampoSelect>
       <CampoCasilla etiqueta="Activo" checked={activo} onChange={(e) => setActivo(e.target.checked)} />
+    </FormularioDialogo>
+  )
+}
+
+const CORREO = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
+
+export function FormNuevoUsuario({ onCerrar, alExito, alCrear }: PropsForm & { alCrear: (email: string, clave: string) => void }) {
+  const [rut, setRut] = useState('')
+  const [nombres, setNombres] = useState('')
+  const [apellidos, setApellidos] = useState('')
+  const [email, setEmail] = useState('')
+  const [telefono, setTelefono] = useState('')
+  const [rol, setRol] = useState('OPERARIO')
+
+  function validar(): string | null {
+    const errRut = validarRut(rut)
+    if (errRut) return errRut
+    if (!nombres.trim()) return 'Los nombres son obligatorios.'
+    if (!apellidos.trim()) return 'Los apellidos son obligatorios.'
+    return CORREO.test(email.trim()) ? null : 'El correo no es válido.'
+  }
+
+  async function enviar() {
+    const r = await crearUsuario({
+      rut: normalizarRut(rut),
+      nombres: nombres.trim(),
+      apellidos: apellidos.trim(),
+      email: email.trim().toLowerCase(),
+      telefono: opcional(telefono),
+      rol,
+    })
+    alCrear(r.email, r.clave)
+  }
+
+  return (
+    <FormularioDialogo
+      titulo="Nuevo usuario"
+      textoEnviar="Crear usuario"
+      exito="Usuario creado."
+      validar={validar}
+      enviar={enviar}
+      alExito={alExito}
+      onCerrar={onCerrar}
+    >
+      <CampoTexto etiqueta="RUT" value={rut} onChange={(e) => setRut(e.target.value)} maxLength={12} ayuda={AYUDA_RUT} />
+      <CampoTexto etiqueta="Nombres" value={nombres} onChange={(e) => setNombres(e.target.value)} maxLength={80} autoComplete="off" />
+      <CampoTexto etiqueta="Apellidos" value={apellidos} onChange={(e) => setApellidos(e.target.value)} maxLength={80} autoComplete="off" />
+      <CampoTexto etiqueta="Correo" type="email" value={email} onChange={(e) => setEmail(e.target.value)} maxLength={254}
+        autoComplete="off" ayuda="Con este correo inicia sesión en el panel." />
+      <CampoTexto etiqueta="Teléfono (opcional)" type="tel" value={telefono} onChange={(e) => setTelefono(e.target.value)} maxLength={15} />
+      <CampoSelect etiqueta="Rol" value={rol} onChange={(e) => setRol(e.target.value)}>
+        <Opciones mapa={ROLES} />
+      </CampoSelect>
     </FormularioDialogo>
   )
 }

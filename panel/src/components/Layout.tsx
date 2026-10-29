@@ -13,7 +13,6 @@ interface Enlace {
   texto: string
   corto: string
   icono: string
-  /** Roles que ven el enlace. */
   roles: string[]
   /** Aparece en la barra inferior del móvil; el resto va en el menú "Más". */
   principal?: boolean
