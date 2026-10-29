@@ -1,13 +1,15 @@
 # Moncopulli
 
-Sistema de trazabilidad agrícola: base de datos en Supabase (PostgreSQL) y bot de Telegram en Cloudflare Workers.
+Sistema de trazabilidad sanitaria e inventario de medicamentos: base de datos en Supabase (PostgreSQL), panel web y bot de Telegram en Cloudflare Workers.
 
 ## Estructura
 
-- `supabase/migrations/`: esquema por migraciones ordenadas (`0001` modelo v2, `0002` trazabilidad SAG y documentos, `0003` importación).
+- `supabase/migrations/`: esquema por migraciones ordenadas (0001 a 0013).
 - `supabase/tests/`: pruebas SQL. Cada archivo corre dentro de una transacción y termina en `ROLLBACK`.
+- `supabase/functions/crear-usuario/`: alta de usuarios desde el panel.
+- `panel/`: panel web (React y Vite) publicado en Cloudflare Workers.
 - `bot/`: Worker del webhook de Telegram y del endpoint de importación. Pruebas con `node --test`.
-- `docs/modelo-datos-v2.md`: modelo de datos.
+- `docs/`: manual de usuario, manual técnico, modelo de datos y diagramas.
 
 ## Requisitos
 

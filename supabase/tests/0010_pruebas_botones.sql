@@ -51,7 +51,6 @@ BEGIN
 
   -- Vincular al operario directamente para estas pruebas
   UPDATE usuario SET telegram_user_id = 1010 WHERE id = v_op;
-  PERFORM set_config('request.jwt.claims', '', true);
 
   -- C1: las opciones traen el animal y solo medicamentos con stock
   v_r := fn_bot_opciones('clave-prueba', 1010);

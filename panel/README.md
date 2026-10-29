@@ -1,7 +1,8 @@
-# Panel Moncopulli (solo lectura)
+# Panel Moncopulli
 
-Webapp React + Vite + Supabase para consultar inventario, animales, tratamientos y auditoría.
-No escribe en la base: usa solo la clave `anon` y las políticas RLS `SELECT` del rol `authenticated`.
+Panel React + Vite + Supabase para inventario, animales, tratamientos, alertas y auditoría.
+Usa solo la clave `anon`: lee con las políticas RLS y escribe a través de las funciones `fn_*` de la base,
+que revisan el rol. El alta de usuarios pasa por la función `crear-usuario`.
 
 ## Instalar
 
@@ -31,7 +32,8 @@ Para entrar necesitas un usuario de Supabase Auth vinculado a una fila de la tab
 ## Probar y construir
 
 ```bash
-npm test           # pruebas de vencimiento y stock (vitest)
+npm test           # pruebas de las reglas en src/lib (vitest)
+npm run lint       # ESLint
 npm run typecheck  # tsc --noEmit
 npm run build      # genera dist/
 ```

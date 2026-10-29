@@ -1,9 +1,9 @@
 -- =====================================================================
--- Agrícola Moncopulli — modelo de datos v2 (PostgreSQL / Supabase)
+-- Agrícola Moncopulli: modelo de datos v2 (PostgreSQL / Supabase)
 -- Fuente: docs/modelo-datos-v2.md
 -- Notas:
---   * Las escrituras las hace solo la API (Cloudflare Worker) con la clave
---     de servicio, que omite RLS. El panel web solo lee según su rol.
+--   * Las tablas no tienen políticas de escritura. Desde 0005 se escribe con
+--     funciones SECURITY DEFINER que revisan el rol; aquí el panel solo lee.
 --   * Todas las FK usan ON DELETE RESTRICT: nada con historial se borra.
 --   * Las fechas con hora son timestamptz (UTC).
 -- =====================================================================
@@ -412,7 +412,7 @@ SELECT m.id AS medicamento_id, m.stock_actual,
 HAVING m.stock_actual <> COALESCE(SUM(l.stock_lote), 0);
 
 -- ---------------------------------------------------------------------
--- 9. Seguridad por rol (RLS): el panel solo lee; la API escribe con la clave de servicio
+-- 9. Seguridad por rol (RLS): políticas solo de lectura
 -- ---------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_rol_actual() RETURNS text
 LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
@@ -466,5 +466,5 @@ CREATE POLICY lectura_alertas ON alerta FOR SELECT TO authenticated
 CREATE POLICY lectura_bot ON mensaje_bot FOR SELECT TO authenticated
   USING (fn_rol_actual() = 'ADMIN');
 
--- Sin políticas de escritura para clientes: las escrituras pasan por la API.
+-- Sin políticas de escritura: las escrituras pasan por funciones (0005).
 COMMIT;

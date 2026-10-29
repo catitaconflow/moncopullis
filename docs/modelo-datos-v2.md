@@ -1,4 +1,4 @@
-# Modelo de datos v2 — Agrícola Moncopulli
+# Modelo de datos v2 de Agrícola Moncopulli
 
 Motor: PostgreSQL en Supabase. Acceso desde Cloudflare Workers (API) y panel web (Cloudflare Pages).
 Autenticación: Supabase Auth (`auth.users`). Estado: **en creación / integración; no probado ni entregado.**

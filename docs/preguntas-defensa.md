@@ -1,6 +1,6 @@
 # Preguntas probables de la defensa (Moncopulli)
 
-Respuestas basadas en lo que existe en el repositorio y en lo que se ejecutó el 21/10/2026. Donde algo no está hecho, la respuesta lo dice.
+Respuestas basadas en lo que existe en el repositorio y en lo que se ejecutó entre el 21/10/2026 y el 29/10/2026. Donde algo no está hecho, la respuesta lo dice.
 
 ## Base de datos
 
@@ -17,7 +17,13 @@ Con un CHECK `stock_lote >= 0` y un trigger (`fn_mov_actualiza_stock`) que actua
 Es la única excepción a la tercera forma normal, y está justificada: consultar el stock de un medicamento sin sumar todos sus lotes. El trigger lo mantiene igual a la suma de los lotes, y la prueba P6 demuestra que no se puede escribir a mano.
 
 **¿Qué versión de la base está desplegada y cómo se sabe?**
-Migraciones 0001 a 0004 registradas en el historial de Supabase (`supabase migration list` muestra local y remoto iguales). Hubo un error real: la 0002 se aplicó a mano antes de su ajuste y la prueba 0002 falló. Se corrigió con la 0004 y se documenta como discrepancia P10.
+Migraciones 0001 a 0013 registradas en el historial de Supabase (`supabase migration list` muestra local y remoto iguales). Hubo un error real: la 0002 se aplicó a mano antes de su ajuste y la prueba 0002 falló. Se corrigió con la 0004 y se documenta como discrepancia P10. La 0012 agrega el alta de usuarios y la 0013 elimina tres vistas que nadie usaba.
+
+**¿Qué es `docs/sql/esquema-moncopulli-app.sql`?**
+Una versión simple del modelo en 9 tablas (Empleados, Animales, Medicamentos, Tratamientos, etc.), escrita a partir del documento "MONCOPULLI APP" para explicar el diseño. No reemplaza a las migraciones: la base desplegada es la de las migraciones.
+
+**¿Cómo se crea un usuario?**
+Desde el panel, solo un Administrador. Una función del servidor (`crear-usuario`) verifica que quien llama sea Administrador activo, crea la cuenta con una contraseña temporal aleatoria y registra al usuario con `fn_crear_usuario`, que valida el RUT y deja el alta en la auditoría. En el primer ingreso el sistema obliga a cambiar la contraseña. La clave service_role vive solo en esa función, nunca en el panel.
 
 ## Seguridad
 
@@ -45,8 +51,9 @@ No lo podemos afirmar. Con 5 usuarios, la primera corrida dio p95 de 118 ms; la 
 Para no escribir datos en producción. Las rutas de rechazo (403 y 401) pasan por el mismo servidor, pero no tocan la base. Es una limitación y se declara.
 
 **¿Qué pruebas se ejecutaron realmente?**
-- Base de datos: 0001 (9 pruebas), 0002 (5), 0003 (importación). Cada una dentro de una transacción con ROLLBACK.
-- Bot: 19 pruebas con `node:test`, incluidas las de cabeceras.
+- Base de datos: 0001 (9 pruebas), 0002 (5), 0003 (importación) y 0012 (alta de usuarios, U1 a U9, todas pasan en producción). Cada una dentro de una transacción con ROLLBACK.
+- Bot: 34 pruebas con `node:test`, incluidas las de cabeceras.
+- Panel: 35 pruebas con Vitest.
 - Carga y pentest: ver las preguntas anteriores.
 
 ## Decisiones de diseño
@@ -57,8 +64,8 @@ Sin sistema operativo que mantener, HTTPS y webhook nativos, y un plan gratuito 
 **¿Por qué dos tablas, `intercambio` e `importacion`?**
 `intercambio` registra las exportaciones y `importacion` las importaciones. Se mantienen separadas para no mezclar el historial de salida con el de entrada. Es una decisión tomada, no un pendiente.
 
-**¿Por qué el panel es de solo lectura?**
-Porque las escrituras se hacen por el servidor (Worker), que valida antes de tocar la base. El panel muestra inventario, animales, tratamientos y auditoría. Las escrituras desde el panel son trabajo posterior.
+**¿Cómo escribe datos el panel?**
+Nunca escribe directo en las tablas. Llama a funciones de la base que revisan el rol, validan los datos y dejan registro en la auditoría. El alta de usuarios pasa además por la función `crear-usuario`, porque crear una cuenta de acceso requiere la clave service_role.
 
 **¿Qué queda fuera del alcance?**
 EID (identificación electrónica), trazabilidad de carne y la app Android (fase 2). El modelo registra solo leche.

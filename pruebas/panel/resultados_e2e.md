@@ -1,4 +1,4 @@
-# Prueba E2E del panel (Playwright) — 26/10/2026
+# Prueba E2E del panel con Playwright (26/10/2026)
 
 Objetivo: https://moncopulli-panel.itskay666.workers.dev (producción), cuenta ADMIN de prueba.
 Viewports: 1280×800 y 360×800. Duración: 34 s. Resultado: 12 de 12 pasan.
