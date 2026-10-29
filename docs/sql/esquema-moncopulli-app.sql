@@ -1,15 +1,29 @@
 -- Moncopulli App: esquema de base de datos
 -- PostgreSQL (Supabase). Se ejecuta completo en el editor SQL de Supabase.
+-- No hay tablas propias del bot: lo que registra el bot se guarda en Tratamientos,
+-- y la columna origen_registro indica si el dato vino del Bot, la App o la Web.
 -- Orden: primero las tablas que no dependen de otras, después las que tienen claves foráneas.
 
--- 1. Empleados
+-- 1. Roles
+-- Los tres perfiles del sistema y lo que puede hacer cada uno.
+CREATE TABLE Roles (
+    id_rol       SERIAL PRIMARY KEY,
+    nombre       VARCHAR(20)  NOT NULL UNIQUE,
+    descripcion  VARCHAR(200)
+);
+
+INSERT INTO Roles (nombre, descripcion) VALUES
+    ('Administrador', 'Todo: usuarios, medicamentos, proveedores, anular tratamientos, auditoría e importación'),
+    ('Operario',      'Registra animales, tratamientos y movimientos de stock'),
+    ('Auditor',       'Solo consulta la auditoría y exporta datos');
+
+-- 2. Empleados
 -- Personas que usan el sistema. El teléfono se usa para validar el acceso desde el bot de Telegram.
 CREATE TABLE Empleados (
     id_empleado     SERIAL PRIMARY KEY,
     nombre          VARCHAR(100) NOT NULL,
     email           VARCHAR(100) UNIQUE,
-    rol             VARCHAR(20)  NOT NULL DEFAULT 'Operario'
-                    CHECK (rol IN ('Administrador', 'Operario', 'Auditor')),
+    id_rol          INT          NOT NULL REFERENCES Roles (id_rol),
     telefono        VARCHAR(30)  UNIQUE,
     activo          BOOLEAN      NOT NULL DEFAULT TRUE,
     fecha_registro  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -17,7 +31,7 @@ CREATE TABLE Empleados (
     ultimo_acceso   TIMESTAMP
 );
 
--- 2. Proveedores
+-- 3. Proveedores
 -- Empresas o laboratorios que venden los medicamentos.
 CREATE TABLE Proveedores (
     id_proveedor  SERIAL PRIMARY KEY,
@@ -26,7 +40,7 @@ CREATE TABLE Proveedores (
     contacto      VARCHAR(100)
 );
 
--- 3. Enfermedades
+-- 4. Enfermedades
 -- Lista cerrada de diagnósticos o motivos de tratamiento (mastitis, neumonía, desparasitación...).
 CREATE TABLE Enfermedades (
     id_enfermedad  SERIAL PRIMARY KEY,
@@ -34,7 +48,7 @@ CREATE TABLE Enfermedades (
     descripcion    TEXT
 );
 
--- 4. Medicamentos
+-- 5. Medicamentos
 -- El stock se cuenta en frascos o unidades cerradas, como pide la norma de bioseguridad.
 CREATE TABLE Medicamentos (
     id_medicamento         SERIAL PRIMARY KEY,
@@ -50,7 +64,7 @@ CREATE TABLE Medicamentos (
     activo                 BOOLEAN NOT NULL DEFAULT TRUE
 );
 
--- 5. Animales
+-- 6. Animales
 -- Cada animal se identifica por su DIIO. Guarda la madre, de dónde llegó y si salió del predio.
 CREATE TABLE Animales (
     id_animal              SERIAL PRIMARY KEY,
@@ -77,8 +91,10 @@ CREATE TABLE Animales (
     creado_en              TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- 6. Tratamientos
--- Cada dosis aplicada o programada. Si el medicamento no está en la lista se escribe en medicamento_texto.
+-- 7. Tratamientos
+-- Cada dosis aplicada o programada. Lo que se registra por el bot también queda aquí;
+-- origen_registro dice de dónde vino: Bot (Telegram), App (Android) o Web (panel).
+-- Si el medicamento no está en la lista se escribe en medicamento_texto.
 CREATE TABLE Tratamientos (
     id_tratamiento       SERIAL PRIMARY KEY,
     id_animal            INT NOT NULL REFERENCES Animales (id_animal) ON DELETE CASCADE,
@@ -93,11 +109,10 @@ CREATE TABLE Tratamientos (
     fecha_programada     DATE,
     fecha_aplicacion     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     observaciones        TEXT,
-    origen_registro      VARCHAR(50) NOT NULL
-                         CHECK (origen_registro IN ('App offline', 'Panel web', 'Bot Telegram', 'Escáner CSV'))
+    origen_registro      VARCHAR(10) NOT NULL CHECK (origen_registro IN ('Bot', 'App', 'Web'))
 );
 
--- 7. Control_de_Movimientos
+-- 8. Control_de_Movimientos
 -- Kárdex de bodega: cada entrada o salida de medicamentos queda registrada.
 CREATE TABLE Control_de_Movimientos (
     id_movimiento     SERIAL PRIMARY KEY,
@@ -109,10 +124,10 @@ CREATE TABLE Control_de_Movimientos (
     motivo            VARCHAR(50) NOT NULL
                       CHECK (motivo IN ('Compra', 'Uso en tratamiento', 'Vencimiento', 'Merma/desecho', 'Ajuste')),
     fecha_movimiento  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    origen_registro   VARCHAR(50) NOT NULL
+    origen_registro   VARCHAR(10) NOT NULL CHECK (origen_registro IN ('Bot', 'App', 'Web'))
 );
 
--- 8. Documentos_Veterinarios
+-- 9. Documentos_Veterinarios
 -- Referencias a los archivos guardados en Supabase Storage (PDF, fotos, planillas).
 CREATE TABLE Documentos_Veterinarios (
     id_documento     SERIAL PRIMARY KEY,
@@ -122,10 +137,10 @@ CREATE TABLE Documentos_Veterinarios (
     nombre_original  VARCHAR(255),
     tipo_archivo     VARCHAR(50) CHECK (tipo_archivo IN ('PDF', 'Imagen', 'Excel', 'Word')),
     fecha_subida     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    origen_registro  VARCHAR(50) NOT NULL DEFAULT 'Bot Telegram'
+    origen_registro  VARCHAR(10) NOT NULL DEFAULT 'Bot' CHECK (origen_registro IN ('Bot', 'App', 'Web'))
 );
 
--- 9. RegistroLogs
+-- 10. RegistroLogs
 -- Auditoría: quién hizo qué, sobre qué y desde dónde.
 CREATE TABLE RegistroLogs (
     id_log           SERIAL PRIMARY KEY,
@@ -134,8 +149,7 @@ CREATE TABLE RegistroLogs (
                      CHECK (accion IN ('Creación', 'Modificación', 'Eliminación', 'Alerta', 'Sincronización')),
     entidad          VARCHAR(50) NOT NULL,   -- Animal, Medicamento, Tratamiento, Empleado, Documento
     detalle          TEXT NOT NULL,
-    origen_registro  VARCHAR(50) NOT NULL
-                     CHECK (origen_registro IN ('App offline', 'Panel web', 'Bot Telegram', 'Escáner CSV', 'Sistema')),
+    origen_registro  VARCHAR(10) NOT NULL CHECK (origen_registro IN ('Bot', 'App', 'Web')),
     fecha_hora       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

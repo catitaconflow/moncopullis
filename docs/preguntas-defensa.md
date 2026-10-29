@@ -20,7 +20,7 @@ Es la única excepción a la tercera forma normal, y está justificada: consulta
 Migraciones 0001 a 0013 registradas en el historial de Supabase (`supabase migration list` muestra local y remoto iguales). Hubo un error real: la 0002 se aplicó a mano antes de su ajuste y la prueba 0002 falló. Se corrigió con la 0004 y se documenta como discrepancia P10. La 0012 agrega el alta de usuarios y la 0013 elimina tres vistas que nadie usaba.
 
 **¿Qué es `docs/sql/esquema-moncopulli-app.sql`?**
-Una versión simple del modelo en 9 tablas (Empleados, Animales, Medicamentos, Tratamientos, etc.), escrita a partir del documento "MONCOPULLI APP" para explicar el diseño. No reemplaza a las migraciones: la base desplegada es la de las migraciones.
+Una versión simple del modelo en 10 tablas (Roles, Empleados, Animales, Medicamentos, Tratamientos, etc.), escrita a partir del documento "MONCOPULLI APP" para explicar el diseño. No tiene tablas del bot: lo que registra el bot queda en Tratamientos y la columna origen_registro dice si vino del Bot, la App o la Web. No reemplaza a las migraciones: la base desplegada es la de las migraciones.
 
 **¿Cómo se crea un usuario?**
 Desde el panel, solo un Administrador. Una función del servidor (`crear-usuario`) verifica que quien llama sea Administrador activo, crea la cuenta con una contraseña temporal aleatoria y registra al usuario con `fn_crear_usuario`, que valida el RUT y deja el alta en la auditoría. En el primer ingreso el sistema obliga a cambiar la contraseña. La clave service_role vive solo en esa función, nunca en el panel.
