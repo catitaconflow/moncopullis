@@ -13,17 +13,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import cl.moncopulli.app.ui.theme.MoncopulliTheme
 import dagger.hilt.android.AndroidEntryPoint
-
+import androidx.activity.viewModels
+import cl.moncopulli.app.ui.prueba.PruebaConexionScreen
+import cl.moncopulli.app.ui.prueba.PruebaConexionViewModel
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val pruebaViewModel: PruebaConexionViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             MoncopulliTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    PruebaConexionScreen(
+                        viewModel = pruebaViewModel,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
