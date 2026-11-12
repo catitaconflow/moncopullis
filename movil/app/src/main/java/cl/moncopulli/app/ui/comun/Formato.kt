@@ -39,3 +39,17 @@ fun diaCortoChile(f: OffsetDateTime): String = f.atZoneSameInstant(ZONA_CHILE).f
 /** "Jueves 12 de noviembre". */
 fun fechaLarga(dia: LocalDate): String =
     dia.format(FECHA_LARGA).replaceFirstChar { it.titlecase(LOCALE_CHILE) }
+
+private val FECHA_HORA_CORTA = DateTimeFormatter.ofPattern("dd-MM HH:mm", LOCALE_CHILE)
+private val FECHA_CORTA = DateTimeFormatter.ofPattern("dd-MM-yyyy", LOCALE_CHILE)
+
+/** "14-11 18:30", igual que textoResguardo del panel. */
+fun fechaHoraCortaChile(f: OffsetDateTime): String = f.atZoneSameInstant(ZONA_CHILE).format(FECHA_HORA_CORTA)
+
+fun fechaCorta(dia: LocalDate): String = dia.format(FECHA_CORTA)
+
+fun etiquetaEstadoProductivo(estado: String): String = when (estado) {
+    "LACTANCIA" -> "Lactancia"
+    "SECA" -> "Seca"
+    else -> estado
+}

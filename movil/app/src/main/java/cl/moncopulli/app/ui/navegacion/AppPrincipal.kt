@@ -40,6 +40,7 @@ import cl.moncopulli.app.R
 import cl.moncopulli.app.data.auth.Perfil
 import cl.moncopulli.app.ui.comun.PantallaProximamente
 import cl.moncopulli.app.ui.inicio.InicioScreen
+import cl.moncopulli.app.ui.animales.AnimalesScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,9 +83,7 @@ fun AppPrincipal(
             modifier = Modifier.padding(padding),
         ) {
             composable<RutaInicio> { InicioScreen(perfil.nombres) }
-            composable<RutaAnimales> {
-                PantallaProximamente("Animales", "La lista de animales llega en el siguiente paso.")
-            }
+            composable<RutaAnimales> { AnimalesScreen() }
             composable<RutaRegistrar> {
                 PantallaProximamente("Próximamente", "Registrar aplicaciones estará disponible pronto.")
             }
