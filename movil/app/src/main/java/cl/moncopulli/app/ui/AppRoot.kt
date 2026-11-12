@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedButton
@@ -16,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cl.moncopulli.app.ui.inicio.InicioScreen
 import cl.moncopulli.app.ui.login.LoginScreen
+import cl.moncopulli.app.ui.navegacion.AppPrincipal
 import cl.moncopulli.app.ui.sesion.EstadoSesion
 import cl.moncopulli.app.ui.sesion.SesionViewModel
 
@@ -28,13 +29,15 @@ fun AppRoot(
 ) {
     val estado by viewModel.estado.collectAsStateWithLifecycle()
     val login by viewModel.login.collectAsStateWithLifecycle()
+    // Las pantallas sin Scaffold propio esquivan las barras del sistema y el teclado.
+    val sinBarras = modifier.safeDrawingPadding()
 
     when (val e = estado) {
-        EstadoSesion.Cargando, EstadoSesion.Verificando -> PantallaCargando(modifier)
-        EstadoSesion.SinSesion -> LoginScreen(login, viewModel::iniciarSesion, modifier)
-        is EstadoSesion.Autorizado -> InicioScreen(e.perfil, viewModel::cerrarSesion, modifier)
+        EstadoSesion.Cargando, EstadoSesion.Verificando -> PantallaCargando(sinBarras)
+        EstadoSesion.SinSesion -> LoginScreen(login, viewModel::iniciarSesion, sinBarras)
+        is EstadoSesion.Autorizado -> AppPrincipal(e.perfil, viewModel::cerrarSesion, modifier)
         is EstadoSesion.ErrorConexion ->
-            PantallaError(e.mensaje, viewModel::reintentar, viewModel::cerrarSesion, modifier)
+            PantallaError(e.mensaje, viewModel::reintentar, viewModel::cerrarSesion, sinBarras)
     }
 }
 

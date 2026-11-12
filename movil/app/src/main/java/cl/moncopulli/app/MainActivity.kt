@@ -7,8 +7,8 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import cl.moncopulli.app.ui.AppRoot
 import cl.moncopulli.app.ui.theme.MoncopulliTheme
@@ -25,8 +25,9 @@ class MainActivity : ComponentActivity() {
         )
         setContent {
             MoncopulliTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    AppRoot(modifier = Modifier.padding(innerPadding))
+                // Sin Scaffold aquí: AppPrincipal trae el suyo (si se anidan, los márgenes se duplican).
+                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                    AppRoot()
                 }
             }
         }
