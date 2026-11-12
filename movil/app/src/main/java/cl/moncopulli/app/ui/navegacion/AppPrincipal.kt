@@ -41,6 +41,7 @@ import cl.moncopulli.app.data.auth.Perfil
 import cl.moncopulli.app.ui.comun.PantallaProximamente
 import cl.moncopulli.app.ui.inicio.InicioScreen
 import cl.moncopulli.app.ui.animales.AnimalesScreen
+import cl.moncopulli.app.ui.inventario.InventarioScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,9 +88,7 @@ fun AppPrincipal(
             composable<RutaRegistrar> {
                 PantallaProximamente("Próximamente", "Registrar aplicaciones estará disponible pronto.")
             }
-            composable<RutaInventario> {
-                PantallaProximamente("Inventario", "El stock por lote llega en el siguiente paso.")
-            }
+            composable<RutaInventario> { InventarioScreen() }
             composable<RutaActividad> {
                 PantallaProximamente("Próximamente", "Aquí verás lo enviado y lo pendiente de enviar.")
             }
