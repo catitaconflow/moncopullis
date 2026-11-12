@@ -1,58 +1,56 @@
 package cl.moncopulli.app.ui.theme
 
-import android.app.Activity
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+private val EsquemaClaro = lightColorScheme(
+    primary = Principal,
+    onPrimary = SobrePrincipal,
+    primaryContainer = PrincipalSuave,
+    onPrimaryContainer = Principal,
+    secondary = Principal,
+    onSecondary = SobrePrincipal,
+    secondaryContainer = PrincipalSuave,   // indicador de la pestaña activa
+    onSecondaryContainer = Principal,
+    tertiary = Principal,
+    onTertiary = SobrePrincipal,
+    background = Fondo,
+    onBackground = Texto,
+    surface = Superficie,
+    onSurface = Texto,
+    surfaceVariant = Fondo,
+    onSurfaceVariant = TextoSecundario,
+    surfaceTint = Superficie,              // sin tinte verde en superficies elevadas
+    surfaceBright = Superficie,
+    surfaceDim = Fondo,
+    surfaceContainerLowest = Superficie,
+    surfaceContainerLow = Superficie,
+    surfaceContainer = Superficie,
+    surfaceContainerHigh = Superficie,
+    surfaceContainerHighest = Superficie,
+    outline = Borde,
+    outlineVariant = Borde,                // borde de OutlinedCard y divisores
+    error = Urgente,
+    onError = SobrePrincipal,
+    errorContainer = UrgenteFondo,
+    onErrorContainer = Urgente,
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+// Radio de 6 dp como el panel. extraLarge (diálogos) queda con el valor por defecto.
+private val Radio = RoundedCornerShape(6.dp)
+private val Formas = Shapes(extraSmall = Radio, small = Radio, medium = Radio, large = Radio)
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
-)
-
+/** Tema único: solo modo claro y sin dynamicColor (colores del fondo de pantalla del teléfono). */
 @Composable
-fun MoncopulliTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
-) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-
+fun MoncopulliTheme(content: @Composable () -> Unit) {
     MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
+        colorScheme = EsquemaClaro,
+        typography = Typography,   // Type.kt: fuente del sistema, no se toca
+        shapes = Formas,
+        content = content,
     )
 }
