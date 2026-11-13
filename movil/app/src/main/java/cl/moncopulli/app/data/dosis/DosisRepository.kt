@@ -3,14 +3,18 @@ package cl.moncopulli.app.data.dosis
 import cl.moncopulli.app.data.ZONA_CHILE
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.postgrest.query.Order
+import io.github.jan.supabase.postgrest.rpc
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 @Singleton
 class DosisRepository @Inject constructor(
@@ -38,6 +42,33 @@ class DosisRepository @Inject constructor(
             .map { it.aModelo() }
     }
 
+    /**
+     * Aplica una dosis PROGRAMADA ahora (p_fecha_aplicada = null → now() en el servidor).
+     * El servidor elige el lote por FEFO. Idempotente si la aplicó el mismo usuario.
+     * Lanza PostgrestRestException (P0001/42501) o un error de red.
+     */
+    suspend fun aplicar(dosisId: Long): DosisAplicada {
+        val r = supabase.postgrest
+            .rpc("fn_app_aplicar_dosis", buildJsonObject { put("p_dosis_id", dosisId) })
+            .decodeAs<RespuestaApp>()
+        return DosisAplicada(
+            yaRegistrada = r.estado == "ya_registrado",
+            lote = r.lote,
+            resguardoHasta = r.resguardoHasta?.let(OffsetDateTime::parse),
+        )
+    }
+
+    /** Omite una dosis PROGRAMADA. NO es idempotente: solo con conexión y sin reintentos automáticos. */
+    suspend fun omitir(dosisId: Long, motivo: String) {
+        supabase.postgrest.rpc(
+            "fn_omitir_dosis",
+            buildJsonObject {
+                put("p_dosis_id", dosisId)
+                put("p_motivo", motivo.trim())
+            },
+        )
+    }
+
     private companion object {
         // medicamento:medicamento_id(...) igual que el panel (dosis también apunta a medicamento vía lote).
         // !inner: sin él, el filtro sobre tratamiento no descarta la dosis, solo deja tratamiento en null.
@@ -48,6 +79,15 @@ class DosisRepository @Inject constructor(
         """.trimIndent()
     }
 }
+
+/** jsonb de fn_app_*: {estado, dosis_id, lote, resguardo_hasta [, tratamiento_id]}. */
+@Serializable
+private data class RespuestaApp(
+    val estado: String,
+    @SerialName("dosis_id") val dosisId: Long,
+    val lote: String? = null,
+    @SerialName("resguardo_hasta") val resguardoHasta: String? = null,
+)
 
 @Serializable
 private data class DosisFila(
