@@ -10,6 +10,7 @@ import cl.moncopulli.app.data.dosis.DosisRepository
 import cl.moncopulli.app.data.envio.EnviosRepository
 import cl.moncopulli.app.data.envio.ResultadoEnvio
 import cl.moncopulli.app.data.red.MonitorConexion
+import cl.moncopulli.app.ui.comun.avisoDeCache
 import cl.moncopulli.app.ui.comun.cantidadConUnidad
 import cl.moncopulli.app.ui.comun.fechaHoraCortaChile
 import cl.moncopulli.app.ui.comun.mensajeDeEscritura
@@ -59,7 +60,7 @@ class InicioViewModel @Inject constructor(
 
     private var carga: Job? = null
 
-    /** Última lista del servidor, sin filtrar. */
+    /** Última lista del servidor (o de la caché), sin filtrar. */
     private var delServidor: List<DosisDelDia> = emptyList()
 
     /** Dosis aplicadas desde este teléfono (por enviar o ya enviadas): se ocultan aunque el servidor aún diga PROGRAMADA. */
@@ -93,9 +94,12 @@ class InicioViewModel @Inject constructor(
         _ui.update { it.copy(actualizando = deslizando, cargando = !deslizando && it.dosis.isEmpty()) }
         carga = viewModelScope.launch {
             try {
-                delServidor = repo.programadasHastaHoy()
+                val l = repo.programadasHastaHoy()
+                delServidor = l.datos
                 // copy (no InicioUi nuevo) para no perder el diálogo ni el aviso abiertos.
-                _ui.update { it.copy(cargando = false, actualizando = false, dosis = visibles(), error = null) }
+                _ui.update {
+                    it.copy(cargando = false, actualizando = false, dosis = visibles(), error = avisoDeCache(l.guardadoEn))
+                }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {

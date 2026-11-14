@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import cl.moncopulli.app.data.CambiosDatos
 import cl.moncopulli.app.data.animal.AnimalRepository
 import cl.moncopulli.app.data.animal.AnimalResumen
+import cl.moncopulli.app.ui.comun.avisoDeCache
 import cl.moncopulli.app.ui.comun.mensajeDeLectura
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.OffsetDateTime
@@ -78,11 +79,11 @@ class AnimalesViewModel @Inject constructor(
         _ui.update { it.copy(actualizando = deslizando, cargando = !deslizando && it.animales.isEmpty()) }
         carga = viewModelScope.launch {
             try {
-                val lista = repo.listarVivos()
+                val l = repo.listarVivos()
                 _ui.update {
                     it.copy(
-                        cargando = false, actualizando = false, error = null,
-                        animales = lista, ahora = OffsetDateTime.now(),
+                        cargando = false, actualizando = false, error = avisoDeCache(l.guardadoEn),
+                        animales = l.datos, ahora = OffsetDateTime.now(),
                     )
                 }
             } catch (e: CancellationException) {

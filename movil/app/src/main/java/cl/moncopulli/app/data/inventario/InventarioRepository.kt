@@ -1,5 +1,8 @@
 package cl.moncopulli.app.data.inventario
 
+import cl.moncopulli.app.data.cache.CacheLectura
+import cl.moncopulli.app.data.cache.JSON_CACHE
+import cl.moncopulli.app.data.cache.Lectura
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
@@ -9,20 +12,30 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.builtins.ListSerializer
 
 @Singleton
 class InventarioRepository @Inject constructor(
     private val supabase: SupabaseClient,
+    private val cache: CacheLectura,
 ) {
-    /** Medicamentos activos con sus lotes, ordenados por nombre. */
-    suspend fun listar(): List<MedicamentoStock> =
-        supabase.from("medicamento")
-            .select(columns = Columns.raw(COLUMNAS)) {
-                filter { eq("activo", true) }
-                order(column = "nombre_comercial", order = Order.ASCENDING)
-            }
-            .decodeList<MedicamentoFila>()
-            .map { it.aModelo() }
+    /**
+     * Medicamentos activos con sus lotes, ordenados por nombre. Sin red usa la caché: el stock es el de
+     * ese momento y no descuenta lo que esté pendiente de enviar (eso lo hace el servidor al recibirlo).
+     */
+    suspend fun listar(): Lectura<List<MedicamentoStock>> =
+        cache.leer(
+            clave = "inventario",
+            red = {
+                supabase.from("medicamento")
+                    .select(columns = Columns.raw(COLUMNAS)) {
+                        filter { eq("activo", true) }
+                        order(column = "nombre_comercial", order = Order.ASCENDING)
+                    }
+                    .data
+            },
+            decodificar = { JSON_CACHE.decodeFromString(ListSerializer(MedicamentoFila.serializer()), it) },
+        ).map { filas -> filas.map { it.aModelo() } }
 
     private companion object {
         // lote(...) embebido por su clave foránea lote.medicamento_id.

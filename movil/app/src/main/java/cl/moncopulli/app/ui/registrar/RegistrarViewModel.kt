@@ -102,8 +102,9 @@ class RegistrarViewModel @Inject constructor(
             try {
                 val hoy = LocalDate.now(ZONA_CHILE)
                 val (animales, medicamentos) = coroutineScope {
-                    val a = async { animalRepo.listarVivos() }
-                    val m = async { inventarioRepo.listar() }
+                    // Sin red llegan desde la caché: el servidor valida igual al recibir el registro.
+                    val a = async { animalRepo.listarVivos().datos }
+                    val m = async { inventarioRepo.listar().datos }
                     a.await() to m.await()
                 }
                 _ui.update {

@@ -1,6 +1,9 @@
 package cl.moncopulli.app.data.dosis
 
 import cl.moncopulli.app.data.ZONA_CHILE
+import cl.moncopulli.app.data.cache.CacheLectura
+import cl.moncopulli.app.data.cache.JSON_CACHE
+import cl.moncopulli.app.data.cache.Lectura
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
@@ -13,6 +16,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -24,27 +28,40 @@ const val RPC_REGISTRAR = "fn_app_registrar_aplicacion"
 @Singleton
 class DosisRepository @Inject constructor(
     private val supabase: SupabaseClient,
+    private val cache: CacheLectura,
 ) {
     /**
      * Dosis PROGRAMADAS hasta el fin de hoy (hora de Chile), incluidas las atrasadas de días
      * anteriores, de tratamientos no anulados. Más antiguas primero.
+     *
+     * Al servidor se le piden también las de los próximos [DIAS_CACHE] días: así, si mañana se abre
+     * la app sin red, la caché ya trae las dosis de mañana. El corte "hasta hoy" se hace aquí, al leer.
      */
-    suspend fun programadasHastaHoy(): List<DosisDelDia> {
-        val finDeHoy = LocalDate.now(ZONA_CHILE).plusDays(1).atStartOfDay(ZONA_CHILE).toInstant()
-        return supabase.from("dosis")
-            .select(columns = Columns.raw(COLUMNAS)) {
-                filter {
-                    eq("estado", "PROGRAMADA")
-                    lt("fecha_programada", finDeHoy.toString())
-                    // Para ver SOLO las de hoy, agrega:
-                    // gte("fecha_programada", LocalDate.now(ZONA_CHILE).atStartOfDay(ZONA_CHILE).toInstant().toString())
-                    exact("tratamiento.fecha_anulacion", null)
-                }
-                order(column = "fecha_programada", order = Order.ASCENDING)
-                limit(count = 200)
-            }
-            .decodeList<DosisFila>()
-            .map { it.aModelo() }
+    suspend fun programadasHastaHoy(): Lectura<List<DosisDelDia>> {
+        val hoy = LocalDate.now(ZONA_CHILE)
+        val finDeHoy = hoy.plusDays(1).atStartOfDay(ZONA_CHILE).toInstant()
+        val horizonte = hoy.plusDays(1 + DIAS_CACHE).atStartOfDay(ZONA_CHILE).toInstant()
+        return cache.leer(
+            clave = "dosis",
+            red = {
+                supabase.from("dosis")
+                    .select(columns = Columns.raw(COLUMNAS)) {
+                        filter {
+                            eq("estado", "PROGRAMADA")
+                            lt("fecha_programada", horizonte.toString())
+                            // Para ver SOLO las de hoy, agrega (y ajusta el filtro de abajo):
+                            // gte("fecha_programada", LocalDate.now(ZONA_CHILE).atStartOfDay(ZONA_CHILE).toInstant().toString())
+                            exact("tratamiento.fecha_anulacion", null)
+                        }
+                        order(column = "fecha_programada", order = Order.ASCENDING)
+                        limit(count = 500)
+                    }
+                    .data
+            },
+            decodificar = { JSON_CACHE.decodeFromString(ListSerializer(DosisFila.serializer()), it) },
+        ).map { filas ->
+            filas.map { it.aModelo() }.filter { it.fechaProgramada.toInstant().isBefore(finDeHoy) }
+        }
     }
 
     /**
@@ -99,6 +116,8 @@ class DosisRepository @Inject constructor(
     }
 
     private companion object {
+        const val DIAS_CACHE = 7L
+
         // medicamento:medicamento_id(...) igual que el panel (dosis también apunta a medicamento vía lote).
         // !inner: sin él, el filtro sobre tratamiento no descarta la dosis, solo deja tratamiento en null.
         val COLUMNAS = """

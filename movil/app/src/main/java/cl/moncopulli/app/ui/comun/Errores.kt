@@ -2,6 +2,7 @@ package cl.moncopulli.app.ui.comun
 
 import io.github.jan.supabase.exceptions.RestException
 import io.github.jan.supabase.postgrest.exception.PostgrestRestException
+import java.time.OffsetDateTime
 
 /** Mensaje para errores de LECTURA (las RLS no fallan al leer: solo filtran filas). */
 fun mensajeDeLectura(e: Exception): String = when (e) {
@@ -10,6 +11,11 @@ fun mensajeDeLectura(e: Exception): String = when (e) {
         else -> "No se pudieron cargar los datos (error ${e.response.status.value})."
     }
     else -> "Sin conexión con el servidor. Desliza hacia abajo para reintentar."
+}
+
+/** Nota para mostrar donde va el error de lectura cuando los datos vienen de la caché. */
+fun avisoDeCache(guardadoEn: OffsetDateTime?): String? = guardadoEn?.let {
+    "Sin conexión. Mostrando datos guardados el ${fechaHoraCortaChile(it)}; pueden no estar al día."
 }
 
 private const val MSG_CONEXION = "No se pudo guardar. Revisa tu conexión e inténtalo de nuevo."

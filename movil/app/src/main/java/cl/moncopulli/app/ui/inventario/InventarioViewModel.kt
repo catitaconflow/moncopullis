@@ -7,6 +7,7 @@ import cl.moncopulli.app.data.ZONA_CHILE
 import cl.moncopulli.app.data.inventario.InventarioRepository
 import cl.moncopulli.app.data.inventario.MedicamentoStock
 import cl.moncopulli.app.ui.comun.LOCALE_CHILE
+import cl.moncopulli.app.ui.comun.avisoDeCache
 import cl.moncopulli.app.ui.comun.mensajeDeLectura
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
@@ -80,11 +81,11 @@ class InventarioViewModel @Inject constructor(
         _ui.update { it.copy(actualizando = deslizando, cargando = !deslizando && it.medicamentos.isEmpty()) }
         carga = viewModelScope.launch {
             try {
-                val lista = repo.listar()
+                val l = repo.listar()
                 _ui.update {
                     it.copy(
-                        cargando = false, actualizando = false, error = null,
-                        medicamentos = lista, hoy = LocalDate.now(ZONA_CHILE),
+                        cargando = false, actualizando = false, error = avisoDeCache(l.guardadoEn),
+                        medicamentos = l.datos, hoy = LocalDate.now(ZONA_CHILE),
                     )
                 }
             } catch (e: CancellationException) {
