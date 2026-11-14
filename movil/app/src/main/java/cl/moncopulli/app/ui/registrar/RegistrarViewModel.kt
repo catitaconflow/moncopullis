@@ -8,10 +8,12 @@ import cl.moncopulli.app.data.ZONA_CHILE
 import cl.moncopulli.app.data.animal.AnimalRepository
 import cl.moncopulli.app.data.animal.AnimalResumen
 import cl.moncopulli.app.data.dosis.DosisAplicada
-import cl.moncopulli.app.data.dosis.DosisRepository
 import cl.moncopulli.app.data.dosis.NuevoRegistro
+import cl.moncopulli.app.data.envio.EnviosRepository
+import cl.moncopulli.app.data.envio.ResultadoEnvio
 import cl.moncopulli.app.data.inventario.InventarioRepository
 import cl.moncopulli.app.data.inventario.MedicamentoStock
+import cl.moncopulli.app.ui.comun.cantidadConUnidad
 import cl.moncopulli.app.ui.comun.fechaHoraCortaChile
 import cl.moncopulli.app.ui.comun.mensajeDeEscritura
 import cl.moncopulli.app.ui.comun.mensajeDeLectura
@@ -66,7 +68,7 @@ data class RegistrarUi(
 
 @HiltViewModel
 class RegistrarViewModel @Inject constructor(
-    private val dosisRepo: DosisRepository,
+    private val envios: EnviosRepository,
     private val animalRepo: AnimalRepository,
     private val inventarioRepo: InventarioRepository,
     private val cambios: CambiosDatos,
@@ -80,6 +82,7 @@ class RegistrarViewModel @Inject constructor(
      * confirma. Así, si se corta la red después de que el servidor guardó, el reintento responde
      * 'ya_registrado' en vez de descontar stock dos veces. No se cambia al editar el formulario por
      * el mismo motivo: no sabemos si el intento anterior llegó.
+     * Si queda en la cola, el uuid pasa a ser de la fila del outbox y aquí se olvida.
      */
     private var uuidPendiente: UUID? = null
 
@@ -161,17 +164,25 @@ class RegistrarViewModel @Inject constructor(
         _ui.update { it.copy(enviando = true, error = null) }
         viewModelScope.launch {
             try {
-                val r = dosisRepo.registrarAplicacion(nuevo)
+                val m = u.medicamento!!
+                val resumen = "${m.nombre} · ${cantidadConUnidad(nuevo.cantidad.toDouble(), m.unidad)} · DIIO ${nuevo.diio}"
+                val r = envios.registrarAplicacion(nuevo, resumen)
                 uuidPendiente = null
+                val aviso = when (r) {
+                    is ResultadoEnvio.Enviado -> textoRegistrado(nuevo.diio, r.respuesta)
+                    ResultadoEnvio.EnCola ->
+                        "Sin conexión: el registro de ${nuevo.diio} quedó guardado en el teléfono y se enviará solo."
+                }
                 // Se conservan medicamento y "indicado por": lo habitual es tratar varios animales igual.
                 _ui.update {
                     it.copy(
                         enviando = false,
-                        aviso = textoRegistrado(nuevo.diio, r),
+                        aviso = aviso,
                         diio = "", cantidad = "", fecha = null, motivo = "", observaciones = "",
                     )
                 }
-                cambios.avisar() // Animales, Inventario y este mismo formulario recargan
+                // En cola no cambió nada en el servidor todavía: el worker avisará al enviarlo.
+                if (r is ResultadoEnvio.Enviado) cambios.avisar() // Animales, Inventario y este formulario recargan
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {

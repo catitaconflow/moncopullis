@@ -57,7 +57,10 @@ class DosisRepository @Inject constructor(
         if (fecha != null) put("p_fecha_aplicada", fecha.toString())
     }
 
-    /** Parámetros de fn_app_registrar_aplicacion. Los opcionales solo si tienen valor (DEFAULT NULL). */
+    /**
+     * Parámetros de fn_app_registrar_aplicacion (registro en terreno). Idempotente por p_uuid: si el
+     * servidor ya lo tiene responde 'ya_registrado' sin tocar el stock. Los opcionales solo si tienen valor.
+     */
     fun paramsRegistrar(r: NuevoRegistro): JsonObject = buildJsonObject {
         put("p_uuid", r.uuid.toString())
         put("p_diio", r.diio)
@@ -94,13 +97,6 @@ class DosisRepository @Inject constructor(
             },
         )
     }
-
-    /**
-     * Registro en terreno. Idempotente por [NuevoRegistro.uuid]: si el servidor ya lo tiene responde
-     * 'ya_registrado' sin tocar el stock. Los opcionales solo se envían si tienen valor (DEFAULT NULL).
-     */
-    suspend fun registrarAplicacion(r: NuevoRegistro): DosisAplicada =
-        llamarRpcApp(RPC_REGISTRAR, paramsRegistrar(r))
 
     private companion object {
         // medicamento:medicamento_id(...) igual que el panel (dosis también apunta a medicamento vía lote).

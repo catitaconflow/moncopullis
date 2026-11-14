@@ -5,6 +5,7 @@ import cl.moncopulli.app.data.ZONA_CHILE
 import cl.moncopulli.app.data.dosis.DosisAplicada
 import cl.moncopulli.app.data.dosis.DosisDelDia
 import cl.moncopulli.app.data.dosis.DosisRepository
+import cl.moncopulli.app.data.dosis.NuevoRegistro
 import cl.moncopulli.app.data.red.MonitorConexion
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
@@ -55,6 +56,23 @@ class EnviosRepository @Inject constructor(
             resumen = resumen,
             paramsDirecto = dosisRepo.paramsAplicar(dosis.id, fecha),
             paramsCola = dosisRepo.paramsAplicar(dosis.id, momento),
+        )
+    }
+
+    /**
+     * Registro en terreno. El id de la fila es el mismo p_uuid: si el intento directo llegó al
+     * servidor pero no la respuesta, el reenvío desde la cola responde 'ya_registrado' sin descontar
+     * stock dos veces. La fecha se fija igual que en [aplicarDosis].
+     */
+    suspend fun registrarAplicacion(r: NuevoRegistro, resumen: String): ResultadoEnvio {
+        val momento = r.fecha ?: OffsetDateTime.now(ZONA_CHILE)
+        return escribir(
+            tipo = TipoEnvio.REGISTRAR_APLICACION,
+            id = r.uuid.toString(),
+            dosisId = null,
+            resumen = resumen,
+            paramsDirecto = dosisRepo.paramsRegistrar(r),
+            paramsCola = dosisRepo.paramsRegistrar(r.copy(fecha = momento)),
         )
     }
 
