@@ -29,6 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -50,7 +52,9 @@ fun AppPrincipal(
     perfil: Perfil,
     onCerrarSesion: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: PrincipalViewModel = hiltViewModel(),
 ) {
+    val enLinea by viewModel.enLinea.collectAsStateWithLifecycle()
     val navController = rememberNavController()
     val entrada by navController.currentBackStackEntryAsState()
     val actual = Pestana.entries.firstOrNull { p ->
@@ -63,7 +67,7 @@ fun AppPrincipal(
             TopAppBar(
                 title = { Text(actual.etiqueta) },
                 actions = {
-                    // 4.4: aquí va el chip de conexión, antes del menú de cuenta.
+                    ChipConexion(enLinea)
                     MenuCuenta(perfil, onCerrarSesion)
                 },
             )

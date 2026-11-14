@@ -115,6 +115,7 @@ fun InicioScreen(
                                 ahora = ahora,
                                 hoy = hoy,
                                 habilitada = !ui.enviando,
+                                puedeOmitir = ui.enLinea,
                                 onAplicar = { viewModel.pedirAplicar(d) },
                                 onOmitir = { viewModel.pedirOmitir(d) },
                             )
@@ -140,6 +141,7 @@ fun InicioScreen(
             TipoAccion.OMITIR -> DialogoOmitir(
                 d = a.dosis,
                 enviando = ui.enviando,
+                enLinea = ui.enLinea,
                 error = ui.errorAccion,
                 onConfirmar = viewModel::confirmarOmitir,
                 onCancelar = viewModel::cancelarAccion,
@@ -164,6 +166,7 @@ private fun TarjetaDosis(
     ahora: OffsetDateTime,
     hoy: LocalDate,
     habilitada: Boolean,
+    puedeOmitir: Boolean,
     onAplicar: () -> Unit,
     onOmitir: () -> Unit,
 ) {
@@ -217,7 +220,7 @@ private fun TarjetaDosis(
                 modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
             ) {
-                TextButton(onClick = onOmitir, enabled = habilitada) { Text("Omitir") }
+                TextButton(onClick = onOmitir, enabled = habilitada && puedeOmitir) { Text("Omitir") }
                 Button(onClick = onAplicar, enabled = habilitada) { Text("Aplicar") }
             }
         }
@@ -266,6 +269,7 @@ private fun DialogoAplicar(
 private fun DialogoOmitir(
     d: DosisDelDia,
     enviando: Boolean,
+    enLinea: Boolean,
     error: String?,
     onConfirmar: (String) -> Unit,
     onCancelar: () -> Unit,
@@ -289,11 +293,18 @@ private fun DialogoOmitir(
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
                     modifier = Modifier.fillMaxWidth(),
                 )
+                if (!enLinea) {
+                    Text(
+                        "Sin conexión: omitir solo funciona con internet.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
                 error?.let { Text(it, color = Urgente) }
             }
         },
         confirmButton = {
-            Button(onClick = { onConfirmar(motivo) }, enabled = !enviando && motivo.isNotBlank()) {
+            Button(onClick = { onConfirmar(motivo) }, enabled = !enviando && enLinea && motivo.isNotBlank()) {
                 if (enviando) CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
                 else Text("Omitir dosis")
             }

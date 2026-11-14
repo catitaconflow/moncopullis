@@ -7,6 +7,7 @@ import cl.moncopulli.app.data.CambiosDatos
 import cl.moncopulli.app.data.dosis.DosisAplicada
 import cl.moncopulli.app.data.dosis.DosisDelDia
 import cl.moncopulli.app.data.dosis.DosisRepository
+import cl.moncopulli.app.data.red.MonitorConexion
 import cl.moncopulli.app.ui.comun.fechaHoraCortaChile
 import cl.moncopulli.app.ui.comun.mensajeDeEscritura
 import cl.moncopulli.app.ui.comun.mensajeDeLectura
@@ -36,12 +37,14 @@ data class InicioUi(
     val enviando: Boolean = false,
     val errorAccion: String? = null,   // se muestra dentro del diálogo
     val aviso: String? = null,         // se muestra una vez en un Snackbar
+    val enLinea: Boolean = true,       // omitir solo con conexión (no es idempotente)
 )
 
 @HiltViewModel
 class InicioViewModel @Inject constructor(
     private val repo: DosisRepository,
     private val cambios: CambiosDatos,
+    monitor: MonitorConexion,
 ) : ViewModel() {
 
     private val _ui = MutableStateFlow(InicioUi())
@@ -51,6 +54,7 @@ class InicioViewModel @Inject constructor(
 
     init {
         cargar(deslizando = false)
+        viewModelScope.launch { monitor.enLinea.collect { v -> _ui.update { it.copy(enLinea = v) } } }
     }
 
     fun actualizar() = cargar(deslizando = true)
@@ -109,6 +113,11 @@ class InicioViewModel @Inject constructor(
 
     fun confirmarOmitir(motivo: String) {
         val a = _ui.value.accion?.takeIf { it.tipo == TipoAccion.OMITIR } ?: return
+        // fn_omitir_dosis no es idempotente: no se guarda para después ni se reintenta solo.
+        if (!_ui.value.enLinea) {
+            _ui.update { it.copy(errorAccion = MSG_OMITIR_SIN_RED) }
+            return
+        }
         if (motivo.isBlank()) {
             _ui.update { it.copy(errorAccion = "Indica por qué se omite la dosis.") }
             return
@@ -156,5 +165,6 @@ class InicioViewModel @Inject constructor(
 
     private companion object {
         const val TAG = "MoncopulliEscritura"
+        const val MSG_OMITIR_SIN_RED = "Para omitir una dosis necesitas conexión."
     }
 }
