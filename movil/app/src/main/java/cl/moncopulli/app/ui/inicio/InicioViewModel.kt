@@ -7,7 +7,10 @@ import cl.moncopulli.app.data.CambiosDatos
 import cl.moncopulli.app.data.dosis.DosisAplicada
 import cl.moncopulli.app.data.dosis.DosisDelDia
 import cl.moncopulli.app.data.dosis.DosisRepository
+import cl.moncopulli.app.data.envio.EnviosRepository
+import cl.moncopulli.app.data.envio.ResultadoEnvio
 import cl.moncopulli.app.data.red.MonitorConexion
+import cl.moncopulli.app.ui.comun.cantidadConUnidad
 import cl.moncopulli.app.ui.comun.fechaHoraCortaChile
 import cl.moncopulli.app.ui.comun.mensajeDeEscritura
 import cl.moncopulli.app.ui.comun.mensajeDeLectura
@@ -40,9 +43,13 @@ data class InicioUi(
     val enLinea: Boolean = true,       // omitir solo con conexión (no es idempotente)
 )
 
+/** Resultado de una acción: el texto del Snackbar y si hay que avisar a las demás pantallas. */
+private data class Hecho(val aviso: String, val avisarCambio: Boolean = true)
+
 @HiltViewModel
 class InicioViewModel @Inject constructor(
     private val repo: DosisRepository,
+    private val envios: EnviosRepository,
     private val cambios: CambiosDatos,
     monitor: MonitorConexion,
 ) : ViewModel() {
@@ -52,21 +59,43 @@ class InicioViewModel @Inject constructor(
 
     private var carga: Job? = null
 
+    /** Última lista del servidor, sin filtrar. */
+    private var delServidor: List<DosisDelDia> = emptyList()
+
+    /** Dosis aplicadas desde este teléfono (por enviar o ya enviadas): se ocultan aunque el servidor aún diga PROGRAMADA. */
+    private var aplicadasAqui: Set<Long> = emptySet()
+
+    private fun visibles() = delServidor.filterNot { it.id in aplicadasAqui }
+
     init {
         cargar(deslizando = false)
         viewModelScope.launch { monitor.enLinea.collect { v -> _ui.update { it.copy(enLinea = v) } } }
+        viewModelScope.launch {
+            envios.dosisAplicadasAqui.collect { ids ->
+                aplicadasAqui = ids
+                _ui.update { it.copy(dosis = visibles()) }
+            }
+        }
+        // Alguien escribió (esta pantalla, otra o el envío en segundo plano): recargar.
+        viewModelScope.launch { cambios.cambios.collect { recargarPorCambio() } }
     }
 
     fun actualizar() = cargar(deslizando = true)
+
+    /** Cancela una carga en curso (pudo empezar antes de la escritura) y carga de nuevo. */
+    private fun recargarPorCambio() {
+        carga?.cancel()
+        cargar(deslizando = false)
+    }
 
     private fun cargar(deslizando: Boolean) {
         if (carga?.isActive == true) return
         _ui.update { it.copy(actualizando = deslizando, cargando = !deslizando && it.dosis.isEmpty()) }
         carga = viewModelScope.launch {
             try {
-                val lista = repo.programadasHastaHoy()
+                delServidor = repo.programadasHastaHoy()
                 // copy (no InicioUi nuevo) para no perder el diálogo ni el aviso abiertos.
-                _ui.update { it.copy(cargando = false, actualizando = false, dosis = lista, error = null) }
+                _ui.update { it.copy(cargando = false, actualizando = false, dosis = visibles(), error = null) }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -108,7 +137,13 @@ class InicioViewModel @Inject constructor(
             _ui.update { it.copy(errorAccion = "La fecha de aplicación no puede ser futura.") }
             return
         }
-        enviar(a.dosis) { textoAplicada(repo.aplicar(a.dosis.id, fecha)) }
+        enviar(a.dosis) {
+            when (val r = envios.aplicarDosis(a.dosis, fecha, resumen(a.dosis))) {
+                is ResultadoEnvio.Enviado -> Hecho(textoAplicada(r.respuesta))
+                // Nada cambió en el servidor todavía: no tiene sentido que las pantallas recarguen.
+                ResultadoEnvio.EnCola -> Hecho(MSG_EN_COLA, avisarCambio = false)
+            }
+        }
     }
 
     fun confirmarOmitir(motivo: String) {
@@ -124,29 +159,22 @@ class InicioViewModel @Inject constructor(
         }
         enviar(a.dosis) {
             repo.omitir(a.dosis.id, motivo)
-            "Dosis omitida."
+            Hecho("Dosis omitida.")
         }
     }
 
     fun avisoMostrado() = _ui.update { it.copy(aviso = null) }
 
-    /** Ejecuta la RPC una sola vez a la vez; si sale bien quita la dosis de la lista y recarga. */
-    private fun enviar(d: DosisDelDia, operacion: suspend () -> String) {
+    /** Ejecuta la acción una sola vez a la vez; si sale bien quita la dosis de la lista. */
+    private fun enviar(d: DosisDelDia, operacion: suspend () -> Hecho) {
         if (_ui.value.enviando) return
         _ui.update { it.copy(enviando = true, errorAccion = null) }
         viewModelScope.launch {
             try {
-                val aviso = operacion()
-                _ui.update { u ->
-                    u.copy(
-                        enviando = false,
-                        accion = null,
-                        aviso = aviso,
-                        dosis = u.dosis.filterNot { it.id == d.id },
-                    )
-                }
-                cargar(deslizando = false)
-                cambios.avisar() // Animales (resguardo) e Inventario (stock) recargan
+                val hecho = operacion()
+                delServidor = delServidor.filterNot { it.id == d.id }
+                _ui.update { it.copy(enviando = false, accion = null, aviso = hecho.aviso, dosis = visibles()) }
+                if (hecho.avisarCambio) cambios.avisar() // Inicio, Animales e Inventario recargan
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -155,6 +183,9 @@ class InicioViewModel @Inject constructor(
             }
         }
     }
+
+    private fun resumen(d: DosisDelDia) =
+        "${d.medicamento} · ${cantidadConUnidad(d.cantidad, d.unidad)} · DIIO ${d.diio ?: "sin DIIO"}"
 
     private fun textoAplicada(r: DosisAplicada): String {
         val base = if (r.yaRegistrada) "Esta dosis ya estaba aplicada por ti" else "Dosis aplicada"
@@ -166,5 +197,6 @@ class InicioViewModel @Inject constructor(
     private companion object {
         const val TAG = "MoncopulliEscritura"
         const val MSG_OMITIR_SIN_RED = "Para omitir una dosis necesitas conexión."
+        const val MSG_EN_COLA = "Sin conexión: la aplicación quedó guardada en el teléfono y se enviará sola."
     }
 }

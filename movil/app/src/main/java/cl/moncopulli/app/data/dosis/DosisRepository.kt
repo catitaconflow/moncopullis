@@ -13,8 +13,13 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+
+/** RPC idempotentes de la 0014 (las únicas que pueden esperar en el outbox). */
+const val RPC_APLICAR = "fn_app_aplicar_dosis"
+const val RPC_REGISTRAR = "fn_app_registrar_aplicacion"
 
 @Singleton
 class DosisRepository @Inject constructor(
@@ -43,19 +48,34 @@ class DosisRepository @Inject constructor(
     }
 
     /**
-     * Aplica una dosis PROGRAMADA. [fecha] = null → now() en el servidor; si no, la hora elegida
-     * (el servidor rechaza fechas más de 5 min en el futuro).
-     * El servidor elige el lote por FEFO. Idempotente si la aplicó el mismo usuario.
-     * Lanza PostgrestRestException (P0001/42501) o un error de red.
+     * Parámetros de fn_app_aplicar_dosis. [fecha] = null → now() en el servidor; si no, la hora
+     * elegida (el servidor rechaza fechas más de 5 min en el futuro). El lote lo elige el servidor (FEFO).
      */
-    suspend fun aplicar(dosisId: Long, fecha: OffsetDateTime? = null): DosisAplicada {
-        val params = buildJsonObject {
-            put("p_dosis_id", dosisId)
-            // ISO 8601 con desfase, p. ej. "2026-11-14T08:30-03:00": Postgres lo lee como timestamptz.
-            if (fecha != null) put("p_fecha_aplicada", fecha.toString())
-        }
+    fun paramsAplicar(dosisId: Long, fecha: OffsetDateTime?): JsonObject = buildJsonObject {
+        put("p_dosis_id", dosisId)
+        // ISO 8601 con desfase, p. ej. "2026-11-14T08:30-03:00": Postgres lo lee como timestamptz.
+        if (fecha != null) put("p_fecha_aplicada", fecha.toString())
+    }
+
+    /** Parámetros de fn_app_registrar_aplicacion. Los opcionales solo si tienen valor (DEFAULT NULL). */
+    fun paramsRegistrar(r: NuevoRegistro): JsonObject = buildJsonObject {
+        put("p_uuid", r.uuid.toString())
+        put("p_diio", r.diio)
+        put("p_medicamento_id", r.medicamentoId)
+        put("p_cantidad", r.cantidad)
+        put("p_indicado_por", r.indicadoPor.trim())
+        r.fecha?.let { put("p_fecha_aplicada", it.toString()) }
+        r.motivo?.trim()?.takeIf { it.isNotEmpty() }?.let { put("p_motivo", it) }
+        r.observaciones?.trim()?.takeIf { it.isNotEmpty() }?.let { put("p_observaciones", it) }
+    }
+
+    /**
+     * Llama a una RPC fn_app_* (ambas devuelven el mismo jsonb). La usan el envío directo y el worker.
+     * Lanza PostgrestRestException (respuesta con error) o HttpRequestException (sin respuesta).
+     */
+    suspend fun llamarRpcApp(funcion: String, params: JsonObject): DosisAplicada {
         val r = supabase.postgrest
-            .rpc("fn_app_aplicar_dosis", params)
+            .rpc(funcion, params)
             .decodeAs<RespuestaApp>()
         return DosisAplicada(
             yaRegistrada = r.estado == "ya_registrado",
@@ -79,26 +99,8 @@ class DosisRepository @Inject constructor(
      * Registro en terreno. Idempotente por [NuevoRegistro.uuid]: si el servidor ya lo tiene responde
      * 'ya_registrado' sin tocar el stock. Los opcionales solo se envían si tienen valor (DEFAULT NULL).
      */
-    suspend fun registrarAplicacion(r: NuevoRegistro): DosisAplicada {
-        val params = buildJsonObject {
-            put("p_uuid", r.uuid.toString())
-            put("p_diio", r.diio)
-            put("p_medicamento_id", r.medicamentoId)
-            put("p_cantidad", r.cantidad)
-            put("p_indicado_por", r.indicadoPor.trim())
-            r.fecha?.let { put("p_fecha_aplicada", it.toString()) }
-            r.motivo?.trim()?.takeIf { it.isNotEmpty() }?.let { put("p_motivo", it) }
-            r.observaciones?.trim()?.takeIf { it.isNotEmpty() }?.let { put("p_observaciones", it) }
-        }
-        val resp = supabase.postgrest
-            .rpc("fn_app_registrar_aplicacion", params)
-            .decodeAs<RespuestaApp>()
-        return DosisAplicada(
-            yaRegistrada = resp.estado == "ya_registrado",
-            lote = resp.lote,
-            resguardoHasta = resp.resguardoHasta?.let(OffsetDateTime::parse),
-        )
-    }
+    suspend fun registrarAplicacion(r: NuevoRegistro): DosisAplicada =
+        llamarRpcApp(RPC_REGISTRAR, paramsRegistrar(r))
 
     private companion object {
         // medicamento:medicamento_id(...) igual que el panel (dosis también apunta a medicamento vía lote).
