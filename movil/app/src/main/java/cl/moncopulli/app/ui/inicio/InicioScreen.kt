@@ -43,6 +43,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cl.moncopulli.app.data.ZONA_CHILE
 import cl.moncopulli.app.data.dosis.DosisDelDia
+import cl.moncopulli.app.ui.comun.CampoFechaHora
 import cl.moncopulli.app.ui.comun.cantidadConUnidad
 import cl.moncopulli.app.ui.comun.diaCortoChile
 import cl.moncopulli.app.ui.comun.etiquetaCategoria
@@ -129,6 +130,8 @@ fun InicioScreen(
         when (a.tipo) {
             TipoAccion.APLICAR -> DialogoAplicar(
                 d = a.dosis,
+                fecha = ui.fechaAplicacion,
+                onCambiarFecha = viewModel::elegirFechaAplicacion,
                 enviando = ui.enviando,
                 error = ui.errorAccion,
                 onConfirmar = viewModel::confirmarAplicar,
@@ -224,6 +227,8 @@ private fun TarjetaDosis(
 @Composable
 private fun DialogoAplicar(
     d: DosisDelDia,
+    fecha: OffsetDateTime?,
+    onCambiarFecha: (OffsetDateTime?) -> Unit,
     enviando: Boolean,
     error: String?,
     onConfirmar: () -> Unit,
@@ -236,8 +241,9 @@ private fun DialogoAplicar(
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("${d.medicamento} · ${cantidadConUnidad(d.cantidad, d.unidad)}")
                 Text("Animal: ${d.diio ?: "Sin DIIO"}")
+                CampoFechaHora(valor = fecha, onCambio = onCambiarFecha, enabled = !enviando)
                 Text(
-                    "Se registra con la hora actual y se descuenta del lote que vence primero.",
+                    "Se descuenta del lote vigente que vence primero.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

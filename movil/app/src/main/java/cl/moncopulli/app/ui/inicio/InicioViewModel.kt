@@ -11,6 +11,7 @@ import cl.moncopulli.app.ui.comun.fechaHoraCortaChile
 import cl.moncopulli.app.ui.comun.mensajeDeEscritura
 import cl.moncopulli.app.ui.comun.mensajeDeLectura
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.OffsetDateTime
 import javax.inject.Inject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
@@ -31,6 +32,7 @@ data class InicioUi(
     val dosis: List<DosisDelDia> = emptyList(),
     val error: String? = null,
     val accion: AccionDosis? = null,
+    val fechaAplicacion: OffsetDateTime? = null, // null = ahora
     val enviando: Boolean = false,
     val errorAccion: String? = null,   // se muestra dentro del diálogo
     val aviso: String? = null,         // se muestra una vez en un Snackbar
@@ -77,7 +79,7 @@ class InicioViewModel @Inject constructor(
 
     private fun abrir(a: AccionDosis) {
         if (_ui.value.enviando) return
-        _ui.update { it.copy(accion = a, errorAccion = null) }
+        _ui.update { it.copy(accion = a, errorAccion = null, fechaAplicacion = null) }
     }
 
     /** Cerrar el diálogo. Mientras se envía no se cierra: así no quedan dudas de si se guardó. */
@@ -89,9 +91,20 @@ class InicioViewModel @Inject constructor(
         if (estado.errorAccion != null) cargar(deslizando = false)
     }
 
+    fun elegirFechaAplicacion(f: OffsetDateTime?) {
+        if (_ui.value.enviando) return
+        _ui.update { it.copy(fechaAplicacion = f, errorAccion = null) }
+    }
+
     fun confirmarAplicar() {
         val a = _ui.value.accion?.takeIf { it.tipo == TipoAccion.APLICAR } ?: return
-        enviar(a.dosis) { textoAplicada(repo.aplicar(a.dosis.id)) }
+        val fecha = _ui.value.fechaAplicacion
+        // Misma regla que el servidor y el panel: hasta 5 minutos en el futuro (relojes desfasados).
+        if (fecha != null && fecha.isAfter(OffsetDateTime.now().plusMinutes(5))) {
+            _ui.update { it.copy(errorAccion = "La fecha de aplicación no puede ser futura.") }
+            return
+        }
+        enviar(a.dosis) { textoAplicada(repo.aplicar(a.dosis.id, fecha)) }
     }
 
     fun confirmarOmitir(motivo: String) {

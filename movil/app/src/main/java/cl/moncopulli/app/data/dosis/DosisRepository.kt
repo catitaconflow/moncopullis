@@ -43,13 +43,19 @@ class DosisRepository @Inject constructor(
     }
 
     /**
-     * Aplica una dosis PROGRAMADA ahora (p_fecha_aplicada = null → now() en el servidor).
+     * Aplica una dosis PROGRAMADA. [fecha] = null → now() en el servidor; si no, la hora elegida
+     * (el servidor rechaza fechas más de 5 min en el futuro).
      * El servidor elige el lote por FEFO. Idempotente si la aplicó el mismo usuario.
      * Lanza PostgrestRestException (P0001/42501) o un error de red.
      */
-    suspend fun aplicar(dosisId: Long): DosisAplicada {
+    suspend fun aplicar(dosisId: Long, fecha: OffsetDateTime? = null): DosisAplicada {
+        val params = buildJsonObject {
+            put("p_dosis_id", dosisId)
+            // ISO 8601 con desfase, p. ej. "2026-11-14T08:30-03:00": Postgres lo lee como timestamptz.
+            if (fecha != null) put("p_fecha_aplicada", fecha.toString())
+        }
         val r = supabase.postgrest
-            .rpc("fn_app_aplicar_dosis", buildJsonObject { put("p_dosis_id", dosisId) })
+            .rpc("fn_app_aplicar_dosis", params)
             .decodeAs<RespuestaApp>()
         return DosisAplicada(
             yaRegistrada = r.estado == "ya_registrado",
