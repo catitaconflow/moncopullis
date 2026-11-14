@@ -75,6 +75,31 @@ class DosisRepository @Inject constructor(
         )
     }
 
+    /**
+     * Registro en terreno. Idempotente por [NuevoRegistro.uuid]: si el servidor ya lo tiene responde
+     * 'ya_registrado' sin tocar el stock. Los opcionales solo se envían si tienen valor (DEFAULT NULL).
+     */
+    suspend fun registrarAplicacion(r: NuevoRegistro): DosisAplicada {
+        val params = buildJsonObject {
+            put("p_uuid", r.uuid.toString())
+            put("p_diio", r.diio)
+            put("p_medicamento_id", r.medicamentoId)
+            put("p_cantidad", r.cantidad)
+            put("p_indicado_por", r.indicadoPor.trim())
+            r.fecha?.let { put("p_fecha_aplicada", it.toString()) }
+            r.motivo?.trim()?.takeIf { it.isNotEmpty() }?.let { put("p_motivo", it) }
+            r.observaciones?.trim()?.takeIf { it.isNotEmpty() }?.let { put("p_observaciones", it) }
+        }
+        val resp = supabase.postgrest
+            .rpc("fn_app_registrar_aplicacion", params)
+            .decodeAs<RespuestaApp>()
+        return DosisAplicada(
+            yaRegistrada = resp.estado == "ya_registrado",
+            lote = resp.lote,
+            resguardoHasta = resp.resguardoHasta?.let(OffsetDateTime::parse),
+        )
+    }
+
     private companion object {
         // medicamento:medicamento_id(...) igual que el panel (dosis también apunta a medicamento vía lote).
         // !inner: sin él, el filtro sobre tratamiento no descarta la dosis, solo deja tratamiento en null.
