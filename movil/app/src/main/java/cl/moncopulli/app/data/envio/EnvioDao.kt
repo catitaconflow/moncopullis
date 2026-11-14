@@ -43,4 +43,29 @@ interface EnvioDao {
      */
     @Query("SELECT DISTINCT dosisId FROM envio WHERE dosisId IS NOT NULL AND estado IN ('PENDIENTE', 'ENVIADO')")
     fun observarDosisAplicadasAqui(): Flow<List<Long>>
+
+    // --- Actividad ---
+
+    @Query("SELECT * FROM envio ORDER BY creadoEn DESC LIMIT 300")
+    fun observarTodos(): Flow<List<EnvioEntity>>
+
+    @Query("SELECT COUNT(*) FROM envio WHERE estado = 'PENDIENTE'")
+    fun observarCantidadPendientes(): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM envio WHERE estado = 'RECHAZADO'")
+    fun observarCantidadRechazados(): Flow<Int>
+
+    /** Solo una RECHAZADO vuelve a la cola (mismos parámetros: el reenvío sigue siendo idempotente). */
+    @Query(
+        """UPDATE envio SET estado = 'PENDIENTE', ultimoError = NULL, actualizadoEn = :ahora
+           WHERE id = :id AND estado = 'RECHAZADO'"""
+    )
+    suspend fun volverAPendiente(id: String, ahora: Long): Int
+
+    /** Solo se descartan RECHAZADO: una PENDIENTE podría ser una aplicación real aún no registrada. */
+    @Query("DELETE FROM envio WHERE id = :id AND estado = 'RECHAZADO'")
+    suspend fun descartarRechazado(id: String): Int
+
+    @Query("DELETE FROM envio WHERE estado = 'ENVIADO' AND actualizadoEn < :limite")
+    suspend fun borrarEnviadosAntesDe(limite: Long)
 }

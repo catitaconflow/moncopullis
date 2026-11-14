@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,6 +30,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -40,7 +44,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cl.moncopulli.app.R
 import cl.moncopulli.app.data.auth.Perfil
-import cl.moncopulli.app.ui.comun.PantallaProximamente
+import cl.moncopulli.app.ui.actividad.ActividadScreen
 import cl.moncopulli.app.ui.inicio.InicioScreen
 import cl.moncopulli.app.ui.animales.AnimalesScreen
 import cl.moncopulli.app.ui.inventario.InventarioScreen
@@ -55,11 +59,22 @@ fun AppPrincipal(
     viewModel: PrincipalViewModel = hiltViewModel(),
 ) {
     val enLinea by viewModel.enLinea.collectAsStateWithLifecycle()
+    val pendientes by viewModel.pendientes.collectAsStateWithLifecycle()
+    val rechazados by viewModel.rechazados.collectAsStateWithLifecycle()
     val navController = rememberNavController()
     val entrada by navController.currentBackStackEntryAsState()
     val actual = Pestana.entries.firstOrNull { p ->
         entrada?.destination?.hierarchy?.any { it.hasRoute(p.ruta::class) } == true
     } ?: Pestana.INICIO
+
+    fun irA(p: Pestana) {
+        navController.navigate(p.ruta) {
+            // Una sola copia de cada pestaña; "atrás" vuelve a Inicio y luego sale.
+            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
 
     Scaffold(
         modifier = modifier,
@@ -67,20 +82,13 @@ fun AppPrincipal(
             TopAppBar(
                 title = { Text(actual.etiqueta) },
                 actions = {
-                    ChipConexion(enLinea)
+                    ChipConexion(enLinea, pendientes, onClick = { irA(Pestana.ACTIVIDAD) })
                     MenuCuenta(perfil, onCerrarSesion)
                 },
             )
         },
         bottomBar = {
-            BarraInferior(actual) { p ->
-                navController.navigate(p.ruta) {
-                    // Una sola copia de cada pestaña; "atrás" vuelve a Inicio y luego sale.
-                    popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            }
+            BarraInferior(actual, pendientes, rechazados, ::irA)
         },
     ) { padding ->
         NavHost(
@@ -92,15 +100,13 @@ fun AppPrincipal(
             composable<RutaAnimales> { AnimalesScreen() }
             composable<RutaRegistrar> { RegistrarScreen() }
             composable<RutaInventario> { InventarioScreen() }
-            composable<RutaActividad> {
-                PantallaProximamente("Próximamente", "Aquí verás lo enviado y lo pendiente de enviar.")
-            }
+            composable<RutaActividad> { ActividadScreen() }
         }
     }
 }
 
 @Composable
-private fun BarraInferior(actual: Pestana, onElegir: (Pestana) -> Unit) {
+private fun BarraInferior(actual: Pestana, pendientes: Int, rechazados: Int, onElegir: (Pestana) -> Unit) {
     NavigationBar {
         Pestana.entries.forEach { p ->
             val esRegistrar = p == Pestana.REGISTRAR
@@ -122,6 +128,8 @@ private fun BarraInferior(actual: Pestana, onElegir: (Pestana) -> Unit) {
                                 tint = MaterialTheme.colorScheme.onPrimary,
                             )
                         }
+                    } else if (p == Pestana.ACTIVIDAD && pendientes + rechazados > 0) {
+                        IconoConInsignia(p, pendientes, rechazados)
                     } else {
                         Icon(painterResource(p.icono), contentDescription = null)
                     }
@@ -134,6 +142,32 @@ private fun BarraInferior(actual: Pestana, onElegir: (Pestana) -> Unit) {
                 },
             )
         }
+    }
+}
+
+/**
+ * Insignia de Actividad: pendientes + rechazados. Roja si hay rechazados (una aplicación real que no
+ * quedó registrada requiere acción); verde si solo hay pendientes (se envían solos).
+ */
+@Composable
+private fun IconoConInsignia(p: Pestana, pendientes: Int, rechazados: Int) {
+    val total = pendientes + rechazados
+    val hayRechazos = rechazados > 0
+    BadgedBox(
+        badge = {
+            Badge(
+                containerColor = if (hayRechazos) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                contentColor = if (hayRechazos) MaterialTheme.colorScheme.onError else MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier.semantics {
+                    contentDescription = buildString {
+                        if (pendientes > 0) append("$pendientes por enviar. ")
+                        if (rechazados > 0) append("$rechazados rechazados.")
+                    }
+                },
+            ) { Text(if (total > 99) "99+" else "$total") }
+        },
+    ) {
+        Icon(painterResource(p.icono), contentDescription = null)
     }
 }
 

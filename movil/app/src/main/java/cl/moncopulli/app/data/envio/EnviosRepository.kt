@@ -10,6 +10,7 @@ import cl.moncopulli.app.data.red.MonitorConexion
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import java.time.OffsetDateTime
+import java.util.concurrent.TimeUnit
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -41,6 +42,28 @@ class EnviosRepository @Inject constructor(
     private val programador: ProgramadorEnvios,
 ) {
     val dosisAplicadasAqui: Flow<Set<Long>> = dao.observarDosisAplicadasAqui().map { it.toSet() }
+
+    // --- Actividad ---
+
+    val actividad: Flow<List<Envio>> = dao.observarTodos().map { filas -> filas.map { it.aModelo() } }
+    val cantidadPendientes: Flow<Int> = dao.observarCantidadPendientes()
+    val cantidadRechazados: Flow<Int> = dao.observarCantidadRechazados()
+
+    /** "Enviar ahora": programa de nuevo (REPLACE reinicia la espera entre reintentos). */
+    fun enviarAhora() = programador.programar()
+
+    suspend fun volverAEnviar(id: String) {
+        if (dao.volverAPendiente(id, System.currentTimeMillis()) > 0) programador.programar()
+    }
+
+    suspend fun descartar(id: String) {
+        dao.descartarRechazado(id)
+    }
+
+    /** Las enviadas solo sirven de historial: se guardan 7 días. */
+    suspend fun limpiarEnviadosAntiguos() {
+        dao.borrarEnviadosAntesDe(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(DIAS_HISTORIAL))
+    }
 
     /**
      * [fecha] = null significa "ahora". Para el intento directo se envía tal cual (el servidor usa su
@@ -122,5 +145,6 @@ class EnviosRepository @Inject constructor(
 
     private companion object {
         const val TAG = "MoncopulliEscritura"
+        const val DIAS_HISTORIAL = 7L
     }
 }

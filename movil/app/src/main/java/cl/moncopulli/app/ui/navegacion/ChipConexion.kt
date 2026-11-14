@@ -2,6 +2,7 @@ package cl.moncopulli.app.ui.navegacion
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,25 +15,35 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 
 /**
- * Chip de la TopAppBar: punto verde "En línea" o punto gris "Sin conexión".
+ * Chip de la TopAppBar. El punto indica la red (verde = en línea, gris = sin conexión) y el texto
+ * muestra los pendientes si hay ("3 por enviar"). Tocarlo lleva a Actividad.
  * Sin rojo ni ámbar: estar sin red es normal en terreno, no es urgente.
  */
 @Composable
-fun ChipConexion(enLinea: Boolean, modifier: Modifier = Modifier) {
-    val texto = if (enLinea) "En línea" else "Sin conexión"
+fun ChipConexion(enLinea: Boolean, pendientes: Int, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val red = if (enLinea) "En línea" else "Sin conexión"
+    val texto = if (pendientes > 0) "$pendientes por enviar" else red
+    val descripcion = if (pendientes > 0) "$red. $pendientes por enviar" else red
     val punto = if (enLinea) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
     Row(
         modifier = modifier
+            .clip(CircleShape)
+            .clickable(onClickLabel = "Ver actividad", onClick = onClick)
             .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
             .padding(horizontal = 10.dp, vertical = 4.dp)
             // TalkBack anuncia el cambio sin que el usuario tenga que tocar el chip.
-            .semantics(mergeDescendants = true) { liveRegion = LiveRegionMode.Polite },
+            .semantics(mergeDescendants = true) {
+                liveRegion = LiveRegionMode.Polite
+                contentDescription = descripcion
+            },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(Modifier.size(8.dp).background(punto, CircleShape))
