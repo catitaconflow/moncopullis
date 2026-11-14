@@ -2,6 +2,7 @@ package cl.moncopulli.app.ui.inventario
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cl.moncopulli.app.data.CambiosDatos
 import cl.moncopulli.app.data.ZONA_CHILE
 import cl.moncopulli.app.data.inventario.InventarioRepository
 import cl.moncopulli.app.data.inventario.MedicamentoStock
@@ -44,6 +45,7 @@ data class InventarioUi(
 @HiltViewModel
 class InventarioViewModel @Inject constructor(
     private val repo: InventarioRepository,
+    cambios: CambiosDatos,
 ) : ViewModel() {
 
     private val _ui = MutableStateFlow(InventarioUi())
@@ -53,6 +55,8 @@ class InventarioViewModel @Inject constructor(
 
     init {
         cargar(deslizando = false)
+        // Otra pantalla escribió (p. ej. se aplicó una dosis): recargar aunque esta pestaña no esté visible.
+        viewModelScope.launch { cambios.cambios.collect { recargarPorCambio() } }
     }
 
     fun actualizar() = cargar(deslizando = true)
@@ -63,6 +67,12 @@ class InventarioViewModel @Inject constructor(
 
     fun alternarBajoMinimo() {
         _ui.update { it.copy(soloBajoMinimo = !it.soloBajoMinimo) }
+    }
+
+    /** Cancela una carga en curso (pudo empezar antes de la escritura) y carga de nuevo. */
+    private fun recargarPorCambio() {
+        carga?.cancel()
+        cargar(deslizando = false)
     }
 
     private fun cargar(deslizando: Boolean) {

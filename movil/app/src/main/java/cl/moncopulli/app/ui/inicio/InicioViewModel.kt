@@ -3,6 +3,7 @@ package cl.moncopulli.app.ui.inicio
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cl.moncopulli.app.data.CambiosDatos
 import cl.moncopulli.app.data.dosis.DosisAplicada
 import cl.moncopulli.app.data.dosis.DosisDelDia
 import cl.moncopulli.app.data.dosis.DosisRepository
@@ -38,6 +39,7 @@ data class InicioUi(
 @HiltViewModel
 class InicioViewModel @Inject constructor(
     private val repo: DosisRepository,
+    private val cambios: CambiosDatos,
 ) : ViewModel() {
 
     private val _ui = MutableStateFlow(InicioUi())
@@ -122,6 +124,7 @@ class InicioViewModel @Inject constructor(
                     )
                 }
                 cargar(deslizando = false)
+                cambios.avisar() // Animales (resguardo) e Inventario (stock) recargan
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {

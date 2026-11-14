@@ -2,6 +2,7 @@ package cl.moncopulli.app.ui.animales
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cl.moncopulli.app.data.CambiosDatos
 import cl.moncopulli.app.data.animal.AnimalRepository
 import cl.moncopulli.app.data.animal.AnimalResumen
 import cl.moncopulli.app.ui.comun.mensajeDeLectura
@@ -41,6 +42,7 @@ data class AnimalesUi(
 @HiltViewModel
 class AnimalesViewModel @Inject constructor(
     private val repo: AnimalRepository,
+    cambios: CambiosDatos,
 ) : ViewModel() {
 
     private val _ui = MutableStateFlow(AnimalesUi())
@@ -50,6 +52,8 @@ class AnimalesViewModel @Inject constructor(
 
     init {
         cargar(deslizando = false)
+        // Otra pantalla escribió (p. ej. se aplicó una dosis): recargar aunque esta pestaña no esté visible.
+        viewModelScope.launch { cambios.cambios.collect { recargarPorCambio() } }
     }
 
     fun actualizar() = cargar(deslizando = true)
@@ -61,6 +65,12 @@ class AnimalesViewModel @Inject constructor(
 
     fun alternarResguardo() {
         _ui.update { it.copy(soloResguardo = !it.soloResguardo) }
+    }
+
+    /** Cancela una carga en curso (pudo empezar antes de la escritura) y carga de nuevo. */
+    private fun recargarPorCambio() {
+        carga?.cancel()
+        cargar(deslizando = false)
     }
 
     private fun cargar(deslizando: Boolean) {
