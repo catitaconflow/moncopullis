@@ -200,7 +200,7 @@ private fun TarjetaMedicamento(
             }
             m.lotes.forEach { FilaLote(it, m.unidad, hoy) }
             if (m.lotes.isNotEmpty()) {
-                // Desactivado sin conexión: fn_registrar_ajuste no es idempotente (no puede esperar en el outbox).
+                // Desactivado sin conexión: fn_app_registrar_salida no es idempotente (no puede esperar en el outbox).
                 TextButton(
                     onClick = onRegistrarSalida,
                     enabled = puedeRegistrarSalida,

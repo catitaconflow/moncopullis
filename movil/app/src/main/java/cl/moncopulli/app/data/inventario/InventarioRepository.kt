@@ -43,21 +43,20 @@ class InventarioRepository @Inject constructor(
         ).map { filas -> filas.map { it.aModelo() } }
 
     /**
-     * Salida por ajuste (merma) de un lote con fn_registrar_ajuste (0005). NO es idempotente: cada llamada
-     * que llega al servidor descuenta stock. Por eso solo se usa con conexión, sin outbox ni reintentos solos.
+     * Salida por ajuste (merma) de un lote con fn_app_registrar_salida (0015): llama a fn_registrar_ajuste
+     * del panel con tipo SALIDA_AJUSTE y deja origen APPMOVIL. NO es idempotente: cada llamada que llega al
+     * servidor descuenta stock. Por eso solo se usa con conexión, sin outbox ni reintentos solos.
      * Lanza RestException si el servidor respondió con error, u otra excepción si no hubo respuesta.
      */
     suspend fun registrarSalida(loteId: Long, cantidad: BigDecimal, motivo: MotivoSalida, observaciones: String) {
         supabase.postgrest.rpc(
-            "fn_registrar_ajuste",
+            "fn_app_registrar_salida",
             buildJsonObject {
                 put("p_lote_id", loteId)
-                put("p_tipo", "SALIDA_AJUSTE")
                 put("p_cantidad", cantidad)
                 put("p_motivo", motivo.name)
-                // p_observaciones no tiene DEFAULT: hay que enviarlo siempre (null si está vacío), o
-                // PostgREST no encuentra la función con esos argumentos (PGRST202).
-                put("p_observaciones", observaciones.trim().takeIf { it.isNotEmpty() })
+                // p_observaciones tiene DEFAULT NULL: solo se envía si tiene texto.
+                observaciones.trim().takeIf { it.isNotEmpty() }?.let { put("p_observaciones", it) }
             },
         )
     }

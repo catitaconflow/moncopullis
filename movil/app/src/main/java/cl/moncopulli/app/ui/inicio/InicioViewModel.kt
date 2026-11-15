@@ -152,7 +152,7 @@ class InicioViewModel @Inject constructor(
 
     fun confirmarOmitir(motivo: String) {
         val a = _ui.value.accion?.takeIf { it.tipo == TipoAccion.OMITIR } ?: return
-        // fn_omitir_dosis no es idempotente: no se guarda para después ni se reintenta solo.
+        // fn_app_omitir_dosis no es idempotente: no se guarda para después ni se reintenta solo.
         if (!_ui.value.enLinea) {
             _ui.update { it.copy(errorAccion = MSG_OMITIR_SIN_RED) }
             return

@@ -104,10 +104,13 @@ class DosisRepository @Inject constructor(
         )
     }
 
-    /** Omite una dosis PROGRAMADA. NO es idempotente: solo con conexión y sin reintentos automáticos. */
+    /**
+     * Omite una dosis PROGRAMADA con fn_app_omitir_dosis (0015: mismas reglas que el panel, origen APPMOVIL).
+     * NO es idempotente: solo con conexión y sin reintentos automáticos.
+     */
     suspend fun omitir(dosisId: Long, motivo: String) {
         supabase.postgrest.rpc(
-            "fn_omitir_dosis",
+            "fn_app_omitir_dosis",
             buildJsonObject {
                 put("p_dosis_id", dosisId)
                 put("p_motivo", motivo.trim())
