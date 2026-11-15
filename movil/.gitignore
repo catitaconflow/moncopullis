@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Salida de Build > Generate Signed APK (APK, mapping.txt de R8 y metadatos): no va al repo
+/app/release/
