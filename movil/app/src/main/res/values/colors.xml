@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <!-- Mismo verde que Principal en ui/theme/Color.kt (el XML no puede leer colores de Compose). -->
     <color name="principal">#FF1F5C3A</color>
+    <!-- Mismo crema que Fondo en ui/theme/Color.kt: ventana y pantalla de arranque. -->
+    <color name="fondo">#FFF4F2EC</color>
 </resources>
