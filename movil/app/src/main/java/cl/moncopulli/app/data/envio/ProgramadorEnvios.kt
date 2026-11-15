@@ -30,6 +30,11 @@ class ProgramadorEnvios @Inject constructor(
         WorkManager.getInstance(context).enqueueUniqueWork(NOMBRE, ExistingWorkPolicy.REPLACE, pedido)
     }
 
+    /** Al cerrar sesión: que no quede un envío programado con la cuenta anterior. */
+    fun cancelar() {
+        WorkManager.getInstance(context).cancelUniqueWork(NOMBRE)
+    }
+
     companion object {
         const val NOMBRE = "enviar-pendientes"
     }

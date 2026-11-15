@@ -2,6 +2,8 @@ package cl.moncopulli.app.data.cache
 
 import android.util.Log
 import cl.moncopulli.app.data.ZONA_CHILE
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.exceptions.RestException
 import java.time.Instant
 import java.time.OffsetDateTime
@@ -21,6 +23,7 @@ internal val JSON_CACHE = Json { ignoreUnknownKeys = true }
 @Singleton
 class CacheLectura @Inject constructor(
     private val dao: CacheDao,
+    private val supabase: SupabaseClient,
 ) {
     /**
      * Red primero, caché de respaldo:
@@ -32,6 +35,9 @@ class CacheLectura @Inject constructor(
      */
     suspend fun <T> leer(clave: String, red: suspend () -> String, decodificar: (String) -> T): Lectura<T> {
         val json = try {
+            // Sin sesión válida (token vencido y aún sin renovar) PostgREST respondería como anon y las
+            // RLS devolverían listas VACÍAS sin error, que pisarían la caché buena. Se trata como sin red.
+            check(supabase.auth.currentSessionOrNull() != null) { "Sesión sin renovar" }
             red()
         } catch (e: CancellationException) {
             throw e

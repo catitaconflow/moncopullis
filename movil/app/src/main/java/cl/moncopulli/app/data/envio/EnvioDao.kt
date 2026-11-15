@@ -68,4 +68,8 @@ interface EnvioDao {
 
     @Query("DELETE FROM envio WHERE estado = 'ENVIADO' AND actualizadoEn < :limite")
     suspend fun borrarEnviadosAntesDe(limite: Long)
+
+    /** Solo al cerrar sesión, después de que el usuario confirmó que se pierden los pendientes. */
+    @Query("DELETE FROM envio")
+    suspend fun borrarTodo()
 }

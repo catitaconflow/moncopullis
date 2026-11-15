@@ -2,13 +2,12 @@ package cl.moncopulli.app.data.envio
 
 import android.util.Log
 import cl.moncopulli.app.data.ZONA_CHILE
+import cl.moncopulli.app.data.auth.SesionRepository
 import cl.moncopulli.app.data.dosis.DosisAplicada
 import cl.moncopulli.app.data.dosis.DosisDelDia
 import cl.moncopulli.app.data.dosis.DosisRepository
 import cl.moncopulli.app.data.dosis.NuevoRegistro
 import cl.moncopulli.app.data.red.MonitorConexion
-import io.github.jan.supabase.SupabaseClient
-import io.github.jan.supabase.auth.auth
 import java.time.OffsetDateTime
 import java.util.concurrent.TimeUnit
 import java.util.UUID
@@ -35,7 +34,7 @@ sealed interface ResultadoEnvio {
  */
 @Singleton
 class EnviosRepository @Inject constructor(
-    private val supabase: SupabaseClient,
+    private val sesion: SesionRepository,
     private val dosisRepo: DosisRepository,
     private val dao: EnvioDao,
     private val monitor: MonitorConexion,
@@ -107,8 +106,9 @@ class EnviosRepository @Inject constructor(
         paramsDirecto: JsonObject,
         paramsCola: JsonObject,
     ): ResultadoEnvio {
-        val uid = supabase.auth.currentSessionOrNull()?.user?.id
-            ?: throw IllegalStateException("No hay sesión.")
+        // Con el token vencido y sin red no hay sesión cargada, pero sí se puede guardar en la cola
+        // a nombre de la última cuenta autorizada: el worker solo lo envía con esa misma sesión.
+        val uid = sesion.idUsuarioParaEscribir() ?: throw IllegalStateException("No hay sesión.")
         val ahora = System.currentTimeMillis()
         val fila = EnvioEntity(
             id = id, tipo = tipo.name, usuarioAuthId = uid, parametros = paramsCola.toString(),
@@ -116,8 +116,9 @@ class EnviosRepository @Inject constructor(
             creadoEn = ahora, actualizadoEn = ahora,
         )
 
-        // Sin red conocida se salta el intento directo (evita esperar el timeout).
-        val intentarDirecto = monitor.estadoActual()
+        // Sin red conocida se salta el intento directo (evita esperar el timeout). Sin sesión válida
+        // también: la llamada iría como anon y el servidor la rechazaría aunque el registro sea correcto.
+        val intentarDirecto = sesion.haySesionValida() && monitor.estadoActual()
         if (intentarDirecto) {
             try {
                 val r = dosisRepo.llamarRpcApp(tipo.rpc, paramsDirecto)
@@ -132,9 +133,10 @@ class EnviosRepository @Inject constructor(
                 throw e
             } catch (e: Exception) {
                 when (clasificarFallo(e)) {
-                    FalloEnvio.SinRespuesta, is FalloEnvio.Transitorio ->
-                        Log.w(TAG, "Sin respuesta al enviar ${tipo.name} $id; queda en cola", e)
-                    else -> throw e // rechazo o sesión vencida: se muestra en el diálogo como antes
+                    // 401: el token venció justo ahora; el worker lo envía cuando la sesión se renueve.
+                    FalloEnvio.SinRespuesta, FalloEnvio.SesionVencida, is FalloEnvio.Transitorio ->
+                        Log.w(TAG, "Sin respuesta válida al enviar ${tipo.name} $id; queda en cola", e)
+                    is FalloEnvio.Rechazo -> throw e // se muestra en el diálogo como antes
                 }
             }
         }

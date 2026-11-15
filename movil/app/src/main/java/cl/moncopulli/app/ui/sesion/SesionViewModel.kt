@@ -1,5 +1,6 @@
 package cl.moncopulli.app.ui.sesion
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cl.moncopulli.app.data.auth.Perfil
@@ -21,7 +22,8 @@ sealed interface EstadoSesion {
     data object Cargando : EstadoSesion      // leyendo la sesión guardada
     data object SinSesion : EstadoSesion     // mostrar el login
     data object Verificando : EstadoSesion   // hay sesión; leyendo perfil y rol
-    data class Autorizado(val authId: String, val perfil: Perfil) : EstadoSesion
+    /** [sinConexion] = el perfil salió del teléfono; se vuelve a verificar al renovar la sesión con red. */
+    data class Autorizado(val authId: String, val perfil: Perfil, val sinConexion: Boolean = false) : EstadoSesion
     data class ErrorConexion(val mensaje: String) : EstadoSesion
 }
 
@@ -46,43 +48,72 @@ class SesionViewModel @Inject constructor(
     }
 
     private suspend fun alCambiarSesion(status: SessionStatus) {
+        // Solo el nombre del estado: status.toString() incluiría la sesión con sus tokens.
+        Log.i(TAG, "Estado de Auth: ${status::class.simpleName}; app: ${_estado.value::class.simpleName}")
         when (status) {
             SessionStatus.Initializing -> _estado.value = EstadoSesion.Cargando
             is SessionStatus.NotAuthenticated -> _estado.value = EstadoSesion.SinSesion
-            is SessionStatus.RefreshFailure ->
-                _estado.value = EstadoSesion.ErrorConexion("No se pudo renovar tu sesión. Revisa tu conexión.")
+            // Token vencido y no se pudo renovar (normalmente, sin red). supabase-kt reintenta solo y
+            // emite Authenticated cuando vuelve la red. Mientras tanto se sigue trabajando sin conexión.
+            is SessionStatus.RefreshFailure -> {
+                Log.i(TAG, "No se pudo renovar la sesión: ${status.cause}")
+                if (_estado.value is EstadoSesion.Autorizado) return
+                val g = repo.perfilGuardado()
+                _estado.value = if (g != null && puedeEntrar(g.perfil)) {
+                    EstadoSesion.Autorizado(g.authUserId, g.perfil, sinConexion = true)
+                } else {
+                    EstadoSesion.ErrorConexion("No se pudo renovar tu sesión. Revisa tu conexión.")
+                }
+            }
             is SessionStatus.Authenticated -> {
-                // Cada renovación del token vuelve a emitir Authenticated: no repetir la verificación.
+                // Cada renovación del token vuelve a emitir Authenticated: no repetir la verificación,
+                // salvo que se haya entrado sin conexión (entonces se confirma el perfil en silencio).
                 val actual = _estado.value
-                if (actual is EstadoSesion.Autorizado && actual.authId == repo.usuarioActual()?.id) return
-                verificar()
+                if (actual is EstadoSesion.Autorizado && actual.authId == repo.usuarioActual()?.id) {
+                    if (actual.sinConexion) verificar(silencioso = true)
+                    return
+                }
+                verificar(silencioso = false)
             }
         }
     }
 
-    private suspend fun verificar() {
+    private fun puedeEntrar(p: Perfil) = p.activo && p.rol in Roles.PERMITIDOS
+
+    /**
+     * Lee perfil y rol. [silencioso] = ya estaba dentro (sin conexión): no se muestra la pantalla de
+     * carga (desmontaría la navegación) y un fallo de red no cambia nada; solo se bloquea si el
+     * servidor confirma que ya no puede entrar.
+     */
+    private suspend fun verificar(silencioso: Boolean) {
         val usuario = repo.usuarioActual()
         if (usuario == null) {
-            _estado.value = EstadoSesion.SinSesion
+            if (!silencioso) _estado.value = EstadoSesion.SinSesion
             return
         }
-        _estado.value = EstadoSesion.Verificando
+        if (!silencioso) _estado.value = EstadoSesion.Verificando
 
         if (usuario.debeCambiarClave) {
             bloquear("Entraste con una contraseña temporal. Cámbiala en el panel web y vuelve a entrar aquí.")
             return
         }
         try {
-            val perfil = repo.leerPerfil(usuario.id)
+            val leido = repo.leerPerfil(usuario.id)
+            val perfil = leido.perfil
             when {
                 perfil == null -> bloquear("Tu cuenta no tiene un perfil de usuario. Avisa a un administrador.")
                 !perfil.activo -> bloquear("Tu cuenta está desactivada. Avisa a un administrador.")
                 perfil.rol !in Roles.PERMITIDOS -> bloquear("Tu rol no tiene acceso a la app móvil.")
-                else -> _estado.value = EstadoSesion.Autorizado(usuario.id, perfil)
+                silencioso && leido.sinConexion -> Unit // sigue sin red: se queda como está
+                else -> {
+                    if (leido.sinConexion) Log.i(TAG, "Sin respuesta del servidor: entra con el perfil guardado")
+                    _estado.value = EstadoSesion.Autorizado(usuario.id, perfil, sinConexion = leido.sinConexion)
+                }
             }
         } catch (e: CancellationException) {
             throw e // nunca tragarse la cancelación de una corrutina
         } catch (e: RestException) {
+            if (silencioso) return
             if (e.response.status.value == 401) {
                 bloquear("Tu sesión expiró. Inicia sesión de nuevo.")
             } else {
@@ -91,7 +122,10 @@ class SesionViewModel @Inject constructor(
                 )
             }
         } catch (e: Exception) {
-            _estado.value = EstadoSesion.ErrorConexion("Sin conexión con el servidor. Revisa tu internet.")
+            // Sin red y sin perfil guardado de esta cuenta (p. ej. primer ingreso en este teléfono).
+            if (!silencioso) {
+                _estado.value = EstadoSesion.ErrorConexion("Sin conexión con el servidor. Revisa tu internet.")
+            }
         }
     }
 
@@ -131,11 +165,16 @@ class SesionViewModel @Inject constructor(
     }
 
     fun reintentar() {
-        viewModelScope.launch { verificar() }
+        viewModelScope.launch { verificar(silencioso = false) }
     }
 
+    /** Cierra sesión y borra pendientes y caché del teléfono (AppPrincipal confirma antes si hay pendientes). */
     fun cerrarSesion() {
         _login.value = LoginUi()
         viewModelScope.launch { repo.cerrarSesion() }
+    }
+
+    private companion object {
+        const val TAG = "MoncopulliSesion"
     }
 }

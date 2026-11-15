@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.DropdownMenu
@@ -20,11 +21,13 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,6 +51,7 @@ import cl.moncopulli.app.ui.actividad.ActividadScreen
 import cl.moncopulli.app.ui.inicio.InicioScreen
 import cl.moncopulli.app.ui.animales.AnimalesScreen
 import cl.moncopulli.app.ui.inventario.InventarioScreen
+import cl.moncopulli.app.ui.theme.Urgente
 import cl.moncopulli.app.ui.registrar.RegistrarScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,6 +65,7 @@ fun AppPrincipal(
     val enLinea by viewModel.enLinea.collectAsStateWithLifecycle()
     val pendientes by viewModel.pendientes.collectAsStateWithLifecycle()
     val rechazados by viewModel.rechazados.collectAsStateWithLifecycle()
+    var confirmandoCierre by rememberSaveable { mutableStateOf(false) }
     val navController = rememberNavController()
     val entrada by navController.currentBackStackEntryAsState()
     val actual = Pestana.entries.firstOrNull { p ->
@@ -83,7 +88,10 @@ fun AppPrincipal(
                 title = { Text(actual.etiqueta) },
                 actions = {
                     ChipConexion(enLinea, pendientes, onClick = { irA(Pestana.ACTIVIDAD) })
-                    MenuCuenta(perfil, onCerrarSesion)
+                    MenuCuenta(perfil) {
+                        // Cerrar sesión borra el outbox: si hay algo sin enviar, preguntar antes.
+                        if (pendientes + rechazados > 0) confirmandoCierre = true else onCerrarSesion()
+                    }
                 },
             )
         },
@@ -103,6 +111,53 @@ fun AppPrincipal(
             composable<RutaActividad> { ActividadScreen() }
         }
     }
+
+    if (confirmandoCierre) {
+        DialogoCerrarSesion(
+            pendientes = pendientes,
+            rechazados = rechazados,
+            onVerActividad = {
+                confirmandoCierre = false
+                irA(Pestana.ACTIVIDAD)
+            },
+            onConfirmar = {
+                confirmandoCierre = false
+                onCerrarSesion()
+            },
+            onCancelar = { confirmandoCierre = false },
+        )
+    }
+}
+
+@Composable
+private fun DialogoCerrarSesion(
+    pendientes: Int,
+    rechazados: Int,
+    onVerActividad: () -> Unit,
+    onConfirmar: () -> Unit,
+    onCancelar: () -> Unit,
+) {
+    val partes = buildList {
+        if (pendientes > 0) add(if (pendientes == 1) "1 registro por enviar" else "$pendientes registros por enviar")
+        if (rechazados > 0) add(if (rechazados == 1) "1 rechazado" else "$rechazados rechazados")
+    }
+    AlertDialog(
+        onDismissRequest = onCancelar,
+        title = { Text("¿Cerrar sesión?") },
+        text = {
+            Text(
+                "Tienes ${partes.joinToString(" y ")}. Si cierras sesión se borran de este teléfono y " +
+                    "no llegarán al sistema. Conéctate a internet y espera a que se envíen, o revísalos en Actividad."
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onVerActividad) { Text("Ver actividad") }
+        },
+        dismissButton = {
+            // Acción destructiva: en rojo y como botón secundario, para no tocarla por error.
+            TextButton(onClick = onConfirmar) { Text("Cerrar sesión y borrar", color = Urgente) }
+        },
+    )
 }
 
 @Composable
