@@ -34,7 +34,8 @@ class PrincipalViewModel @Inject constructor(
     init {
         // Precarga cada vez que pasa a haber red Y sesión válida: al entrar, al volver la señal y al
         // renovarse una sesión vencida. collectLatest cancela una precarga en curso si se pierde la red
-        // o se cierra sesión (para no guardar datos después de borrar la caché).
+        // o se cierra sesión. La cancelación llega un poco después de borrar la caché: lo que cierra ese
+        // hueco es que CacheLectura no guarda nada si ya no hay sesión.
         viewModelScope.launch {
             combine(monitor.enLinea, sesion.estadoAuth) { red, s -> red && s is SessionStatus.Authenticated }
                 .distinctUntilChanged()

@@ -51,7 +51,11 @@ class CacheLectura @Inject constructor(
             )
         }
         val datos = decodificar(json) // primero decodificar: no se guarda una respuesta que no se entiende
-        dao.guardar(CacheEntity(clave, json, System.currentTimeMillis()))
+        // Si mientras llegaba la respuesta se cerró sesión (la caché ya se borró), no se guarda:
+        // si no, una lectura en curso (p. ej. la precarga) dejaría datos de la cuenta anterior.
+        if (supabase.auth.currentSessionOrNull() != null) {
+            dao.guardar(CacheEntity(clave, json, System.currentTimeMillis()))
+        }
         return Lectura(datos)
     }
 
