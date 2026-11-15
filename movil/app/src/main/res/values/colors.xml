@@ -7,4 +7,6 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- Mismo verde que Principal en ui/theme/Color.kt (el XML no puede leer colores de Compose). -->
+    <color name="principal">#FF1F5C3A</color>
 </resources>
