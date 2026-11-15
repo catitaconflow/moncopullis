@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cl.moncopulli.app.data.animal.AnimalResumen
+import cl.moncopulli.app.ui.comun.AvisoLista
 import cl.moncopulli.app.ui.comun.etiquetaCategoria
 import cl.moncopulli.app.ui.comun.etiquetaEstadoProductivo
 import cl.moncopulli.app.ui.comun.fechaCorta
@@ -91,25 +92,20 @@ fun AnimalesScreen(
                         CircularProgressIndicator()
                     }
                 }
-                ui.animales.isEmpty() -> item { Aviso(ui.error ?: "No hay animales registrados.") }
+                ui.animales.isEmpty() -> item {
+                    AvisoLista(
+                        ui.error ?: "No hay animales registrados.",
+                        onReintentar = if (ui.error != null) viewModel::actualizar else null,
+                    )
+                }
                 else -> {
-                    ui.error?.let { item { Aviso(it) } }
-                    if (visibles.isEmpty()) item { Aviso("Ningún animal coincide con el filtro.") }
+                    ui.error?.let { item { AvisoLista(it) } }
+                    if (visibles.isEmpty()) item { AvisoLista("Ningún animal coincide con el filtro.") }
                     items(visibles, key = { it.id }) { a -> TarjetaAnimal(a, ui.enResguardo(a)) }
                 }
             }
         }
     }
-}
-
-@Composable
-private fun Aviso(texto: String) {
-    Text(
-        texto,
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(vertical = 16.dp),
-    )
 }
 
 @Composable

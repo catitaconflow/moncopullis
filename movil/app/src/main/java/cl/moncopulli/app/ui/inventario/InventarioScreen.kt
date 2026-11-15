@@ -49,6 +49,7 @@ import cl.moncopulli.app.data.inventario.DIAS_ALERTA_VENCIMIENTO
 import cl.moncopulli.app.data.inventario.LoteStock
 import cl.moncopulli.app.data.inventario.MedicamentoStock
 import cl.moncopulli.app.data.inventario.MotivoSalida
+import cl.moncopulli.app.ui.comun.AvisoLista
 import cl.moncopulli.app.ui.comun.Insignia
 import cl.moncopulli.app.ui.comun.cantidadConUnidad
 import cl.moncopulli.app.ui.comun.fechaCorta
@@ -122,10 +123,15 @@ fun InventarioScreen(
                             CircularProgressIndicator()
                         }
                     }
-                    ui.medicamentos.isEmpty() -> item { Aviso(ui.error ?: "No hay medicamentos activos.") }
+                    ui.medicamentos.isEmpty() -> item {
+                        AvisoLista(
+                            ui.error ?: "No hay medicamentos activos.",
+                            onReintentar = if (ui.error != null) viewModel::actualizar else null,
+                        )
+                    }
                     else -> {
-                        ui.error?.let { item { Aviso(it) } }
-                        if (visibles.isEmpty()) item { Aviso("Ningún medicamento coincide con el filtro.") }
+                        ui.error?.let { item { AvisoLista(it) } }
+                        if (visibles.isEmpty()) item { AvisoLista("Ningún medicamento coincide con el filtro.") }
                         items(visibles, key = { it.id }) { m ->
                             TarjetaMedicamento(
                                 m, ui.hoy,
@@ -155,16 +161,6 @@ fun InventarioScreen(
             onCancelar = viewModel::cerrarSalida,
         )
     }
-}
-
-@Composable
-private fun Aviso(texto: String) {
-    Text(
-        texto,
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(vertical = 16.dp),
-    )
 }
 
 @Composable

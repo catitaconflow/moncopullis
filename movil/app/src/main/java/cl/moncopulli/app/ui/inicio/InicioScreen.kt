@@ -43,6 +43,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cl.moncopulli.app.data.ZONA_CHILE
 import cl.moncopulli.app.data.dosis.DosisDelDia
+import cl.moncopulli.app.ui.comun.AvisoLista
 import cl.moncopulli.app.ui.comun.CampoFechaHora
 import cl.moncopulli.app.ui.comun.cantidadConUnidad
 import cl.moncopulli.app.ui.comun.diaCortoChile
@@ -105,10 +106,13 @@ fun InicioScreen(
                         }
                     }
                     ui.dosis.isEmpty() -> item {
-                        Aviso(ui.error ?: "No hay dosis programadas para hoy.")
+                        AvisoLista(
+                            ui.error ?: "No hay dosis programadas para hoy.",
+                            onReintentar = if (ui.error != null) viewModel::actualizar else null,
+                        )
                     }
                     else -> {
-                        ui.error?.let { item { Aviso(it) } }
+                        ui.error?.let { item { AvisoLista(it) } }
                         items(ui.dosis, key = { it.id }) { d ->
                             TarjetaDosis(
                                 d = d,
@@ -148,16 +152,6 @@ fun InicioScreen(
             )
         }
     }
-}
-
-@Composable
-private fun Aviso(texto: String) {
-    Text(
-        texto,
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(vertical = 16.dp),
-    )
 }
 
 @Composable

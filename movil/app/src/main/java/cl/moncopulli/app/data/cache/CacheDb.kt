@@ -14,7 +14,8 @@ import androidx.room.Upsert
  */
 @Entity(tableName = "cache")
 data class CacheEntity(
-    @PrimaryKey val clave: String,   // "dosis", "animales", "resguardos", "inventario"
+    // "dosis", "animales", "resguardos", "inventario" y "perfil" (sin él la app no abre sin red).
+    @PrimaryKey val clave: String,
     val json: String,
     val guardadoEn: Long,            // epoch ms
 )
