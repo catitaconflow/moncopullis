@@ -5,14 +5,19 @@ import cl.moncopulli.app.data.cache.JSON_CACHE
 import cl.moncopulli.app.data.cache.Lectura
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.postgrest.query.Order
+import io.github.jan.supabase.postgrest.rpc
+import java.math.BigDecimal
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 @Singleton
 class InventarioRepository @Inject constructor(
@@ -36,6 +41,26 @@ class InventarioRepository @Inject constructor(
             },
             decodificar = { JSON_CACHE.decodeFromString(ListSerializer(MedicamentoFila.serializer()), it) },
         ).map { filas -> filas.map { it.aModelo() } }
+
+    /**
+     * Salida por ajuste (merma) de un lote con fn_registrar_ajuste (0005). NO es idempotente: cada llamada
+     * que llega al servidor descuenta stock. Por eso solo se usa con conexión, sin outbox ni reintentos solos.
+     * Lanza RestException si el servidor respondió con error, u otra excepción si no hubo respuesta.
+     */
+    suspend fun registrarSalida(loteId: Long, cantidad: BigDecimal, motivo: MotivoSalida, observaciones: String) {
+        supabase.postgrest.rpc(
+            "fn_registrar_ajuste",
+            buildJsonObject {
+                put("p_lote_id", loteId)
+                put("p_tipo", "SALIDA_AJUSTE")
+                put("p_cantidad", cantidad)
+                put("p_motivo", motivo.name)
+                // p_observaciones no tiene DEFAULT: hay que enviarlo siempre (null si está vacío), o
+                // PostgREST no encuentra la función con esos argumentos (PGRST202).
+                put("p_observaciones", observaciones.trim().takeIf { it.isNotEmpty() })
+            },
+        )
+    }
 
     private companion object {
         // lote(...) embebido por su clave foránea lote.medicamento_id.
