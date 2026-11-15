@@ -86,15 +86,15 @@ BEGIN
   END IF;
   IF NOT EXISTS (SELECT 1 FROM tratamiento t JOIN dosis d ON d.tratamiento_id = t.id
                   WHERE t.uuid = v_u1 AND t.creado_por = v_op AND t.indicado_por = 'Dr. Pérez' AND t.animal_id = v_animal
-                    AND d.estado = 'APLICADA' AND d.aplicado_por = v_op AND d.origen = 'WEBAPP'
+                    AND d.estado = 'APLICADA' AND d.aplicado_por = v_op AND d.origen = 'APPMOVIL'
                     AND d.fin_resguardo_leche IS NOT NULL AND d.cantidad = 10) THEN
     RAISE EXCEPTION 'M1 FALLA: tratamiento o dosis mal registrados';
   END IF;
-  IF (SELECT count(*) FROM movimiento_inventario WHERE dosis_id = (v_r ->> 'dosis_id')::bigint AND tipo = 'SALIDA_DOSIS') <> 1 THEN
-    RAISE EXCEPTION 'M1 FALLA: debía haber una salida de stock';
+  IF (SELECT count(*) FROM movimiento_inventario WHERE dosis_id = (v_r ->> 'dosis_id')::bigint AND tipo = 'SALIDA_DOSIS' AND origen = 'APPMOVIL') <> 1 THEN
+    RAISE EXCEPTION 'M1 FALLA: debía haber una salida de stock con origen APPMOVIL';
   END IF;
   IF NOT EXISTS (SELECT 1 FROM auditoria WHERE entidad = 'tratamiento' AND entidad_id = (v_r ->> 'tratamiento_id')::bigint
-                    AND accion = 'CREAR' AND usuario_id = v_op AND descripcion LIKE '%app móvil%') THEN
+                    AND accion = 'CREAR' AND usuario_id = v_op AND descripcion LIKE '%app móvil%' AND origen = 'APPMOVIL') THEN
     RAISE EXCEPTION 'M1 FALLA: falta la auditoría del registro en terreno';
   END IF;
 
