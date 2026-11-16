@@ -36,7 +36,7 @@ La barra superior muestra el nombre de la pestaña, un chip de conexión (en lí
 - Se inicia sesión con correo y contraseña de Supabase Auth: las mismas cuentas del panel web.
 - Solo pueden entrar usuarios **activos** con rol **ADMIN** u **OPERARIO**. Las funciones del servidor validan lo mismo con `fn_exigir_rol`, así que no basta con saltarse la validación de la app.
 - Si la cuenta tiene una **contraseña temporal** (creada desde el panel), la app pide cambiarla primero en el panel web.
-- Al **cerrar sesión** se borra del teléfono todo lo de esa cuenta: caché, pendientes y envíos programados. Si hay pendientes sin enviar, la app pide confirmar antes, porque se pierden.
+- Al **cerrar sesión** se borra del teléfono todo lo de esa cuenta: caché, pendientes y envíos programados. Si hay registros pendientes o rechazados, la app pide confirmar antes, porque se pierden.
 
 ## Funcionamiento sin conexión
 
@@ -210,9 +210,9 @@ Para compartir el APK sin cable: Android 8.0 o superior. Hay que permitir "Insta
   2. Inicio: aplicar una dosis (ver lote y resguardo) y omitir otra con motivo.
   3. Registrar: registrar una aplicación con un DIIO existente.
   4. Inventario: registrar una salida y ver el stock actualizado.
-  5. Activar el **modo avión**: las listas siguen visibles (con la fecha de la caché) y aplicar o registrar queda "por enviar". Omitir y registrar salida aparecen deshabilitados o avisan que requieren conexión.
+  5. Activar el **modo avión**: las listas siguen visibles (con la fecha de la caché) y aplicar o registrar queda "por enviar". Los botones **Omitir** y **Registrar salida** aparecen deshabilitados.
   6. Quitar el modo avión: los pendientes se envían solos y Actividad los muestra como enviados.
-  7. Cerrar sesión con pendientes: la app debe pedir confirmación.
+  7. Cerrar sesión con pendientes o rechazados: la app debe pedir confirmación.
 
 ## Problemas frecuentes
 
@@ -227,3 +227,7 @@ Para compartir el APK sin cable: Android 8.0 o superior. Hay que permitir "Insta
 | Tras instalar se ve una versión vieja | Se instaló otro APK | Revisar la ruta y la fecha del APK; ver [Generar el APK firmado](#generar-el-apk-firmado) |
 | El ícono nuevo no aparece | El launcher guarda el ícono anterior en caché | Reiniciar el teléfono |
 
+## Licencias
+
+- Fuente **Nunito** (pesos SemiBold y Bold, en `app/src/main/res/font/`): SIL Open Font License 1.1. El texto completo está en `licencias/Nunito-OFL.txt`.
+- Las bibliotecas de terceros se distribuyen bajo sus propias licencias (principalmente Apache 2.0).
