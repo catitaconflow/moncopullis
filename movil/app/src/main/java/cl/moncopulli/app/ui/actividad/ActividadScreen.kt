@@ -34,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cl.moncopulli.app.data.envio.Envio
 import cl.moncopulli.app.data.envio.EstadoEnvio
 import cl.moncopulli.app.data.envio.TipoEnvio
+import cl.moncopulli.app.ui.comun.AvisoLista
 import cl.moncopulli.app.ui.comun.Insignia
 import cl.moncopulli.app.ui.comun.fechaHoraCortaChile
 import cl.moncopulli.app.ui.theme.Advertencia
@@ -65,7 +66,8 @@ fun ActividadScreen(
             }
         }
         if (ui.vacio) {
-            item { Nota("Aún no hay registros hechos desde este teléfono.") }
+            // Mismo aviso de lista vacía que Inicio, Animales e Inventario (Nota es para textos de apoyo).
+            item { AvisoLista("Aún no hay registros hechos desde este teléfono.") }
         }
 
         // Primero lo que requiere acción.
