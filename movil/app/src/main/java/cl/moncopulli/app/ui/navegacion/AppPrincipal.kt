@@ -104,7 +104,7 @@ fun AppPrincipal(
             startDestination = RutaInicio,
             modifier = Modifier.padding(padding),
         ) {
-            composable<RutaInicio> { InicioScreen(perfil.nombres) }
+            composable<RutaInicio> { InicioScreen() }
             composable<RutaAnimales> { AnimalesScreen() }
             composable<RutaRegistrar> { RegistrarScreen() }
             composable<RutaInventario> { InventarioScreen() }

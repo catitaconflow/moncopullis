@@ -36,8 +36,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -60,7 +64,6 @@ private const val MAX_MOTIVO = 300 // fn_omitir_dosis guarda left(motivo, 300)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InicioScreen(
-    nombre: String,
     modifier: Modifier = Modifier,
     viewModel: InicioViewModel = hiltViewModel(),
 ) {
@@ -68,6 +71,7 @@ fun InicioScreen(
     // Se recalculan cada vez que llega una lista nueva.
     val ahora = remember(ui.dosis) { OffsetDateTime.now() }
     val hoy = remember(ui.dosis) { LocalDate.now(ZONA_CHILE) }
+    val atrasadas = remember(ui.dosis, ahora) { ui.dosis.count { it.atrasada(ahora) } }
     val snackbar = remember { SnackbarHostState() }
 
     // El aviso se muestra una vez; se marca como mostrado cuando el Snackbar se cierra.
@@ -90,13 +94,17 @@ fun InicioScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 item {
+                    // Sin saludo: el nombre ya está en el menú de cuenta.
                     Column(Modifier.padding(bottom = 8.dp)) {
-                        Text("Hola, $nombre", style = MaterialTheme.typography.titleLarge)
-                        Text(
-                            fechaLarga(hoy),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
+                        Text(fechaLarga(hoy), style = MaterialTheme.typography.titleLarge)
+                        // Solo con dosis: si está cargando o vacía, el indicador o el aviso de abajo ya lo dicen.
+                        if (!ui.cargando && ui.dosis.isNotEmpty()) {
+                            Text(
+                                resumenDosis(ui.dosis.size, atrasadas),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
                     }
                 }
                 when {
@@ -154,6 +162,20 @@ fun InicioScreen(
     }
 }
 
+/** Misma regla que el servidor (0005). La usan la tarjeta y el resumen, para que siempre coincidan. */
+private fun DosisDelDia.atrasada(ahora: OffsetDateTime) = fechaProgramada.isBefore(ahora)
+
+/** "5 por aplicar · 2 atrasadas": el total incluye las atrasadas, que van en rojo. */
+private fun resumenDosis(total: Int, atrasadas: Int): AnnotatedString = buildAnnotatedString {
+    append("$total por aplicar")
+    if (atrasadas > 0) {
+        append(" · ")
+        withStyle(SpanStyle(color = Urgente)) {
+            append(if (atrasadas == 1) "1 atrasada" else "$atrasadas atrasadas")
+        }
+    }
+}
+
 @Composable
 private fun TarjetaDosis(
     d: DosisDelDia,
@@ -164,7 +186,7 @@ private fun TarjetaDosis(
     onAplicar: () -> Unit,
     onOmitir: () -> Unit,
 ) {
-    val atrasada = d.fechaProgramada.isBefore(ahora)   // misma regla que el servidor (0005)
+    val atrasada = d.atrasada(ahora)
     val esDeHoy = d.fechaProgramada.atZoneSameInstant(ZONA_CHILE).toLocalDate() == hoy
 
     OutlinedCard(
