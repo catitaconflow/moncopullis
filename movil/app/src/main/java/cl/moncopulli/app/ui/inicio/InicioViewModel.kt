@@ -12,6 +12,7 @@ import cl.moncopulli.app.data.envio.ResultadoEnvio
 import cl.moncopulli.app.data.red.MonitorConexion
 import cl.moncopulli.app.ui.comun.avisoDeCache
 import cl.moncopulli.app.ui.comun.cantidadConUnidad
+import cl.moncopulli.app.ui.comun.esErrorReintentable
 import cl.moncopulli.app.ui.comun.fechaHoraCortaChile
 import cl.moncopulli.app.ui.comun.mensajeDeEscritura
 import cl.moncopulli.app.ui.comun.mensajeDeLectura
@@ -40,6 +41,7 @@ data class InicioUi(
     val fechaAplicacion: OffsetDateTime? = null, // null = ahora
     val enviando: Boolean = false,
     val errorAccion: String? = null,   // se muestra dentro del diálogo
+    val errorAccionReintentable: Boolean = false, // red o servidor: el botón dice "Reintentar"
     val aviso: String? = null,         // se muestra una vez en un Snackbar
     val enLinea: Boolean = true,       // omitir solo con conexión (no es idempotente)
 )
@@ -116,21 +118,21 @@ class InicioViewModel @Inject constructor(
 
     private fun abrir(a: AccionDosis) {
         if (_ui.value.enviando) return
-        _ui.update { it.copy(accion = a, errorAccion = null, fechaAplicacion = null) }
+        _ui.update { it.copy(accion = a, errorAccion = null, errorAccionReintentable = false, fechaAplicacion = null) }
     }
 
     /** Cerrar el diálogo. Mientras se envía no se cierra: así no quedan dudas de si se guardó. */
     fun cancelarAccion() {
         val estado = _ui.value
         if (estado.enviando) return
-        _ui.update { it.copy(accion = null, errorAccion = null) }
+        _ui.update { it.copy(accion = null, errorAccion = null, errorAccionReintentable = false) }
         // Si hubo un error (p. ej. "ya fue aplicada por otro usuario"), la lista puede estar desactualizada.
         if (estado.errorAccion != null) cargar(deslizando = false)
     }
 
     fun elegirFechaAplicacion(f: OffsetDateTime?) {
         if (_ui.value.enviando) return
-        _ui.update { it.copy(fechaAplicacion = f, errorAccion = null) }
+        _ui.update { it.copy(fechaAplicacion = f, errorAccion = null, errorAccionReintentable = false) }
     }
 
     fun confirmarAplicar() {
@@ -172,7 +174,7 @@ class InicioViewModel @Inject constructor(
     /** Ejecuta la acción una sola vez a la vez; si sale bien quita la dosis de la lista. */
     private fun enviar(d: DosisDelDia, operacion: suspend () -> Hecho) {
         if (_ui.value.enviando) return
-        _ui.update { it.copy(enviando = true, errorAccion = null) }
+        _ui.update { it.copy(enviando = true, errorAccion = null, errorAccionReintentable = false) }
         viewModelScope.launch {
             try {
                 val hecho = operacion()
@@ -183,7 +185,13 @@ class InicioViewModel @Inject constructor(
                 throw e
             } catch (e: Exception) {
                 Log.w(TAG, "Falló la escritura de la dosis ${d.id}", e)
-                _ui.update { it.copy(enviando = false, errorAccion = mensajeDeEscritura(e)) }
+                _ui.update {
+                    it.copy(
+                        enviando = false,
+                        errorAccion = mensajeDeEscritura(e),
+                        errorAccionReintentable = esErrorReintentable(e),
+                    )
+                }
             }
         }
     }

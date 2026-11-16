@@ -34,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cl.moncopulli.app.data.envio.Envio
 import cl.moncopulli.app.data.envio.EstadoEnvio
 import cl.moncopulli.app.data.envio.TipoEnvio
+import cl.moncopulli.app.data.envio.rechazoDefinitivo
 import cl.moncopulli.app.ui.comun.AvisoLista
 import cl.moncopulli.app.ui.comun.Insignia
 import cl.moncopulli.app.ui.comun.fechaHoraCortaChile
@@ -85,8 +86,13 @@ fun ActividadScreen(
                         modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
                     ) {
-                        TextButton(onClick = { porDescartar = e.id }) { Text("Descartar") }
-                        Button(onClick = { viewModel.volverAEnviar(e.id) }) { Text("Volver a enviar") }
+                        if (e.rechazoDefinitivo) {
+                            // Reenviar daría el mismo rechazo: solo se puede descartar.
+                            Button(onClick = { porDescartar = e.id }) { Text("Descartar") }
+                        } else {
+                            TextButton(onClick = { porDescartar = e.id }) { Text("Descartar") }
+                            Button(onClick = { viewModel.volverAEnviar(e.id) }) { Text("Volver a enviar") }
+                        }
                     }
                 }
             }

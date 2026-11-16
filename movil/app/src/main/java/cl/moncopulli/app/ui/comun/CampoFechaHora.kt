@@ -3,6 +3,7 @@ package cl.moncopulli.app.ui.comun
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -103,7 +104,8 @@ private fun DialogoFecha(inicial: LocalDate, onElegir: (LocalDate) -> Unit, onCa
     DatePickerDialog(
         onDismissRequest = onCancelar,
         confirmButton = {
-            TextButton(
+            // Botón relleno: es el paso principal y se distingue de "Cancelar" (OBS-04 a).
+            Button(
                 onClick = { estado.selectedDateMillis?.let { onElegir(it.aFechaUtc()) } },
                 enabled = estado.selectedDateMillis != null,
             ) { Text("Siguiente") }

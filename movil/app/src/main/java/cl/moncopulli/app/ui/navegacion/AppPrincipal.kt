@@ -39,6 +39,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -93,7 +94,8 @@ fun AppPrincipal(
         topBar = {
             // Verde con texto e íconos blancos; el color también cubre la zona de la barra de estado.
             TopAppBar(
-                title = { Text(actual.etiqueta) },
+                // Una línea: con fuente grande se corta con "…" en vez de partir la palabra (DEF-01).
+                title = { Text(actual.etiqueta, maxLines = 1, overflow = TextOverflow.Ellipsis) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
@@ -222,7 +224,7 @@ private fun BarraInferior(actual: Pestana, pendientes: Int, rechazados: Int, onE
                         Icon(painterResource(p.icono), contentDescription = null)
                     }
                 },
-                label = { Text(p.etiqueta) },
+                label = { Text(p.etiqueta, maxLines = 1, overflow = TextOverflow.Ellipsis) },
                 colors = if (esRegistrar) {
                     NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent)
                 } else {

@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -103,15 +104,24 @@ fun InventarioScreen(
                             modifier = Modifier.fillMaxWidth(),
                         )
                         Row(verticalAlignment = Alignment.CenterVertically) {
+                            // Con fuente grande el chip se acorta con "…" y el contador no se parte (DEF-01).
                             FilterChip(
                                 selected = ui.soloBajoMinimo,
                                 onClick = viewModel::alternarBajoMinimo,
-                                label = { Text("Bajo mínimo (${ui.totalBajoMinimo})") },
+                                label = {
+                                    Text(
+                                        "Bajo mínimo (${ui.totalBajoMinimo})",
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                },
+                                modifier = Modifier.weight(1f, fill = false),
                             )
                             Text(
                                 "${visibles.size} de ${ui.medicamentos.size}",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                softWrap = false,
                                 modifier = Modifier.padding(start = 12.dp),
                             )
                         }

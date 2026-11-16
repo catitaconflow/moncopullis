@@ -21,6 +21,21 @@ data class Envio(
     val resguardoHasta: OffsetDateTime?,
 )
 
+/**
+ * Rechazos que reenviar nunca puede arreglar (OBS-02): la dosis ya la aplicó otro usuario, o el uuid
+ * pertenece a un registro de otro usuario. Las RPC no devuelven un código propio para estos casos,
+ * así que se reconocen por el texto de fn_error en 0014/0015 (fn_app_aplicar_dosis y
+ * fn_app_registrar_aplicacion). LIMITACIÓN: si una migración cambia esos textos, hay que cambiarlos aquí.
+ */
+private val RECHAZOS_DEFINITIVOS = listOf(
+    "ya fue aplicada por otro usuario",
+    "pertenece a otro usuario",
+)
+
+/** true = en Actividad solo se ofrece "Descartar". */
+val Envio.rechazoDefinitivo: Boolean
+    get() = error?.let { e -> RECHAZOS_DEFINITIVOS.any { e.contains(it, ignoreCase = true) } } == true
+
 internal fun EnvioEntity.aModelo() = Envio(
     id = id,
     tipo = TipoEnvio.valueOf(tipo),

@@ -33,3 +33,11 @@ fun mensajeDeEscritura(e: Exception): String = when {
     e is RestException && e.response.status.value == 401 -> MSG_SESION
     else -> MSG_CONEXION
 }
+
+/**
+ * true = vale la pena ofrecer "Reintentar": falló la red, el servidor (5xx) o la sesión.
+ * false = el servidor rechazó los datos (P0001) o el permiso (42501): repetir igual da el mismo error;
+ * hay que corregir el formulario, así que el botón conserva su texto normal (OBS-01).
+ */
+fun esErrorReintentable(e: Exception): Boolean =
+    !(e is PostgrestRestException && (e.code == "P0001" || e.code == "42501"))

@@ -167,7 +167,7 @@ fun RegistrarScreen(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 if (ui.enviando) CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
-                else Text(if (ui.error != null) "Reintentar" else "Registrar aplicación")
+                else Text(if (ui.error != null && ui.errorReintentable) "Reintentar" else "Registrar aplicación")
             }
         }
         SnackbarHost(snackbar, Modifier.align(Alignment.BottomCenter))

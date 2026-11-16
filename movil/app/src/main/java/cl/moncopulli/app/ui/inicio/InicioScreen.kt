@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
@@ -41,6 +41,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -147,6 +148,7 @@ fun InicioScreen(
                 onCambiarFecha = viewModel::elegirFechaAplicacion,
                 enviando = ui.enviando,
                 error = ui.errorAccion,
+                reintentable = ui.errorAccionReintentable,
                 onConfirmar = viewModel::confirmarAplicar,
                 onCancelar = viewModel::cancelarAccion,
             )
@@ -198,38 +200,49 @@ private fun TarjetaDosis(
     ) {
         Column(Modifier.padding(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Column(Modifier.width(64.dp)) {
+                // Ancho mínimo, no fijo: con fuente grande la hora crece en vez de partirse (DEF-01).
+                // "Atrasada" va bajo la hora para dejar más ancho al DIIO y al medicamento.
+                Column(Modifier.widthIn(min = 64.dp).padding(end = 8.dp)) {
                     Text(
                         horaChile(d.fechaProgramada),
                         style = MaterialTheme.typography.titleMedium,
                         color = if (atrasada) Urgente else MaterialTheme.colorScheme.onSurface,
+                        softWrap = false,
                     )
                     if (!esDeHoy) {
                         Text(
                             diaCortoChile(d.fechaProgramada),
                             style = MaterialTheme.typography.bodySmall,
                             color = if (atrasada) Urgente else MaterialTheme.colorScheme.onSurfaceVariant,
+                            softWrap = false,
                         )
                     }
+                    if (atrasada) {
+                        Text("Atrasada", style = MaterialTheme.typography.labelMedium, color = Urgente, softWrap = false)
+                    }
                 }
+                // Una línea con "…": el texto completo está en el diálogo de Aplicar y lo lee TalkBack.
                 Column(Modifier.weight(1f)) {
                     Text(
                         d.diio ?: "Sin DIIO",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
                     Text(
                         "${d.medicamento} · ${cantidadConUnidad(d.cantidad, d.unidad)}",
                         style = MaterialTheme.typography.bodyMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
                     Text(
                         etiquetaCategoria(d.categoria),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
-                }
-                if (atrasada) {
-                    Text("Atrasada", style = MaterialTheme.typography.labelMedium, color = Urgente)
                 }
             }
             Row(
@@ -250,6 +263,7 @@ private fun DialogoAplicar(
     onCambiarFecha: (OffsetDateTime?) -> Unit,
     enviando: Boolean,
     error: String?,
+    reintentable: Boolean,
     onConfirmar: () -> Unit,
     onCancelar: () -> Unit,
 ) {
@@ -272,7 +286,7 @@ private fun DialogoAplicar(
         confirmButton = {
             Button(onClick = onConfirmar, enabled = !enviando) {
                 if (enviando) CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
-                else Text(if (error != null) "Reintentar" else "Aplicar")
+                else Text(if (error != null && reintentable) "Reintentar" else "Aplicar")
             }
         },
         dismissButton = {

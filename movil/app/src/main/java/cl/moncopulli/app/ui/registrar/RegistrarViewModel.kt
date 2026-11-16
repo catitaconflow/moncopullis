@@ -1,6 +1,7 @@
 package cl.moncopulli.app.ui.registrar
 
 import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cl.moncopulli.app.data.CambiosDatos
@@ -14,6 +15,7 @@ import cl.moncopulli.app.data.envio.ResultadoEnvio
 import cl.moncopulli.app.data.inventario.InventarioRepository
 import cl.moncopulli.app.data.inventario.MedicamentoStock
 import cl.moncopulli.app.ui.comun.cantidadConUnidad
+import cl.moncopulli.app.ui.comun.esErrorReintentable
 import cl.moncopulli.app.ui.comun.fechaHoraCortaChile
 import cl.moncopulli.app.ui.comun.mensajeDeEscritura
 import cl.moncopulli.app.ui.comun.mensajeDeLectura
@@ -60,6 +62,7 @@ data class RegistrarUi(
     // Envío
     val enviando: Boolean = false,
     val error: String? = null,
+    val errorReintentable: Boolean = false,   // red o servidor: el botón dice "Reintentar"
     val aviso: String? = null,
 ) {
     val medicamento: MedicamentoStock? get() = medicamentos.firstOrNull { it.id == medicamentoId }
@@ -68,13 +71,15 @@ data class RegistrarUi(
 
 @HiltViewModel
 class RegistrarViewModel @Inject constructor(
+    /** Guarda el formulario si Android cierra el proceso en segundo plano (OBS-03). */
+    private val estado: SavedStateHandle,
     private val envios: EnviosRepository,
     private val animalRepo: AnimalRepository,
     private val inventarioRepo: InventarioRepository,
     private val cambios: CambiosDatos,
 ) : ViewModel() {
 
-    private val _ui = MutableStateFlow(RegistrarUi())
+    private val _ui = MutableStateFlow(restaurarFormulario())
     val ui: StateFlow<RegistrarUi> = _ui.asStateFlow()
 
     /**
@@ -84,13 +89,41 @@ class RegistrarViewModel @Inject constructor(
      * el mismo motivo: no sabemos si el intento anterior llegó.
      * Si queda en la cola, el uuid pasa a ser de la fila del outbox y aquí se olvida.
      */
-    private var uuidPendiente: UUID? = null
+    private var uuidPendiente: UUID? = estado.get<String>(K_UUID)?.let { runCatching { UUID.fromString(it) }.getOrNull() }
+        set(valor) {
+            field = valor
+            // También se guarda: si el proceso muere tras un intento sin respuesta, el reintento usa el mismo uuid.
+            estado[K_UUID] = valor?.toString()
+        }
 
     private var carga: Job? = null
 
     init {
         cargarCatalogos()
         viewModelScope.launch { cambios.cambios.collect { cargarCatalogos(forzar = true) } }
+        viewModelScope.launch { _ui.collect { guardarFormulario(it) } }
+    }
+
+    // --- Estado guardado (SavedStateHandle): solo los campos; los catálogos se vuelven a cargar ---
+
+    private fun restaurarFormulario() = RegistrarUi(
+        diio = estado.get<String>(K_DIIO) ?: "",
+        medicamentoId = estado.get<Long>(K_MEDICAMENTO),
+        cantidad = estado.get<String>(K_CANTIDAD) ?: "",
+        indicadoPor = estado.get<String>(K_INDICADO_POR) ?: "",
+        fecha = estado.get<String>(K_FECHA)?.let { runCatching { OffsetDateTime.parse(it) }.getOrNull() },
+        motivo = estado.get<String>(K_MOTIVO) ?: "",
+        observaciones = estado.get<String>(K_OBSERVACIONES) ?: "",
+    )
+
+    private fun guardarFormulario(u: RegistrarUi) {
+        estado[K_DIIO] = u.diio
+        estado[K_MEDICAMENTO] = u.medicamentoId
+        estado[K_CANTIDAD] = u.cantidad
+        estado[K_INDICADO_POR] = u.indicadoPor
+        estado[K_FECHA] = u.fecha?.toString()   // como texto: el Bundle no necesita saber de OffsetDateTime
+        estado[K_MOTIVO] = u.motivo
+        estado[K_OBSERVACIONES] = u.observaciones
     }
 
     fun reintentarCatalogos() = cargarCatalogos()
@@ -135,7 +168,7 @@ class RegistrarViewModel @Inject constructor(
 
     private fun editar(cambio: (RegistrarUi) -> RegistrarUi) {
         if (_ui.value.enviando) return
-        _ui.update { cambio(it).copy(error = null) }
+        _ui.update { cambio(it).copy(error = null, errorReintentable = false) }
     }
 
     fun avisoMostrado() = _ui.update { it.copy(aviso = null) }
@@ -148,7 +181,7 @@ class RegistrarViewModel @Inject constructor(
         val cantidad = u.cantidad.replace(',', '.').toBigDecimalOrNull()
         val error = validar(u, cantidad)
         if (error != null) {
-            _ui.update { it.copy(error = error) }
+            _ui.update { it.copy(error = error, errorReintentable = false) }
             return
         }
         val uuid = uuidPendiente ?: UUID.randomUUID().also { uuidPendiente = it }
@@ -162,7 +195,7 @@ class RegistrarViewModel @Inject constructor(
             motivo = u.motivo,
             observaciones = u.observaciones,
         )
-        _ui.update { it.copy(enviando = true, error = null) }
+        _ui.update { it.copy(enviando = true, error = null, errorReintentable = false) }
         viewModelScope.launch {
             try {
                 val m = u.medicamento!!
@@ -188,7 +221,9 @@ class RegistrarViewModel @Inject constructor(
                 throw e
             } catch (e: Exception) {
                 Log.w(TAG, "Falló el registro $uuid", e)
-                _ui.update { it.copy(enviando = false, error = mensajeDeEscritura(e)) }
+                _ui.update {
+                    it.copy(enviando = false, error = mensajeDeEscritura(e), errorReintentable = esErrorReintentable(e))
+                }
             }
         }
     }
@@ -214,5 +249,13 @@ class RegistrarViewModel @Inject constructor(
 
     private companion object {
         const val TAG = "MoncopulliEscritura"
+        const val K_DIIO = "registrar_diio"
+        const val K_MEDICAMENTO = "registrar_medicamento"
+        const val K_CANTIDAD = "registrar_cantidad"
+        const val K_INDICADO_POR = "registrar_indicado_por"
+        const val K_FECHA = "registrar_fecha"
+        const val K_MOTIVO = "registrar_motivo"
+        const val K_OBSERVACIONES = "registrar_observaciones"
+        const val K_UUID = "registrar_uuid"
     }
 }
