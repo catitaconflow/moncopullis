@@ -1,5 +1,6 @@
 package cl.moncopulli.app.ui.navegacion
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,7 +24,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,10 +35,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -72,6 +77,8 @@ fun AppPrincipal(
         entrada?.destination?.hierarchy?.any { it.hasRoute(p.ruta::class) } == true
     } ?: Pestana.INICIO
 
+    IconosClarosEnBarraDeEstado()
+
     fun irA(p: Pestana) {
         navController.navigate(p.ruta) {
             // Una sola copia de cada pestaña; "atrás" vuelve a Inicio y luego sale.
@@ -84,8 +91,15 @@ fun AppPrincipal(
     Scaffold(
         modifier = modifier,
         topBar = {
+            // Verde con texto e íconos blancos; el color también cubre la zona de la barra de estado.
             TopAppBar(
                 title = { Text(actual.etiqueta) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                ),
                 actions = {
                     ChipConexion(enLinea, pendientes, onClick = { irA(Pestana.ACTIVIDAD) })
                     MenuCuenta(perfil) {
@@ -129,6 +143,23 @@ fun AppPrincipal(
     }
 }
 
+/**
+ * Mientras se ve la app principal (barra superior verde), la hora y la batería van en blanco.
+ * Al salir (cerrar sesión → Login crema) vuelven a oscuras, como las deja enableEdgeToEdge en MainActivity.
+ * La barra de navegación del sistema no se toca: abajo el fondo es verde claro y sus íconos siguen oscuros.
+ */
+@Composable
+private fun IconosClarosEnBarraDeEstado() {
+    val vista = LocalView.current
+    if (vista.isInEditMode) return // la vista previa de Android Studio no tiene ventana
+    DisposableEffect(vista) {
+        val ventana = (vista.context as? Activity)?.window
+        val control = ventana?.let { WindowCompat.getInsetsController(it, vista) }
+        control?.isAppearanceLightStatusBars = false // false = íconos claros
+        onDispose { control?.isAppearanceLightStatusBars = true }
+    }
+}
+
 @Composable
 private fun DialogoCerrarSesion(
     pendientes: Int,
@@ -162,7 +193,9 @@ private fun DialogoCerrarSesion(
 
 @Composable
 private fun BarraInferior(actual: Pestana, pendientes: Int, rechazados: Int, onElegir: (Pestana) -> Unit) {
-    NavigationBar {
+    // Verde claro (PrincipalSuave). El indicador por defecto es de ese mismo color, así que la pestaña
+    // activa usa un indicador blanco para seguir distinguiéndose.
+    NavigationBar(containerColor = MaterialTheme.colorScheme.primaryContainer) {
         Pestana.entries.forEach { p ->
             val esRegistrar = p == Pestana.REGISTRAR
             NavigationBarItem(
@@ -193,7 +226,7 @@ private fun BarraInferior(actual: Pestana, pendientes: Int, rechazados: Int, onE
                 colors = if (esRegistrar) {
                     NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent)
                 } else {
-                    NavigationBarItemDefaults.colors()
+                    NavigationBarItemDefaults.colors(indicatorColor = MaterialTheme.colorScheme.surface)
                 },
             )
         }

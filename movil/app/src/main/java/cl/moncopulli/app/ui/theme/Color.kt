@@ -11,6 +11,8 @@ val TextoSecundario = Color(0xFF55594F)  // --muted
 val Principal = Color(0xFF1F5C3A)        // --accent
 val PrincipalSuave = Color(0xFFE3F0E7)   // --accent-suave
 val SobrePrincipal = Color(0xFFFFFFFF)   // --on-accent
+// Verde claro para lo que va SOBRE el verde Principal (punto "En línea" del chip en la barra superior).
+val PrincipalClaro = Color(0xFF8FD4A9)   // --accent del modo oscuro del panel
 
 // Rojo SOLO para lo atrasado o urgente.
 val Urgente = Color(0xFF9B2226)          // --danger
