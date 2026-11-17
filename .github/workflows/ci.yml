@@ -62,7 +62,9 @@ jobs:
       - name: Configurar Android SDK
         uses: android-actions/setup-android@v4
         with:
-          packages: 'platform-tools platforms;android-37'
+          packages: platform-tools
+      - name: Instalar Android 17 SDK (canary)
+        run: sdkmanager --channel=3 "platforms;android-37" "build-tools;37.0.0"
       - name: Ejecutar pruebas unitarias y compilar debug
         run: ./gradlew --no-daemon testDebugUnitTest assembleDebug
 

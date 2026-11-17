@@ -15,7 +15,7 @@ Sistema de trazabilidad sanitaria e inventario de medicamentos para la lechería
 ## Requisitos
 
 - Node.js 20 o superior para el panel y el bot.
-- JDK 25 y Android SDK API 37 para compilar la app Android.
+- JDK 25 y Android 17 SDK API 37 (canary) para compilar la app Android.
 - Acceso al proyecto Supabase para aplicar migraciones y usar el sistema.
 - Cuenta de Cloudflare con Wrangler para desplegar el panel o el bot.
 
@@ -53,7 +53,7 @@ Completa `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` en `panel/.env.local`. N
 
 ## App Android
 
-Abre la carpeta `movil/` en Android Studio. Completa `movil/local.properties` con la URL de Supabase y la clave pública `anon`; `movil/local.properties.example` muestra el formato. Android Studio añade allí la ruta local del SDK.
+Abre la carpeta `movil/` en Android Studio. Instala Android 17 SDK API 37 desde el canal Canary. Completa `movil/local.properties` con la URL de Supabase y la clave pública `anon`; `movil/local.properties.example` muestra el formato. Android Studio añade allí la ruta local del SDK.
 
 Ese archivo local está ignorado por Git y no se debe subir. La clave `anon` se incluye en la app y su acceso queda limitado por Auth y RLS. Nunca uses `service_role`.
 
