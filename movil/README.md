@@ -126,7 +126,7 @@ Versiones tomadas de `gradle/libs.versions.toml` y `app/build.gradle.kts`:
 | Ktor (cliente OkHttp) | 3.5.1 |
 | `minSdk` / `targetSdk` / `compileSdk` | 26 (Android 8.0) / 37 / 37 |
 
-El código compila con destino Java 11. Gradle usa el JDK que trae Android Studio.
+El código genera bytecode compatible con Java 11. Gradle y Android Gradle Plugin requieren JDK 25, igual que la versión fijada en `gradle/gradle-daemon-jvm.properties` y la que usa CI.
 
 ## Requisitos en Supabase
 
@@ -154,7 +154,7 @@ Si faltan estas migraciones, la app entra y lista datos, pero falla al aplicar, 
 
 ## Configuración local
 
-La URL y la clave del proyecto se leen de **`movil/local.properties`**. Ese archivo está en `.gitignore` y **nunca se sube al repositorio**. Android Studio lo crea al abrir el proyecto, con `sdk.dir`; hay que agregarle dos líneas:
+La URL y la clave del proyecto se leen de **`movil/local.properties`**. Ese archivo está en `.gitignore` y **nunca se sube al repositorio**. Android Studio lo crea al abrir el proyecto, con `sdk.dir`; agrega las dos propiedades del archivo de referencia `local.properties.example`:
 
 ```properties
 SUPABASE_URL=https://<REF_DEL_PROYECTO>.supabase.co
@@ -204,8 +204,17 @@ Para compartir el APK sin cable: Android 8.0 o superior. Hay que permitir "Insta
 
 ## Pruebas
 
-- **Servidor:** las reglas de negocio que usa la app (roles, idempotencia, stock, resguardo, origen `APPMOVIL`) se prueban en `supabase/tests/0014_*` y `0015_*`. Ver [Requisitos en Supabase](#requisitos-en-supabase).
-- **App:** por ahora las pruebas son manuales; `app/src/test` y `app/src/androidTest` solo tienen los ejemplos de la plantilla. Lista mínima antes de entregar una versión, en release y en un teléfono real:
+Las pruebas unitarias de la app cubren la creación de parámetros para las funciones RPC, la hora que se fija en la cola sin conexión, el umbral de stock bajo mínimo y el cálculo de días hasta el vencimiento. Se ejecutan en la JVM, sin teléfono ni credenciales de Supabase:
+
+```bash
+./gradlew --no-daemon testDebugUnitTest
+```
+
+En Windows: `gradlew.bat --no-daemon testDebugUnitTest`.
+
+CI ejecuta estas pruebas y compila el APK debug con `assembleDebug`; no instala ni publica la app. Las reglas del servidor (roles, idempotencia, stock, resguardo y origen `APPMOVIL`) se prueban por separado en `supabase/tests/0014_*` y `0015_*`. Ver [Requisitos en Supabase](#requisitos-en-supabase).
+
+Además de las pruebas automáticas, antes de entregar una versión conviene revisar en release y en un teléfono real:
   1. Iniciar sesión como ADMIN y como OPERARIO. Un usuario con otro rol o desactivado no debe poder entrar.
   2. Inicio: aplicar una dosis (ver lote y resguardo) y omitir otra con motivo.
   3. Registrar: registrar una aplicación con un DIIO existente.

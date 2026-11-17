@@ -7,6 +7,7 @@ import cl.moncopulli.app.data.dosis.DosisAplicada
 import cl.moncopulli.app.data.dosis.DosisDelDia
 import cl.moncopulli.app.data.dosis.DosisRepository
 import cl.moncopulli.app.data.dosis.NuevoRegistro
+import cl.moncopulli.app.data.dosis.fechaAplicacionParaCola
 import cl.moncopulli.app.data.red.MonitorConexion
 import java.time.OffsetDateTime
 import java.util.concurrent.TimeUnit
@@ -70,7 +71,7 @@ class EnviosRepository @Inject constructor(
      * hora de la sincronización y el resguardo de leche quedaría mal calculado.
      */
     suspend fun aplicarDosis(dosis: DosisDelDia, fecha: OffsetDateTime?, resumen: String): ResultadoEnvio {
-        val momento = fecha ?: OffsetDateTime.now(ZONA_CHILE)
+        val momento = fechaAplicacionParaCola(fecha, OffsetDateTime.now(ZONA_CHILE))
         return escribir(
             tipo = TipoEnvio.APLICAR_DOSIS,
             id = UUID.randomUUID().toString(),
@@ -87,7 +88,7 @@ class EnviosRepository @Inject constructor(
      * stock dos veces. La fecha se fija igual que en [aplicarDosis].
      */
     suspend fun registrarAplicacion(r: NuevoRegistro, resumen: String): ResultadoEnvio {
-        val momento = r.fecha ?: OffsetDateTime.now(ZONA_CHILE)
+        val momento = fechaAplicacionParaCola(r.fecha, OffsetDateTime.now(ZONA_CHILE))
         return escribir(
             tipo = TipoEnvio.REGISTRAR_APLICACION,
             id = r.uuid.toString(),

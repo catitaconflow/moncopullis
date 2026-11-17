@@ -41,6 +41,31 @@ jobs:
       - name: Auditoría de dependencias de producción (falla con severidad alta)
         run: npm audit --omit=dev --audit-level=high
 
+  android:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: movil
+    steps:
+      - uses: actions/checkout@v7
+      - name: Configurar JDK 25
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+          cache-dependency-path: |
+            movil/gradle/wrapper/gradle-wrapper.properties
+            movil/gradle/libs.versions.toml
+            movil/*.gradle*
+            movil/app/*.gradle*
+      - name: Configurar Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools platforms;android-37'
+      - name: Ejecutar pruebas unitarias y compilar debug
+        run: ./gradlew --no-daemon testDebugUnitTest assembleDebug
+
   secretos:
     runs-on: ubuntu-latest
     steps:

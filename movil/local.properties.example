@@ -1,0 +1,4 @@
+# Referencia para movil/local.properties. Reemplaza ambos valores con los de tu proyecto Supabase.
+# No uses aquí la clave service_role.
+SUPABASE_URL=https://<REF_DEL_PROYECTO>.supabase.co
+SUPABASE_ANON_KEY=<CLAVE_ANON_PUBLICA>

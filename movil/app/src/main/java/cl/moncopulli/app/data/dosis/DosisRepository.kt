@@ -68,26 +68,14 @@ class DosisRepository @Inject constructor(
      * Parámetros de fn_app_aplicar_dosis. [fecha] = null → now() en el servidor; si no, la hora
      * elegida (el servidor rechaza fechas más de 5 min en el futuro). El lote lo elige el servidor (FEFO).
      */
-    fun paramsAplicar(dosisId: Long, fecha: OffsetDateTime?): JsonObject = buildJsonObject {
-        put("p_dosis_id", dosisId)
-        // ISO 8601 con desfase, p. ej. "2026-11-14T08:30-03:00": Postgres lo lee como timestamptz.
-        if (fecha != null) put("p_fecha_aplicada", fecha.toString())
-    }
+    fun paramsAplicar(dosisId: Long, fecha: OffsetDateTime?): JsonObject =
+        parametrosAplicarDosis(dosisId, fecha)
 
     /**
      * Parámetros de fn_app_registrar_aplicacion (registro en terreno). Idempotente por p_uuid: si el
      * servidor ya lo tiene responde 'ya_registrado' sin tocar el stock. Los opcionales solo si tienen valor.
      */
-    fun paramsRegistrar(r: NuevoRegistro): JsonObject = buildJsonObject {
-        put("p_uuid", r.uuid.toString())
-        put("p_diio", r.diio)
-        put("p_medicamento_id", r.medicamentoId)
-        put("p_cantidad", r.cantidad)
-        put("p_indicado_por", r.indicadoPor.trim())
-        r.fecha?.let { put("p_fecha_aplicada", it.toString()) }
-        r.motivo?.trim()?.takeIf { it.isNotEmpty() }?.let { put("p_motivo", it) }
-        r.observaciones?.trim()?.takeIf { it.isNotEmpty() }?.let { put("p_observaciones", it) }
-    }
+    fun paramsRegistrar(r: NuevoRegistro): JsonObject = parametrosRegistrarAplicacion(r)
 
     /**
      * Llama a una RPC fn_app_* (ambas devuelven el mismo jsonb). La usan el envío directo y el worker.
