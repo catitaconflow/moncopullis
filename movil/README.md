@@ -128,7 +128,7 @@ Versiones tomadas de `gradle/libs.versions.toml` y `app/build.gradle.kts`:
 
 El código genera bytecode compatible con Java 11. Gradle y Android Gradle Plugin requieren JDK 25, igual que la versión fijada en `gradle/gradle-daemon-jvm.properties` y la que usa CI.
 
-La plataforma configurada es Android 17 (API 37), actualmente en el canal de vista previa Cinnamon Bun. En Android Studio instala **Android SDK Platform Cinnamon Bun Preview** y la versión más reciente de **Android SDK Build-Tools 37** desde SDK Manager → SDK Platforms / SDK Tools. El CI instala estos paquetes desde el canal Canary.
+La plataforma configurada es Android 17 (API 37). En Android Studio instala **Android SDK Platform 37.0** (en la sección Cinnamon Bun Preview mientras siga en vista previa) y **Android SDK Build-Tools 37.0.0** desde SDK Manager → SDK Platforms / SDK Tools. El CI instala `platforms;android-37.0` y `build-tools;37.0.0` desde el canal Canary.
 
 ## Requisitos en Supabase
 

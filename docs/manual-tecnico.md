@@ -21,7 +21,7 @@ Los diagramas están en `docs/diagramas/` (archivos `.drawio` editables y `.png`
 ## 2. Requisitos
 
 - Node.js 20 o superior (CI usa 24), JDK 25 y Git.
-- Android 17 SDK API 37 desde el canal Canary para compilar la app móvil.
+- Android 17 SDK Platform 37.0 desde el canal Canary para compilar la app móvil.
 - Cuenta de Supabase con acceso al proyecto `moncopulli` y cuenta de Cloudflare.
 - No se necesita instalar Supabase CLI ni Wrangler: se usan con `npx`.
 
@@ -156,7 +156,7 @@ panel/src/
 | Permisos por rol en la interfaz | Iniciar sesión con las cuentas OPERARIO y AUDITOR de prueba | Cada rol ve solo sus pantallas |
 | Seguridad | ZAP baseline, `npm audit`, Gitleaks | Sin alertas medias o altas |
 
-En cada pull request y push a `main`, `.github/workflows/ci.yml` ejecuta las pruebas del bot y del panel, ESLint, el build web, las pruebas unitarias Android, `assembleDebug`, `npm audit` y Gitleaks. El job Android instala la plataforma API 37 desde el canal Canary, usa JDK 25 y no necesita secretos de Supabase ni publica el APK.
+En cada pull request y push a `main`, `.github/workflows/ci.yml` ejecuta las pruebas del bot y del panel, ESLint, el build web, las pruebas unitarias Android, `assembleDebug`, `npm audit` y Gitleaks. El job Android instala la plataforma `android-37.0` y Build-Tools `37.0.0` desde el canal Canary, usa JDK 25 y no necesita secretos de Supabase ni publica el APK.
 
 ## 7. Despliegue
 
