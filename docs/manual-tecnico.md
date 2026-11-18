@@ -155,7 +155,7 @@ panel/src/
 | Funciones puras del panel | `cd panel && npm test` | 35 de 35 |
 | Calidad del código del panel | `cd panel && npm run lint` | Sin errores |
 | Bot | `cd bot && npm test` | 34 de 34 |
-| App Android | `cd movil && ./gradlew testDebugUnitTest` | 26 de 26 (parámetros RPC, formato, stock, inventario y 6 capturas de pantalla) |
+| App Android | `cd movil && ./gradlew testDebugUnitTest` | 32 de 32 (parámetros RPC, formato, stock, inventario, cola de envíos en Room y 6 capturas de pantalla) |
 | Base de datos | `npx supabase db query --linked -f supabase/tests/<archivo>.sql` (0001, 0002, 0003, 0005, 0007, 0008, 0010, 0012, 0014, 0015 y 0016) | Cada archivo informa que todas sus pruebas pasan |
 | Interfaz | Playwright (ver `pruebas/panel/resultados_e2e.md`) | Todos los casos pasan |
 | Carga | GitHub, Actions, carga, Run workflow (`pruebas/carga/carga.k6.js`) | p95 menor a 500 ms y 0 fallas en las 3 corridas |

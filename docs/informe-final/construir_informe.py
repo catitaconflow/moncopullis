@@ -157,7 +157,7 @@ T(["Indicador", "Resultado"], [
     ["Pruebas de base de datos", "10 archivos SQL (cada uno en transacción con ROLLBACK); todos pasan"],
     ["Pruebas de interfaz del panel (Playwright)", "12/12 de consulta + 14/14 de registro"],
     ["Pruebas de la app móvil en teléfono real", "37 de 39 casos ejecutados; 36 pasan (97,3 %); 0 defectos graves"],
-    ["App móvil v2 (rediseño, 18-11-2026)", "JUnit 26/26 (incluye 6 capturas automáticas) · Android Lint 0 errores · CI Android en verde · DEF-02 corregido"],
+    ["App móvil v2 (rediseño, 18-11-2026)", "JUnit 32/32 (incluye la cola de envíos AUT-02 y 6 capturas automáticas) · Android Lint 0 errores · CI Android en verde · DEF-02 corregido"],
     ["Carga y estrés", "50 usuarios: p95 entre 27 y 34 ms · hasta 400 usuarios sin fallas"],
     ["Base de datos en producción (verificado en vivo)", "18 tablas, 30 relaciones, 60 índices, RLS en las 18 tablas, 2 tareas programadas; migraciones 0001 a 0016 aplicadas"],
     ["Pruebas en producción de las migraciones nuevas", "0014: M1 a M17 · 0015: O1 a O11 · 0016: T1 a T4 — todas pasan (con ROLLBACK, sin dejar datos)"],
@@ -256,7 +256,7 @@ T(["Tecnología", "Para qué", "Por qué", "Alternativa descartada"], [
     ["Telegram Bot API", "Registro rápido", "Gratis y conocida por el personal", "WhatsApp Business: cobra por conversación"],
     ["GitHub Actions", "CI y respaldo", "Pruebas en cada cambio y respaldo automático diario", "Respaldo manual"],
 ], widths=[3.3, 2.7, 5.5, 4.5], titulo="Tecnologías elegidas", font=9)
-CAJA("¿Por qué Supabase y no Firebase?", "Un integrante exploró Firebase para un monitor de temperatura. Decidimos mantener un solo backend en Supabase porque nuestros datos son muy relacionados (animal → tratamiento → dosis → lote → movimiento) y las reglas críticas (stock no negativo, una sola salida por dosis, auditoría que no se borra) las garantiza PostgreSQL. El trabajo sin señal en terreno lo resuelve la app móvil con su cola local, que era la principal ventaja de Firebase. El monitor de temperatura se propone migrarlo a Supabase en la fase 2 (sección 13.3).")
+CAJA("¿Por qué Supabase y no Firebase?", "Un integrante exploró Firebase para un monitor de temperatura. Decidimos mantener un solo backend en Supabase porque nuestros datos son muy relacionados (animal → tratamiento → dosis → lote → movimiento) y las reglas críticas (stock no negativo, una sola salida por dosis, auditoría que no se borra) las garantiza PostgreSQL. El trabajo sin señal en terreno lo resuelve la app móvil con su cola local, que era la principal ventaja de Firebase. El monitor de temperatura se propone migrarlo a Supabase en la fase 2 (sección 13.4).")
 salto()
 
 # ===================================================================== 4 INTERFACES
@@ -583,6 +583,7 @@ T(["Fecha", "Qué se ejecutó", "Versión", "Responsable", "Resultado"], [
     ["18 nov", "App v2: JUnit, capturas automáticas, Lint, APK firmado y CI del PR #2", "d47f9a0 a 9535c19", "Equipo", "JUnit 26/26, Lint 0 errores, CI 4/4 en verde"],
     ["18 nov", "Migraciones 0014, 0015 y 0016 en producción con sus pruebas", "main 6e0d925", "Equipo", "M1–M17, O1–O11 y T1–T4 pasan"],
     ["18 nov", "App v2 instalada y abierta en emulador Android (Pixel 8, Android 15)", "APK release", "Andy Timbles", "Inicia y conecta con Supabase"],
+    ["18 nov", "AUT-02: cola de envíos con Room en memoria (Robolectric)", "029a5af+", "Equipo", "6/6: orden, id repetido, enviado, fallo, rechazo y limpieza"],
 ], widths=[2, 5.5, 2.6, 2.6, 3.3], titulo="Bitácora de ejecución", font=8.5)
 H("10.3 Resultados por componente", 2)
 T(["Componente", "Casos", "Pasan", "Evidencia"], [
@@ -592,7 +593,7 @@ T(["Componente", "Casos", "Pasan", "Evidencia"], [
     ["Panel E2E (Playwright)", "26 + roles", "26 + roles", "pruebas/panel/"],
     ["App móvil manual (teléfono real)", "39 planificados / 37 ejecutados", "36", "movil/pruebas/"],
     ["App automáticas (ciclos 1 y 2)", "JUnit 14 · Lint · Monkey s42", "Todas las ejecutadas", "Reportes HTML ciclos 1 y 2"],
-    ["App v2 (18-11)", "JUnit 26 (20 de lógica + 6 capturas) · Lint · CI Android", "26/26 · 0 errores · verde", "app/build/reports; PR #2"],
+    ["App v2 (18-11)", "JUnit 32 (20 de lógica + 6 de la cola Room AUT-02 + 6 capturas) · Lint · CI Android", "32/32 · 0 errores · verde", "app/build/reports; PR #2 y #3"],
     ["Migraciones en producción (18-11)", "0014: 17 · 0015: 11 · 0016: 4", "Todas", "Sección 7.3"],
     ["Carga k6 (50 usuarios, 3 corridas)", "470 892 solicitudes", "0 fallas; p95 27–34 ms", "resumen-1..3.json"],
     ["Estrés k6 (100/200/400)", "60 050 solicitudes", "0 fallas; p95 ≤ 69 ms", "resumen-estres.json"],
@@ -622,7 +623,7 @@ H("11.1 Cumplimiento de criterios", 2)
 T(["Criterio", "Meta", "Resultado", "¿Cumple?"], [
     ["CA-01", "100 % grupos A, B y C", "24 de 24", "Sí"],
     ["CA-02", "≥ 95 % de 39 casos", "36/39 = 92,3 % (36/37 ejecutados = 97,3 %)", "No (faltan 2 por ejecutar)"],
-    ["CA-03", "100 % automáticas", "Bot 34/34, panel 35/35, JUnit 26/26 (app v2); Room sin ejecutar", "Parcial"],
+    ["CA-03", "100 % automáticas", "Bot 34/34, panel 35/35, JUnit 32/32 con la prueba de Room (AUT-02, 6/6) ejecutada en la JVM con Robolectric", "Sí"],
     ["CA-04", "0 errores de análisis", "ESLint 0; Android Lint 0 errores, 20 advertencias con decisión", "Sí"],
     ["CA-05", "0 cierres en 3 semillas", "0 y 0 en semilla 42 (2 veces); 7 y 123 sin ejecutar", "Parcial"],
     ["CA-06", "20 enviados, 0 duplicados", "20 en 2,3 s; SQL: 20 distintos", "Sí"],
@@ -676,7 +677,7 @@ salto()
 H("13. Recomendaciones y mejora continua", 1)
 T(["ID", "Recomendación", "Origen", "Prioridad", "Cómo sabremos que está cerrada"], [
     ["R-13", "Fusionar el PR y aplicar migraciones 0014 y 0015 en producción", "Discrepancia migraciones", "Cerrada", "Hecho el 18-11: 0001–0016 en remoto; M1–M17 y O1–O11 pasan"],
-    ["R-03", "Ejecutar AUT-02 (Room), Monkey semillas 7 y 123, MOV-33 (red lenta) y MOV-38", "CA-02, CA-03, CA-05", "Alta", "Los 3 criterios en «Sí»"],
+    ["R-03", "Ejecutar AUT-02 (Room), Monkey semillas 7 y 123, MOV-33 (red lenta) y MOV-38", "CA-02, CA-03, CA-05", "Alta", "AUT-02 hecha (6/6, CA-03 cumplido). MOV-33 y MOV-38 en la planilla del ciclo 3. Monkey 7 y 123 solo contra un Supabase de pruebas (en producción tocaría datos reales)"],
     ["R-04", "Llevar al cliente las 4 preguntas de la prueba de uso y repetir MOV-39 con un operario real", "OBS-04, sección 11.3", "Alta", "Tabla de entrevistas completa"],
     ["R-05", "Excluir caché, cola y sesión de la transferencia entre dispositivos (data_extraction_rules.xml)", "Revisión de código", "Alta", "Prueba de transferencia sin datos de la app"],
     ["R-01", "Rediseñar la interfaz móvil (tarjetas, jerarquía, consistencia con el panel)", "DEF-02, opinión del equipo", "Cerrada", "Hecho (sección 4.5). Falta repetir MOV-37 y MOV-38 en teléfono con la v2"],
@@ -691,11 +692,13 @@ T(["ID", "Recomendación", "Origen", "Prioridad", "Cómo sabremos que está cerr
 ], widths=[1.6, 5.4, 3, 1.6, 4.4], titulo="Recomendaciones priorizadas", font=8.5)
 H("13.1 Versión para iPhone", 2)
 P("Decisión del 18-11-2026: se mantiene solo Android. Para mostrar la app desde un computador se entrega un emulador para Windows (sección 7.7.1). El equipo evaluó ofrecer la app también en iOS. La app actual es nativa de Android (Kotlin). Para no mantener dos aplicaciones distintas, la alternativa recomendada es reescribir la interfaz en Flutter, que genera desde un mismo código el APK de Android y la app de iOS, reutilizando las mismas funciones fn_app_* de Supabase. Hay que considerar que instalar en un iPhone requiere un Mac con Xcode y una cuenta de Apple Developer; un APK solo se instala en Android.")
-H("13.2 Mejora continua del proceso", 2)
+H("13.2 Kit del ciclo 3 para el equipo", 2)
+P("Para cerrar R-03, R-04 y R-15 se preparó un kit listo para imprimir (movil/pruebas/ciclo3/Kit_ciclo3_y_entrevistas.docx): una planilla de 12 casos para la app v2 en el emulador (con espacio para el resultado exacto y la captura) y el formulario de entrevista a operarios con la tabla de la sección 7.4. La carpeta del emulador trae herramientas de un clic para capturar la pantalla, poner la fuente al máximo y simular una red 2G.")
+H("13.3 Mejora continua del proceso", 2)
 B(["Mantener la regla «sin evidencia no hay prueba aprobada».",
    "Agregar la app al CI con Lint y JUnit en cada pull request (ya implementado en la rama de la app).",
    "Revisión cruzada: quien programa no es quien firma la prueba de aceptación."])
-H("13.3 Propuesta: monitoreo de la cadena de frío", 2)
+H("13.4 Propuesta: monitoreo de la cadena de frío", 2)
 P("Un integrante desarrolló un prototipo que muestra en vivo la temperatura y humedad de sensores con alerta fuera del rango de 2 a 8 °C, el rango de conservación de vacunas. Se propone integrarlo en la fase 2 sobre Supabase, como un nuevo tipo de alerta, para que una falla del refrigerador no inutilice el stock sin que nadie lo note.")
 F(D / "propuesta_frio.png", "Propuesta de integración del monitor de temperatura (fase 2, no implementado).", 14)
 salto()
