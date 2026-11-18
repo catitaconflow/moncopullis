@@ -1,0 +1,23 @@
+EMULADOR ANDROID PARA LA APP MONCOPULLI (Windows 10/11)
+
+1. Antes de la primera vez (una sola vez):
+   - Busca en Windows "Activar o desactivar las características de Windows".
+   - Marca "Plataforma de hipervisor de Windows" (Windows Hypervisor Platform) y acepta.
+   - Reinicia el computador.
+   - Si no aparece o el emulador dice que falta aceleración: entra a la BIOS y activa
+     "Virtualization Technology" (Intel VT-x) o "SVM Mode" (AMD).
+
+2. Deja el archivo Moncopulli.apk en esta misma carpeta.
+
+3. Doble clic en INICIAR_EMULADOR.bat
+   - La primera vez descarga unos 4 GB (Java, herramientas de Android y Android 15)
+     en %LOCALAPPDATA%\MoncopulliEmulador. Tarda entre 10 y 30 minutos según tu internet.
+   - Las siguientes veces abre en 1 a 2 minutos.
+   - Al terminar, la app queda instalada y abierta en un teléfono virtual Pixel 8.
+
+4. Para probar sin señal: en el emulador, baja la cortina de notificaciones y activa el modo avión.
+
+5. Para borrar todo: elimina la carpeta %LOCALAPPDATA%\MoncopulliEmulador.
+
+Si Windows SmartScreen avisa al abrir el .bat: "Más información" -> "Ejecutar de todas formas".
+El script solo descarga desde dl.google.com (Android oficial) y api.adoptium.net (Java oficial).

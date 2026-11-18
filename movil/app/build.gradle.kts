@@ -73,7 +73,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     testImplementation(libs.junit)
     // Capturas de pantalla en la JVM (sin emulador): Robolectric con gráficos nativos.
-    testImplementation("org.robolectric:robolectric:4.18")
+    testImplementation(libs.robolectric)
     testImplementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(platform(libs.androidx.compose.bom))
