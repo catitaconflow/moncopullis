@@ -14,10 +14,16 @@ EMULADOR ANDROID PARA LA APP MONCOPULLI (Windows 10/11)
      en %LOCALAPPDATA%\MoncopulliEmulador. Tarda entre 10 y 30 minutos según tu internet.
    - Las siguientes veces abre en 1 a 2 minutos.
    - Al terminar, la app queda instalada y abierta en un teléfono virtual Pixel 8.
+   - Para instalar otra versión: arrastra el .apk encima de la pantalla del emulador.
+   - Para agrandar la ventana: arrastra la esquina inferior derecha.
 
-4. Para probar sin señal: en el emulador, baja la cortina de notificaciones y activa el modo avión.
+4. Herramientas para las pruebas (con el emulador abierto):
+   - CAPTURA_PANTALLA.bat  guarda una captura en capturas_ciclo3\ con el nombre del caso.
+   - FUENTE_MAX.bat / FUENTE_NORMAL.bat  fuente y pantalla al máximo (caso MOV-37).
+   - RED_LENTA.bat / RED_NORMAL.bat      simula una red 2G lenta (caso MOV-33).
+   - Sin señal: baja la cortina del emulador y desactiva "Internet".
 
 5. Para borrar todo: elimina la carpeta %LOCALAPPDATA%\MoncopulliEmulador.
 
-Si Windows SmartScreen avisa al abrir el .bat: "Más información" -> "Ejecutar de todas formas".
-El script solo descarga desde dl.google.com (Android oficial) y api.adoptium.net (Java oficial).
+Si Windows SmartScreen avisa al abrir un .bat: "Más información" -> "Ejecutar de todas formas".
+Los scripts solo descargan desde dl.google.com (Android oficial) y api.adoptium.net (Java oficial).
