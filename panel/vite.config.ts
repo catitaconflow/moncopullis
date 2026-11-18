@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import { configDefaults } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
@@ -15,5 +16,6 @@ export default defineConfig({
     },
   },
   server: { port: 5173 },
-  test: { environment: 'node' },
+  // tests/e2e son de Playwright (npx playwright test), no de Vitest
+  test: { environment: 'node', exclude: [...configDefaults.exclude, 'tests/e2e/**'] },
 })
