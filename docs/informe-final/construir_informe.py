@@ -133,7 +133,7 @@ T(["Dato", "Detalle"], [
     ["Asignatura", "Proyecto Integrado"],
     ["Profesor", "Javier Elgueta"],
     ["Fecha de entrega", "18 de noviembre de 2026"],
-    ["Versión", "3.0 — Informe final (reemplaza al informe de avance del 26 de octubre)"],
+    ["Versión", "3.1 — Informe final (incluye rediseño de la app y migraciones 0014 a 0016 en producción)"],
     ["Repositorio", "github.com/catitaconflow/moncopullis"],
 ], widths=[4, 12])
 salto()
@@ -157,8 +157,10 @@ T(["Indicador", "Resultado"], [
     ["Pruebas de base de datos", "10 archivos SQL (cada uno en transacción con ROLLBACK); todos pasan"],
     ["Pruebas de interfaz del panel (Playwright)", "12/12 de consulta + 14/14 de registro"],
     ["Pruebas de la app móvil en teléfono real", "37 de 39 casos ejecutados; 36 pasan (97,3 %); 0 defectos graves"],
+    ["App móvil v2 (rediseño, 18-11-2026)", "JUnit 26/26 (incluye 6 capturas automáticas) · Android Lint 0 errores · CI Android en verde · DEF-02 corregido"],
     ["Carga y estrés", "50 usuarios: p95 entre 27 y 34 ms · hasta 400 usuarios sin fallas"],
-    ["Base de datos en producción (verificado en vivo)", "18 tablas, 30 relaciones, 60 índices, RLS en las 18 tablas, 34 funciones seguras, 2 tareas programadas"],
+    ["Base de datos en producción (verificado en vivo)", "18 tablas, 30 relaciones, 60 índices, RLS en las 18 tablas, 2 tareas programadas; migraciones 0001 a 0016 aplicadas"],
+    ["Pruebas en producción de las migraciones nuevas", "0014: M1 a M17 · 0015: O1 a O11 · 0016: T1 a T4 — todas pasan (con ROLLBACK, sin dejar datos)"],
     ["Respaldo", "Diario, con restauración de prueba, verificación de auditoría y cifrado"],
 ], widths=[6.5, 9.5], titulo="Estado del sistema a la fecha de entrega")
 
@@ -230,7 +232,7 @@ T(["Sprint", "Fechas", "Entregado"], [
 ], widths=[4.5, 3, 8.5], titulo="Cronograma real")
 H("2.4 Cómo colaboramos (evidencia en el repositorio)", 2)
 B([("Un solo repositorio ", "en GitHub con una carpeta por componente (supabase/, panel/, bot/, movil/, pruebas/, docs/)."),
-   ("Ramas y pull requests: ", "la app móvil se desarrolló en la rama feature/app-movil y se integra por el pull request #1, con tres revisores asignados, descripción de qué incluye, cómo se probó y qué queda pendiente."),
+   ("Ramas y pull requests: ", "la app móvil se desarrolló en la rama feature/app-movil (pull request #1, con tres revisores asignados). El informe final, el rediseño de la app y el emulador entraron por el pull request #2, que incluyó el #1; se fusionó a main el 18-11-2026 con las cuatro revisiones automáticas en verde (bot, panel, Android y secretos)."),
    ("Commits con formato tipo: descripción ", "(feat, fix, test, docs, ci, chore), para que el historial cuente qué cambió y por qué. La rama principal tiene 46 commits y la rama de la app 52."),
    ("Integración continua: ", "cada push ejecuta las pruebas del bot y del panel, revisa el código, compila, revisa dependencias vulnerables y busca secretos filtrados. En la rama de la app también compila Android y corre sus pruebas JUnit."),
    ("Documentación compartida ", "en docs/ (manual técnico, manual de usuario, modelo de datos, guía de entrevista, preguntas de defensa) y movil/README.md."),
@@ -287,19 +289,47 @@ P("El panel está publicado en un Worker de Cloudflare en https://moncopulli-pan
 H("4.3 App móvil Android", 2)
 P("La app tiene cinco pestañas pensadas para el trabajo en terreno: Inicio (dosis de hoy y atrasadas), Animales (con filtro de resguardo), Registrar, Inventario y Actividad (lo enviado, pendiente y rechazado). Arriba siempre se ve si hay conexión o cuántos registros esperan envío.")
 F(I / "app_login_aplicar.png", "App móvil: mismo mensaje ante contraseña o correo incorrecto (no revela qué correos existen) y aviso tras aplicar una dosis con lote y fecha de resguardo.", 15)
+F(I / "app_v2_a.png", "App v2 (rediseño): Login con encabezado verde, Inicio con resumen del día y tarjetas de dosis, Animales con aviso de resguardo.", 16)
+F(I / "app_v2_b.png", "App v2: Inventario con barra de stock frente al mínimo y lotes, y Actividad con rechazados, por enviar y enviados.", 12)
 F(D / "app_offline.png", "Cómo la app registra sin señal y envía al volver la conexión.", 12)
 H("4.4 Lineamientos estéticos y funcionales", 2)
 T(["Lineamiento", "Cómo se cumple", "Evidencia"], [
-    ["Identidad visual común", "Paleta verde del predio en panel y app; logo de Moncopulli en login, ícono y pestaña Animales; fuente Nunito en la app", "Figuras 4 a 8"],
+    ["Identidad visual común", "Paleta verde del predio en panel y app; logo de Moncopulli en login, ícono y pestaña Animales; fuente Nunito en la app", "Figuras 4 a 11"],
     ["Contraste legible (WCAG 2.2 AA)", "Texto oscuro sobre fondo crema; modo oscuro automático en el panel", "panel/src/index.css"],
-    ["Botones grandes para usar con guantes", "Área táctil mínima de 44 px en panel; botones de ancho completo en la app; menú de botones en el bot", "Figuras 7 y 8"],
+    ["Botones grandes para usar con guantes", "Área táctil mínima de 44 px en panel; botones de ancho completo en la app; menú de botones en el bot", "Figuras 7 a 11"],
     ["Retroalimentación en cada acción", "Estados de carga, vacío, error y éxito; botones deshabilitados mientras se guarda; mensajes en lenguaje simple", "Casos E5, E8, W1, MOV-11"],
     ["Responsive", "Panel de 360 px a escritorio; app adaptada a fuente grande", "P20, P25, MOV-37"],
     ["Prevención de errores", "Confirmación antes de guardar en el bot; fechas futuras bloqueadas; DIIO de 9 dígitos validado", "MOV-10, MOV-13"],
     ["Accesibilidad", "Animaciones se apagan si el sistema lo pide; textos largos con «…» en vez de cortarse", "Animaciones.tsx, DEF-01"],
 ], widths=[3.8, 8, 4.2], titulo="Lineamientos y cumplimiento", font=9)
-H("4.5 Mejora de la interfaz móvil (en curso)", 2)
-P("En las pruebas, el equipo y la persona de prueba de uso consideraron que la interfaz de la app se ve funcional pero anticuada, y la prueba de accesibilidad con fuente al máximo dejó un defecto visual abierto (DEF-02). Por eso la siguiente iteración es un rediseño completo de la interfaz móvil, manteniendo intacta la lógica probada (cola sin conexión, funciones del servidor). Los objetivos del rediseño son: tarjetas con jerarquía clara (hora arriba, DIIO y medicamento a todo el ancho), estados con color e ícono, navegación más limpia y consistencia total con el panel (caso MOV-38).")
+H("4.5 Rediseño de la interfaz móvil (implementado el 18-11-2026)", 2)
+P("El equipo y la persona de la prueba de uso consideraron que la app se veía funcional pero anticuada, y la prueba de accesibilidad con fuente al máximo dejó un defecto visual abierto (DEF-02). Rediseñamos todas las pantallas sin tocar la lógica ya probada (cola sin conexión, caché y funciones del servidor), de modo que los resultados de los ciclos 1 y 2 siguen siendo válidos para el comportamiento.")
+T(["Antes (v1)", "Después (v2)", "Por qué"], [
+    ["Barra superior verde y plana", "Barra clara con título grande, pastilla de conexión y avatar con iniciales", "Más espacio visual y estado de red legible de un vistazo"],
+    ["Inicio: lista de dosis", "Resumen del día con contadores (por aplicar y atrasadas) y tarjetas con pastilla de estado", "El operario ve primero lo urgente"],
+    ["Tarjeta: hora en una columna que quitaba ancho al DIIO", "Hora y estado arriba; DIIO y medicamento a todo el ancho; botones apilados con fuente grande", "Corrige DEF-02 (verificado en la Figura 13)"],
+    ["Inventario: texto de stock", "Cifra grande, barra de stock frente al mínimo y lotes en filas con su vencimiento", "Se entiende el stock sin leer números"],
+    ["Menú de cuenta solo con «Cerrar sesión»", "Nombre, rol, «Abrir panel web» y «Cerrar sesión» en rojo", "Acceso directo al panel para lo que la app no hace (crear cuentas, entradas)"],
+    ["Esquinas de 6 dp, bordes marcados", "Esquinas de 16 dp, sombras suaves, tipografía Nunito en títulos y botones", "Aspecto actual y coherente con la marca"],
+], widths=[4.5, 6.5, 5], titulo="Cambios del rediseño de la app", font=8.5)
+F(I / "app_def02.png", "DEF-02: ciclo 2 (izquierda, DIIO y medicamento cortados con «…») y app v2 con fuente al doble (derecha, todo legible y botones apilados).", 11)
+P("Las capturas de esta sección no son maquetas: las genera una prueba automática (CapturasPantallaTest) que dibuja las pantallas reales de la app con datos ficticios, sin emulador. Así cada cambio futuro de diseño deja su evidencia.")
+H("4.6 Qué hace cada canal (panel, app y bot)", 2)
+P("La base de datos es una sola y las reglas son las mismas para todos. Cada canal ofrece solo lo que tiene sentido donde se usa. Por ejemplo, crear cuentas de usuario es tarea del administrador en la oficina, por eso está en el panel y no en la app de terreno; desde la app, el menú de cuenta lleva directo al panel.")
+T(["Proceso", "Base de datos", "Panel", "App", "Bot"], [
+    ["Crear usuarios y cambiar rol", "✔", "✔ (ADMIN)", "—", "—"],
+    ["Medicamentos y proveedores", "✔", "✔", "—", "—"],
+    ["Entrada de stock", "✔", "✔", "—", "—"],
+    ["Salida o ajuste de stock", "✔", "✔", "✔", "—"],
+    ["Animales: alta y baja", "✔", "✔", "consulta", "consulta"],
+    ["Crear tratamiento con dosis programadas", "✔", "✔", "—", "—"],
+    ["Aplicar dosis programada", "✔", "✔", "✔ (también sin señal)", "—"],
+    ["Registrar tratamiento en terreno", "✔", "✔", "✔ (también sin señal)", "✔"],
+    ["Omitir dosis", "✔", "✔", "✔", "—"],
+    ["Anular tratamiento", "✔", "✔ (ADMIN)", "—", "—"],
+    ["Alertas", "✔ (cada hora)", "✔", "—", "stock bajo"],
+    ["Auditoría, exportar e importar", "✔", "✔", "—", "—"],
+], widths=[5.2, 2.4, 2.6, 3.4, 2.4], titulo="Funciones por canal (verificado contra el código y la base el 18-11-2026)", font=8.5)
 salto()
 
 # ===================================================================== 5 BASE DE DATOS
@@ -375,6 +405,7 @@ T(["Patrón", "Cómo se implementa", "Probado en"], [
     ["Ofuscación del APK", "R8 reduce y ofusca: 263 de 270 clases sin nombre legible", "MOV-34"],
     ["Dependencias revisadas", "npm audit en cada push; React Router actualizado a 7.18.4", "P18; re-ejecución 18-11: 0 vulnerabilidades"],
     ["Respaldo cifrado", "Copia diaria cifrada con age; la clave privada no está en GitHub", "P27"],
+    ["Mínimo privilegio en funciones", "Solo las funciones públicas se pueden llamar por la API; las de trigger y las auxiliares quedaron cerradas (migración 0016)", "T1 a T4"],
 ], widths=[4, 8, 4], titulo="Patrones de seguridad", font=9)
 H("6.2 Cobertura frente a OWASP Top 10 (2021)", 2)
 T(["Riesgo OWASP", "Medida"], [
@@ -416,7 +447,7 @@ B(["npx supabase login  (inicia sesión con la cuenta del proyecto)",
    "npx supabase db push --dry-run  (muestra qué se aplicaría, sin cambiar nada)",
    "npx supabase db push  (aplica las migraciones pendientes, 0001 a 0015)",
    "npx supabase db query --linked -f supabase/tests/<archivo>.sql  (ejecuta cada prueba; terminan en ROLLBACK y no dejan datos)"], style="List Number")
-CAJA("Importante:", "al 18-11-2026 la base de producción tiene aplicadas las migraciones 0001 a 0013. Las 0014 y 0015 (funciones de la app móvil) están en el pull request #1 y se aplicaron solo en el proyecto de pruebas. Deben aplicarse en producción al aprobar el pull request; sin ellas la app inicia sesión y lista datos, pero no puede aplicar ni registrar.", "FBEEDD")
+CAJA("Estado al 18-11-2026:", "la base de producción tiene aplicadas las migraciones 0001 a 0016, igual que el repositorio. Las 0014 y 0015 (app móvil) y la 0016 (cierre de funciones de trigger) se aplicaron después de fusionar el pull request #2; sus pruebas M1 a M17, O1 a O11 y T1 a T4 pasan en producción dentro de transacciones revertidas.")
 H("7.4 Paso 3 — Panel web", 2)
 B(["cd panel  y  npm ci  (instala las dependencias exactas)",
    "Copiar .env.example a .env.local y completar VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY (solo la clave anon)",
@@ -439,6 +470,13 @@ B(["Abrir la carpeta movil/ en Android Studio",
    "En el teléfono: Ajustes → Acerca del teléfono → tocar 7 veces «Número de compilación» → Opciones de desarrollador → activar «Depuración por USB»",
    "Conectar el teléfono por cable y ejecutar: adb install -r app/build/outputs/apk/debug/app-debug.apk",
    "Alternativa sin adb: copiar el .apk al teléfono por cable (modo transferencia de archivos), abrirlo y permitir «instalar apps desconocidas»"], style="List Number")
+P("Versión firmada para entregar: agregar a local.properties RELEASE_STORE_FILE, RELEASE_STORE_PASSWORD, RELEASE_KEY_ALIAS y RELEASE_KEY_PASSWORD y ejecutar ./gradlew assembleRelease. La clave de firma no se sube al repositorio y debe guardarse: sin ella no se pueden instalar actualizaciones sobre la versión anterior.")
+H("7.7.1 Sin teléfono Android: emulador para Windows", 3)
+B(["Activar una vez «Plataforma de hipervisor de Windows» en «Activar o desactivar las características de Windows» y reiniciar.",
+   "Descomprimir Moncopulli_app_y_emulador.zip y hacer doble clic en INICIAR_EMULADOR.bat.",
+   "La primera vez descarga Java, las herramientas de Android, el emulador y Android 15 (unos 4 GB); después abre en 1 a 2 minutos.",
+   "Crea un Pixel 8 virtual, instala el APK y abre la app. Para instalar otra versión basta con arrastrar el .apk sobre el emulador.",
+   "Es la forma recomendada para la demostración, porque el equipo usa iPhone y un APK solo se instala en Android."], style="List Number")
 H("7.8 Paso 7 — Verificación después de instalar", 2)
 T(["Comprobación", "Resultado esperado"], [
     ["Abrir /inventario del panel sin sesión", "Redirige a /login"],
@@ -542,6 +580,9 @@ T(["Fecha", "Qué se ejecutó", "Versión", "Responsable", "Resultado"], [
     ["16 nov", "App ciclo 2: corrección y regresión", "6d25a75", "Liliana Bravo", "OBS corregidas; DEF-02 abierto"],
     ["17 nov", "Caja blanca y caja negra; emulador Pixel 8; HTTP Toolkit", "ZIP del repositorio", "Cristóbal Jara", "69 pruebas OK; NET-03 inconcluso"],
     ["18 nov", "Re-ejecución de regresión antes de entregar", "main 8e18e13", "Equipo", "Bot 34/34, panel 35/35, lint, build, audit 0"],
+    ["18 nov", "App v2: JUnit, capturas automáticas, Lint, APK firmado y CI del PR #2", "d47f9a0 a 9535c19", "Equipo", "JUnit 26/26, Lint 0 errores, CI 4/4 en verde"],
+    ["18 nov", "Migraciones 0014, 0015 y 0016 en producción con sus pruebas", "main 6e0d925", "Equipo", "M1–M17, O1–O11 y T1–T4 pasan"],
+    ["18 nov", "App v2 instalada y abierta en emulador Android (Pixel 8, Android 15)", "APK release", "Andy Timbles", "Inicia y conecta con Supabase"],
 ], widths=[2, 5.5, 2.6, 2.6, 3.3], titulo="Bitácora de ejecución", font=8.5)
 H("10.3 Resultados por componente", 2)
 T(["Componente", "Casos", "Pasan", "Evidencia"], [
@@ -550,7 +591,9 @@ T(["Componente", "Casos", "Pasan", "Evidencia"], [
     ["Panel unitarias (Vitest)", "35", "35", "Re-ejecutado el 18-11"],
     ["Panel E2E (Playwright)", "26 + roles", "26 + roles", "pruebas/panel/"],
     ["App móvil manual (teléfono real)", "39 planificados / 37 ejecutados", "36", "movil/pruebas/"],
-    ["App automáticas", "JUnit 14 · Lint · Monkey s42", "Todas las ejecutadas", "Reportes HTML ciclos 1 y 2"],
+    ["App automáticas (ciclos 1 y 2)", "JUnit 14 · Lint · Monkey s42", "Todas las ejecutadas", "Reportes HTML ciclos 1 y 2"],
+    ["App v2 (18-11)", "JUnit 26 (20 de lógica + 6 capturas) · Lint · CI Android", "26/26 · 0 errores · verde", "app/build/reports; PR #2"],
+    ["Migraciones en producción (18-11)", "0014: 17 · 0015: 11 · 0016: 4", "Todas", "Sección 7.3"],
     ["Carga k6 (50 usuarios, 3 corridas)", "470 892 solicitudes", "0 fallas; p95 27–34 ms", "resumen-1..3.json"],
     ["Estrés k6 (100/200/400)", "60 050 solicitudes", "0 fallas; p95 ≤ 69 ms", "resumen-estres.json"],
     ["Seguridad", "ZAP, token, RLS, jadx, Gitleaks, audit", "Sin hallazgos medios o altos", "pruebas/seguridad/"],
@@ -579,13 +622,13 @@ H("11.1 Cumplimiento de criterios", 2)
 T(["Criterio", "Meta", "Resultado", "¿Cumple?"], [
     ["CA-01", "100 % grupos A, B y C", "24 de 24", "Sí"],
     ["CA-02", "≥ 95 % de 39 casos", "36/39 = 92,3 % (36/37 ejecutados = 97,3 %)", "No (faltan 2 por ejecutar)"],
-    ["CA-03", "100 % automáticas", "Bot 34/34, panel 35/35, JUnit 14/14; Room sin ejecutar", "Parcial"],
+    ["CA-03", "100 % automáticas", "Bot 34/34, panel 35/35, JUnit 26/26 (app v2); Room sin ejecutar", "Parcial"],
     ["CA-04", "0 errores de análisis", "ESLint 0; Android Lint 0 errores, 20 advertencias con decisión", "Sí"],
     ["CA-05", "0 cierres en 3 semillas", "0 y 0 en semilla 42 (2 veces); 7 y 123 sin ejecutar", "Parcial"],
     ["CA-06", "20 enviados, 0 duplicados", "20 en 2,3 s; SQL: 20 distintos", "Sí"],
     ["CA-07", "< 2 s y p95 < 500 ms", "0,50 s; p95 27–69 ms", "Sí"],
     ["CA-08", "< 60 s", "40,37 s", "Sí"],
-    ["CA-09", "0 defectos Alta", "0 (1 Baja abierto)", "Sí"],
+    ["CA-09", "0 defectos Alta", "0 (DEF-02 corregido en la app v2)", "Sí"],
 ], widths=[2, 4, 7, 3], titulo="Validación frente a criterios de aceptación", font=9)
 H("11.2 ¿Son confiables los resultados?", 2)
 B([("Repetibilidad: ", "la carga con JMeter desde un computador variaba de 118 a 6 709 ms con la misma carga. Lo repetimos con k6 desde GitHub Actions tres veces y el p95 quedó entre 27 y 34 ms. Concluimos que la variación era de la red del computador, no del sistema."),
@@ -610,7 +653,7 @@ T(["ID", "Esperado", "Obtenido", "Causa", "Acción / estado"], [
     ["P24", "14 formularios abren", "No abrían", "Doble montaje de React en desarrollo cerraba el diálogo", "Corregido en Dialogo.tsx; 14/14"],
     ["P32", "Importación auditada", "No auditaba; uuid mal formado daba error técnico", "El informe describía algo que el código no hacía", "Migración 0011; pruebas I7 e I8"],
     ["MOV-37 c1 (DEF-01)", "Textos legibles con fuente máxima", "Palabras partidas", "Etiquetas sin límite de líneas; columna de hora de ancho fijo", "Parcialmente corregido (6d25a75)"],
-    ["MOV-37 c2 (DEF-02)", "DIIO y medicamento legibles", "Terminan en «…»", "«Atrasada» bajo la hora agranda la columna y quita ancho", "Abierto → rediseño de tarjetas (R-01)"],
+    ["MOV-37 c2 (DEF-02)", "DIIO y medicamento legibles", "Terminan en «…»", "«Atrasada» bajo la hora agranda la columna y quita ancho", "Corregido en app v2: hora arriba, DIIO a todo el ancho (Figura 13)"],
     ["MOV-11 (OBS-01)", "Botón conserva su texto", "Cambiaba a «Reintentar»", "No distinguía error de validación de error de red", "Corregido y verificado"],
     ["MOV-25 (OBS-02)", "Solo «Descartar»", "Ofrecía «Volver a enviar»", "Todos los rechazos se trataban igual", "Corregido y verificado"],
     ["MOV-30 (OBS-03)", "Formulario se conserva", "Se perdían los campos", "Estado solo en memoria, sin SavedStateHandle", "Corregido: 7 campos se conservan"],
@@ -618,10 +661,13 @@ T(["ID", "Esperado", "Obtenido", "Causa", "Acción / estado"], [
     ["NET-03", "Tráfico Android visible en HTTP Toolkit", "Error TLS -202", "Proxy manual sin certificado de confianza instalado", "Inconcluso; usar el flujo ADB de HTTP Toolkit"],
     ["BB-01", "Panel funcional en Android", "«Configuración incompleta»", "El ZIP no trae .env.local (correcto: no se suben claves)", "Comportamiento esperado; repetir con Supabase de pruebas"],
     ["npm ci (17-11)", "0 vulnerabilidades", "19 avisos (2 críticos)", "npm ci cuenta también herramientas de desarrollo; el CI audita solo producción", "Re-ejecutado 18-11 --omit=dev: 0; revisar las de desarrollo (R-12)"],
-    ["Migraciones", "Producción con 0001–0015", "Producción con 0001–0013", "PR #1 aún no fusionado", "Aplicar 0014–0015 al aprobar el PR (R-13)"],
+    ["Migraciones", "Producción con 0001–0015", "Producción con 0001–0013", "PR #1 aún no fusionado", "Cerrado: PR #2 fusionado y 0014–0015 aplicadas y probadas"],
+    ["Revisión 18-11", "Solo funciones públicas expuestas", "4 funciones de trigger ejecutables por la API", "Permiso por defecto de PostgreSQL al crear funciones", "Migración 0016; pruebas T1–T4"],
+    ["Emulador", "Script instala Android 15", "Quedó esperando sin teléfono virtual", "cmd.exe corta los argumentos en «;»", "Corregido: argumento entre comillas y límite de 8 min"],
+    ["Capturas", "Imagen de cada pantalla", "captureToImage no responde en Robolectric", "Limitación de la herramienta de prueba", "Se dibuja la vista raíz en un Bitmap"],
 ], widths=[2.2, 3, 3, 4, 3.8], titulo="Discrepancias entre lo esperado y lo obtenido", font=8)
 H("12.1 Lectura de las discrepancias", 2)
-B(["De 18 diferencias, 12 están corregidas y verificadas, 1 es comportamiento esperado, 2 son pendientes de entorno (NET-03, migraciones) y 3 quedan abiertas con recomendación.",
+B(["De 21 diferencias, 18 están corregidas y verificadas, 1 es comportamiento esperado, 1 es pendiente de entorno (NET-03) y 1 queda abierta con recomendación (npm ci en herramientas de desarrollo).",
    "Ninguna diferencia perdió o duplicó datos ni permitió una acción no autorizada.",
    "El patrón más repetido fue «lo desplegado o documentado no coincidía con el código» (P10, P11, P32, migraciones). La medida fue comparar siempre historial local y remoto y re-ejecutar las pruebas antes de cada entrega."])
 salto()
@@ -629,21 +675,22 @@ salto()
 # ===================================================================== 13 RECOMENDACIONES
 H("13. Recomendaciones y mejora continua", 1)
 T(["ID", "Recomendación", "Origen", "Prioridad", "Cómo sabremos que está cerrada"], [
-    ["R-13", "Fusionar el PR #1 y aplicar migraciones 0014 y 0015 en producción", "Discrepancia migraciones", "Alta", "migration list muestra 0015 en remoto; pruebas 0014 y 0015 pasan"],
+    ["R-13", "Fusionar el PR y aplicar migraciones 0014 y 0015 en producción", "Discrepancia migraciones", "Cerrada", "Hecho el 18-11: 0001–0016 en remoto; M1–M17 y O1–O11 pasan"],
     ["R-03", "Ejecutar AUT-02 (Room), Monkey semillas 7 y 123, MOV-33 (red lenta) y MOV-38", "CA-02, CA-03, CA-05", "Alta", "Los 3 criterios en «Sí»"],
     ["R-04", "Llevar al cliente las 4 preguntas de la prueba de uso y repetir MOV-39 con un operario real", "OBS-04, sección 11.3", "Alta", "Tabla de entrevistas completa"],
     ["R-05", "Excluir caché, cola y sesión de la transferencia entre dispositivos (data_extraction_rules.xml)", "Revisión de código", "Alta", "Prueba de transferencia sin datos de la app"],
-    ["R-01", "Rediseñar la interfaz móvil (tarjetas, jerarquía, consistencia con el panel)", "DEF-02, opinión del equipo", "Media", "MOV-37 y MOV-38 pasan"],
+    ["R-01", "Rediseñar la interfaz móvil (tarjetas, jerarquía, consistencia con el panel)", "DEF-02, opinión del equipo", "Cerrada", "Hecho (sección 4.5). Falta repetir MOV-37 y MOV-38 en teléfono con la v2"],
     ["R-06", "Cifrar sesión y bases locales (SQLCipher + Android Keystore)", "Revisión de código", "Media", "Inspección del almacenamiento sin datos legibles"],
     ["R-07", "Probar error de red en Registrar, rechazo «pertenece a otro usuario» y corte a mitad de envío", "OBS-01, OBS-02, MOV-28", "Media", "3 casos nuevos pasan"],
     ["R-08", "Que otro integrante repita los grupos A a D sobre el APK final", "Ejecutora = desarrolladora", "Media", "Planilla firmada por otra persona"],
     ["R-14", "Completar NET-03 con el flujo ADB de HTTP Toolkit contra el Supabase de pruebas", "NET-03", "Media", "Captura de solicitudes Android con respuesta"],
     ["R-06b", "Entorno de staging (Supabase + Worker) con E2E en cada PR", "Pruebas en producción con datos ficticios", "Media", "CI despliega a staging"],
     ["R-12", "Revisar los avisos de npm en dependencias de desarrollo", "npm ci 17-11", "Baja", "npm audit sin críticos"],
-    ["R-02/R-10", "Terminar DEF-01 en Inventario; limpiar recursos sin uso", "DEF-01, Lint", "Baja", "Lint sin UnusedResources"],
+    ["R-02/R-10", "Terminar DEF-01 en Inventario; limpiar recursos sin uso", "DEF-01, Lint", "Cerrada", "Hecho: nombre a todo el ancho; Lint sin UnusedResources"],
+    ["R-15", "Repetir en la app v2 los casos clave del ciclo 2 (MOV-07, 17, 21, 22, 25, 37) en el emulador o un teléfono", "Rediseño", "Alta", "Planilla del ciclo 3 con resultados"],
 ], widths=[1.6, 5.4, 3, 1.6, 4.4], titulo="Recomendaciones priorizadas", font=8.5)
 H("13.1 Versión para iPhone", 2)
-P("El equipo evaluó ofrecer la app también en iOS. La app actual es nativa de Android (Kotlin). Para no mantener dos aplicaciones distintas, la alternativa recomendada es reescribir la interfaz en Flutter, que genera desde un mismo código el APK de Android y la app de iOS, reutilizando las mismas funciones fn_app_* de Supabase. Hay que considerar que instalar en un iPhone requiere un Mac con Xcode y una cuenta de Apple Developer; un APK solo se instala en Android.")
+P("Decisión del 18-11-2026: se mantiene solo Android. Para mostrar la app desde un computador se entrega un emulador para Windows (sección 7.7.1). El equipo evaluó ofrecer la app también en iOS. La app actual es nativa de Android (Kotlin). Para no mantener dos aplicaciones distintas, la alternativa recomendada es reescribir la interfaz en Flutter, que genera desde un mismo código el APK de Android y la app de iOS, reutilizando las mismas funciones fn_app_* de Supabase. Hay que considerar que instalar en un iPhone requiere un Mac con Xcode y una cuenta de Apple Developer; un APK solo se instala en Android.")
 H("13.2 Mejora continua del proceso", 2)
 B(["Mantener la regla «sin evidencia no hay prueba aprobada».",
    "Agregar la app al CI con Lint y JUnit en cada pull request (ya implementado en la rama de la app).",
@@ -675,6 +722,7 @@ salto()
 # ===================================================================== 15 CONCLUSIÓN
 H("15. Conclusión", 1)
 P("El sistema resuelve las necesidades diarias del predio: registrar la llegada de medicamentos, controlar el stock por lote, registrar animales y tratamientos, aplicar dosis desde la oficina, el potrero o Telegram, y saber hasta cuándo no entregar la leche de una vaca. Todo queda auditado, se puede exportar para el SAG y se respalda cada día.")
+P("En la última iteración rediseñamos la app móvil, corregimos el defecto visual que quedaba abierto, fusionamos todo el trabajo del equipo en la rama principal con las revisiones automáticas en verde y dejamos la base de producción al día con las migraciones de la app.")
 P("Las reglas importantes las aplica la base de datos, no la pantalla, y las probamos con cada rol, con carga, sin señal y buscando fallas de seguridad. Las diferencias encontradas se documentaron con su causa y la mayoría ya está corregida. Lo que falta, principalmente validar con los operarios del predio y completar cinco pruebas de la app, está identificado con su prioridad y su criterio de cierre.")
 P("Como aprendizaje del equipo, nos quedamos con la regla de no dar por hecha ninguna prueba sin evidencia: varias veces el código, el despliegue y lo que decía el informe no coincidían, y solo lo detectamos porque volvimos a probar.")
 
@@ -705,7 +753,9 @@ T(["Comando", "Resultado"], [
     ["npm run lint", "Sin errores"],
     ["npm run build", "Compilación correcta"],
     ["npm audit --omit=dev", "found 0 vulnerabilities"],
-    ["Consulta a Supabase producción", "18 tablas con RLS; 30 claves foráneas; 60 índices (7 parciales); 43 funciones, 34 SECURITY DEFINER; tareas cron moncopulli-alertas y moncopulli-retencion-bot; migraciones 0001–0013"],
+    ["cd movil && ./gradlew testDebugUnitTest lintDebug assembleRelease", "26 pruebas pasan · Lint 0 errores · APK firmado de 2,9 MB"],
+    ["Migraciones en producción", "0014 (M1–M17), 0015 (O1–O11) y 0016 (T1–T4): todas pasan"],
+    ["Consulta a Supabase producción", "18 tablas con RLS; 30 claves foráneas; 60 índices (7 parciales); 43 funciones, 34 SECURITY DEFINER; tareas cron moncopulli-alertas y moncopulli-retencion-bot; migraciones 0001–0016"],
 ], widths=[5.5, 10.5], titulo="Re-ejecución antes de la entrega", font=9)
 H("Anexo B. Evidencias de accesibilidad de la app", 1)
 F(I / "app_accesibilidad.png", "MOV-37 con fuente y pantalla al máximo: ciclo 1 (palabras partidas) y ciclo 2 (texto con «…»).", 10)

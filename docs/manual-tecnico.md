@@ -7,7 +7,7 @@ Los diagramas están en `docs/diagramas/` (archivos `.drawio` editables y `.png`
 
 | Carpeta | Qué contiene | Tecnología |
 |---------|--------------|------------|
-| `supabase/migrations/` | Esquema de la base: tablas, restricciones, RLS, triggers y funciones (0001 a 0015) | PostgreSQL 17 en Supabase |
+| `supabase/migrations/` | Esquema de la base: tablas, restricciones, RLS, triggers y funciones (0001 a 0016) | PostgreSQL 17 en Supabase |
 | `supabase/functions/crear-usuario/` | Alta de usuarios con contraseña temporal | Deno, Supabase Edge Functions |
 | `supabase/tests/` | Pruebas SQL que terminan en ROLLBACK | SQL |
 | `bot/` | Worker de la API: webhook de Telegram e importación | TypeScript, Cloudflare Workers |
@@ -111,6 +111,9 @@ Para revisar la tarea programada: `select jobname, schedule, active from cron.jo
 - **0013** es limpieza: borra las vistas `v_*` que nadie consulta (corrían con permisos del dueño y saltaban el RLS), el índice único de nombre que repetía `medicamento_nombre_ci_uk` y quita a `anon` el permiso sobre `fn_rol_actual`. No toca datos.
 - **0014** agrega las funciones idempotentes `fn_app_registrar_aplicacion` y `fn_app_aplicar_dosis`, usadas por los registros de terreno y la aplicación de dosis desde Android. Prueba: `supabase/tests/0014_pruebas_app_movil.sql`.
 - **0015** registra el origen `APPMOVIL` en dosis, movimientos y auditoría, y agrega `fn_app_omitir_dosis` y `fn_app_registrar_salida`. Prueba: `supabase/tests/0015_pruebas_origen_app.sql`.
+- **0016** quita el permiso de ejecución por la API a las funciones de trigger (`fn_solo_insercion`, `fn_mov_actualiza_stock`, `fn_mov_lote_de_dosis`, `fn_medicamento_protege_stock`). Los triggers siguen funcionando. Prueba: `supabase/tests/0016_pruebas_funciones_trigger.sql`.
+
+Estado en producción (18-11-2026): migraciones 0001 a 0016 aplicadas; pruebas 0014 (M1 a M17), 0015 (O1 a O11) y 0016 (T1 a T4) pasan.
 
 Las migraciones se aplican manualmente después de revisar `npx supabase db push --dry-run`; ningún workflow las ejecuta automáticamente.
 
@@ -140,16 +143,20 @@ panel/src/
 - Lee con PostgREST bajo RLS y escribe solo mediante funciones `fn_app_*`. La autorización de ADMIN u OPERARIO y las reglas de stock, resguardo y auditoría siguen en Supabase.
 - `movil/local.properties` contiene la URL de Supabase y la clave pública `anon` para la compilación local. Se crea desde la referencia `movil/local.properties.example`, se mantiene ignorado por Git y no se necesita para compilar en CI.
 - Comandos desde `movil/`: `./gradlew testDebugUnitTest` ejecuta las pruebas unitarias y `./gradlew assembleDebug` compila el APK de depuración. Windows usa `gradlew.bat`.
+- Interfaz v2 (rediseño del 18-11-2026): tema en `ui/theme/` y componentes compartidos en `ui/comun/Disenio.kt` (`TarjetaMonco`, `CampoBusqueda`, `EncabezadoSeccion`, `BarraStock`, `IconoCirculo`). Las tarjetas de Inicio ponen la hora arriba y el DIIO y el medicamento a todo el ancho (corrige DEF-02); con fuente ≥ 1,5× los botones se apilan.
+- Capturas automáticas sin emulador: `./gradlew testDebugUnitTest --tests "*CapturasPantallaTest*"` genera PNG en `app/build/capturas/` con Robolectric.
+- Release firmado: agregar en `local.properties` `RELEASE_STORE_FILE`, `RELEASE_STORE_PASSWORD`, `RELEASE_KEY_ALIAS` y `RELEASE_KEY_PASSWORD`, y ejecutar `./gradlew assembleRelease`. El keystore no se sube al repositorio y debe guardarse: sin él no se pueden publicar actualizaciones.
+- Emulador para Windows sin Android Studio: `movil/emulador/INICIAR_EMULADOR.bat` descarga el emulador oficial, crea un Pixel 8 virtual e instala el APK que esté en esa carpeta (ver `LEEME.txt`).
 
 ## 6. Pruebas
 
 | Qué | Comando | Resultado esperado |
 |-----|---------|--------------------|
-| Funciones puras del panel | `cd panel && npm test` | 31 de 31 |
+| Funciones puras del panel | `cd panel && npm test` | 35 de 35 |
 | Calidad del código del panel | `cd panel && npm run lint` | Sin errores |
-| Bot | `cd bot && npm test` | 19 de 19 |
-| App Android | `cd movil && ./gradlew testDebugUnitTest` | Pruebas unitarias de parámetros RPC, hora de cola y reglas de inventario |
-| Base de datos | `npx supabase db query --linked -f supabase/tests/<archivo>.sql` (0001, 0002, 0003, 0005, 0007, 0008, 0010, 0012, 0014 y 0015) | Cada archivo informa que todas sus pruebas pasan |
+| Bot | `cd bot && npm test` | 34 de 34 |
+| App Android | `cd movil && ./gradlew testDebugUnitTest` | 26 de 26 (parámetros RPC, formato, stock, inventario y 6 capturas de pantalla) |
+| Base de datos | `npx supabase db query --linked -f supabase/tests/<archivo>.sql` (0001, 0002, 0003, 0005, 0007, 0008, 0010, 0012, 0014, 0015 y 0016) | Cada archivo informa que todas sus pruebas pasan |
 | Interfaz | Playwright (ver `pruebas/panel/resultados_e2e.md`) | Todos los casos pasan |
 | Carga | GitHub, Actions, carga, Run workflow (`pruebas/carga/carga.k6.js`) | p95 menor a 500 ms y 0 fallas en las 3 corridas |
 | Estrés | GitHub, Actions, estres, Run workflow (`pruebas/carga/estres.k6.js`) | Sin fallas con 100, 200 y 400 usuarios |
