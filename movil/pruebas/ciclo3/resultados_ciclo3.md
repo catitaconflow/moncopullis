@@ -1,6 +1,6 @@
 # Ciclo 3: app móvil v2 (18-11-2026)
 
-Ejecutado con Chrome automatizado (Playwright) contra producción, con la cuenta ADMIN y registros [FALSO]. Las acciones de la app se hicieron por la misma API que usa Android (funciones `fn_app_*` con la sesión de Supabase Auth); el resultado se verificó en el panel publicado y en la base. Script: `ciclo3_navegador.js` (credenciales solo por variables de entorno `C3_EMAIL` y `C3_CLAVE`).
+Ejecutado con Chrome automatizado (Playwright) contra producción, con la cuenta ADMIN y registros [FALSO]. Las acciones de la app se hicieron por la misma API que usa Android (funciones `fn_app_*` con la sesión de Supabase Auth); el resultado se verificó en el panel publicado y en la base. Script: `ciclo3_navegador.js` (credenciales y clave pública solo por variables de entorno `C3_EMAIL`, `C3_CLAVE` y `C3_KEY`).
 
 | ID | Caso | Esperado | Obtenido | Pasa |
 |---|---|---|---|---|

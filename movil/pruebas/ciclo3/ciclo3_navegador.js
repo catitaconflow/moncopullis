@@ -6,7 +6,7 @@ const path = require('path');
 
 const PANEL = 'https://moncopulli-panel.itskay666.workers.dev';
 const SB = 'https://gagxfsyrsrfnjuseengj.supabase.co';
-const KEY = 'sb_publishable_r1MmubwecAXdcDwP73PdOg_oBniMDgb'; // clave pública (la misma del APK)
+const KEY = process.env.C3_KEY; // clave pública (publishable) de Supabase, la misma del APK; se pasa por variable de entorno
 const OUT = path.join(__dirname, 'capturas');
 fs.mkdirSync(OUT, { recursive: true });
 const R = [];

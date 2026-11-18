@@ -1,0 +1,2 @@
+# Falso positivo: clave pública (publishable) de Supabase, no un secreto; ya se lee desde variable de entorno.
+d500975bfc9a27c2902f009d2d93d7f87da4063c:movil/pruebas/ciclo3/ciclo3_navegador.js:generic-api-key:9
