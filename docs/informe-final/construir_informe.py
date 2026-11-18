@@ -148,9 +148,8 @@ T(["Dato", "Detalle"], [
 salto()
 
 # ===================================================================== ÍNDICE
-H("Índice", 1)
+_t = doc.add_paragraph(); _r = _t.add_run("Índice"); _r.bold = True; _r.font.size = Pt(16); _r.font.color.rgb = VERDE; _t.paragraph_format.space_after = Pt(10)
 field(doc.add_paragraph(), 'TOC \\o "1-2" \\h \\z \\u')
-P("Nota: al abrir el documento en Word, haga clic derecho sobre el índice y elija «Actualizar campos» para ver los números de página.", italic=True, size=9)
 salto()
 
 # ===================================================================== RESUMEN EJECUTIVO
