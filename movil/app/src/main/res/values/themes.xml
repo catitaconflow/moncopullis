@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Lo que Android dibuja ANTES de que Compose pinte el primer frame. Va en un tema base para que
+         values-v31 lo herede y solo agregue lo de la pantalla de arranque, sin copiar estas líneas. -->
+    <style name="Base.Theme.Moncopulli" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- Crema del tema en vez del gris claro de Theme.Material.Light: sin destello al arrancar. -->
+        <item name="android:windowBackground">@color/fondo</item>
+        <!-- Barras del color del fondo con íconos oscuros mientras arranca; luego manda enableEdgeToEdge.
+             En Android 15+ (targetSdk 35+) statusBarColor ya no tiene efecto y navigationBarColor solo
+             afecta la navegación de 3 botones; ahí se ve el windowBackground detrás de las barras. -->
+        <item name="android:statusBarColor">@color/fondo</item>
+        <item name="android:navigationBarColor">@color/fondo</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <!-- Existe desde API 27; en API 26 se ignora (tools:targetApi solo silencia el aviso de lint). -->
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+    </style>
+
+    <style name="Theme.Moncopulli" parent="Base.Theme.Moncopulli" />
+</resources>

@@ -1,0 +1,1147 @@
+  bash arg: -p
+  bash arg: cl.moncopulli.app
+  bash arg: -s
+  bash arg: 42
+  bash arg: --pct-syskeys
+  bash arg: 0
+  bash arg: --throttle
+  bash arg: 100
+  bash arg: -v
+  bash arg: 5000
+args: [-p, cl.moncopulli.app, -s, 42, --pct-syskeys, 0, --throttle, 100, -v, 5000]
+ arg: "-p"
+ arg: "cl.moncopulli.app"
+ arg: "-s"
+ arg: "42"
+ arg: "--pct-syskeys"
+ arg: "0"
+ arg: "--throttle"
+ arg: "100"
+ arg: "-v"
+ arg: "5000"
+data="cl.moncopulli.app"
+data="42"
+arg="--pct-syskeys" mCurArgData="null" mNextArg=5 argwas="--pct-syskeys" nextarg="0"
+data="0"
+arg="--throttle" mCurArgData="null" mNextArg=7 argwas="--throttle" nextarg="100"
+data="100"
+:Monkey: seed=42 count=5000
+:AllowPackage: cl.moncopulli.app
+:IncludeCategory: android.intent.category.LAUNCHER
+:IncludeCategory: android.intent.category.MONKEY
+// Event percentages:
+//   0: 15.306122%
+//   1: 10.204082%
+//   2: 2.0408163%
+//   3: 15.306122%
+//   4: -0.0%
+//   5: -0.0%
+//   6: 25.510204%
+//   7: 15.306122%
+//   8: -0.0%
+//   9: 2.0408163%
+//   10: 1.0204082%
+//   11: 13.265306%
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(1008.0,884.0)
+:Sending Touch (ACTION_UP): 0:(1005.3496,899.6426)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,1.0)
+:Sending Touch (ACTION_DOWN): 0:(493.0,313.0)
+:Sending Touch (ACTION_UP): 0:(457.87598,331.79883)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,-2.0)
+:Sending Touch (ACTION_DOWN): 0:(753.0,2109.0)
+:Sending Touch (ACTION_UP): 0:(763.98535,2108.4434)
+:Sending Trackball (ACTION_MOVE): 0:(4.0,-2.0)
+:Sending Touch (ACTION_DOWN): 0:(1006.0,1795.0)
+:Sending Touch (ACTION_UP): 0:(985.0752,1720.8555)
+:Sending Touch (ACTION_DOWN): 0:(173.0,1427.0)
+:Sending Touch (ACTION_UP): 0:(172.1377,1430.9971)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-4.0)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,-3.0)
+:Sending Touch (ACTION_DOWN): 0:(383.0,1393.0)
+:Sending Touch (ACTION_UP): 0:(378.0166,1382.4639)
+    //[calendar_time:2026-11-16 22:35:28.768  system_uptime:88524999]
+    // Sending event #100
+    //[calendar_time:2026-11-16 22:35:28.901  system_uptime:88525100]
+    // Sending event #100
+:Sending Touch (ACTION_DOWN): 0:(750.0,1693.0)
+:Sending Touch (ACTION_UP): 0:(750.89746,1687.4883)
+:Sending Touch (ACTION_DOWN): 0:(563.0,1473.0)
+:Sending Touch (ACTION_UP): 0:(544.16797,1485.377)
+:Sending Touch (ACTION_DOWN): 0:(907.0,510.0)
+:Sending Touch (ACTION_UP): 0:(916.1875,515.8291)
+:Sending Touch (ACTION_DOWN): 0:(921.0,1141.0)
+:Sending Touch (ACTION_UP): 0:(1009.73535,1170.5723)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(738.0,1819.0)
+:Sending Touch (ACTION_UP): 0:(734.5879,1819.3271)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,-1.0)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-2.0)
+:Sending Touch (ACTION_DOWN): 0:(976.0,1164.0)
+:Sending Touch (ACTION_UP): 0:(1018.167,1109.9814)
+:Sending Touch (ACTION_DOWN): 0:(1002.0,287.0)
+    //[calendar_time:2026-11-16 22:35:32.318  system_uptime:88528517]
+    // Sending event #200
+:Sending Touch (ACTION_UP): 0:(1016.2881,311.2754)
+:Sending Touch (ACTION_DOWN): 0:(307.0,1343.0)
+:Sending Touch (ACTION_UP): 0:(306.41113,1376.9463)
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,4.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Sending Touch (ACTION_DOWN): 0:(497.0,2107.0)
+:Sending Touch (ACTION_UP): 0:(496.63574,2104.336)
+:Sending Touch (ACTION_DOWN): 0:(639.0,1008.0)
+:Sending Touch (ACTION_UP): 0:(600.99023,1009.374)
+:Sending Touch (ACTION_DOWN): 0:(687.0,386.0)
+:Sending Touch (ACTION_UP): 0:(679.07324,407.85352)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,-4.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-5.0)
+:Sending Touch (ACTION_DOWN): 0:(607.0,391.0)
+:Sending Touch (ACTION_UP): 0:(610.7549,395.208)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-2.0)
+:Sending Touch (ACTION_DOWN): 0:(636.0,1543.0)
+:Sending Touch (ACTION_UP): 0:(629.03516,1532.3516)
+:Sending Touch (ACTION_DOWN): 0:(813.0,1682.0)
+:Sending Touch (ACTION_UP): 0:(790.81836,1677.1025)
+:Sending Touch (ACTION_DOWN): 0:(565.0,935.0)
+    //[calendar_time:2026-11-16 22:35:35.219  system_uptime:88531418]
+    // Sending event #300
+:Sending Touch (ACTION_UP): 0:(627.6953,865.3594)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,2.0)
+:Sending Touch (ACTION_DOWN): 0:(804.0,2209.0)
+:Sending Touch (ACTION_UP): 0:(791.7363,2325.587)
+:Sending Touch (ACTION_DOWN): 0:(669.0,199.0)
+:Sending Touch (ACTION_UP): 0:(671.98047,213.00781)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,3.0)
+:Sending Touch (ACTION_DOWN): 0:(701.0,2081.0)
+:Sending Touch (ACTION_UP): 0:(702.541,2084.88)
+:Sending Touch (ACTION_DOWN): 0:(258.0,708.0)
+:Sending Touch (ACTION_UP): 0:(258.85938,707.4072)
+:Sending Touch (ACTION_DOWN): 0:(631.0,1368.0)
+:Sending Touch (ACTION_UP): 0:(606.0752,1401.4199)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,4.0)
+:Sending Touch (ACTION_DOWN): 0:(659.0,2330.0)
+:Sending Touch (ACTION_UP): 0:(658.27344,2325.9482)
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.HOME] cmp=com.motorola.launcher3/com.android.launcher3.CustomizationPanelLauncher } in package com.motorola.launcher3
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,2.0)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,-4.0)
+    //[calendar_time:2026-11-16 22:35:37.027  system_uptime:88533226]
+    // Sending event #400
+:Sending Touch (ACTION_DOWN): 0:(161.0,748.0)
+:Sending Touch (ACTION_UP): 0:(176.41309,762.74023)
+:Sending Trackball (ACTION_MOVE): 0:(4.0,3.0)
+:Sending Touch (ACTION_DOWN): 0:(771.0,792.0)
+:Sending Touch (ACTION_UP): 0:(750.79297,768.9785)
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.HOME] cmp=com.motorola.launcher3/com.android.launcher3.CustomizationPanelLauncher } in package com.motorola.launcher3
+:Sending Touch (ACTION_DOWN): 0:(666.0,764.0)
+:Sending Touch (ACTION_UP): 0:(661.03613,781.36914)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,1.0)
+:Sending Touch (ACTION_DOWN): 0:(199.0,2033.0)
+:Sending Touch (ACTION_UP): 0:(205.38672,2035.5)
+:Sending Touch (ACTION_DOWN): 0:(762.0,130.0)
+:Sending Touch (ACTION_UP): 0:(757.81055,125.24219)
+:Sending Touch (ACTION_DOWN): 0:(126.0,18.0)
+:Sending Touch (ACTION_UP): 0:(137.45801,14.411133)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,0.0)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,0.0)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Trackball (ACTION_MOVE): 0:(3.0,3.0)
+:Sending Touch (ACTION_DOWN): 0:(451.0,1064.0)
+:Sending Touch (ACTION_UP): 0:(437.23047,1063.0674)
+:Sending Touch (ACTION_DOWN): 0:(444.0,1508.0)
+:Sending Touch (ACTION_UP): 0:(451.1416,1512.5605)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-3.0)
+    //[calendar_time:2026-11-16 22:35:39.455  system_uptime:88535654]
+    // Sending event #500
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-1.0)
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,-4.0)
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,-4.0)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,1.0)
+:Sending Touch (ACTION_DOWN): 0:(79.0,1627.0)
+:Sending Touch (ACTION_UP): 0:(4.2441406,1683.7412)
+:Sending Touch (ACTION_DOWN): 0:(155.0,443.0)
+:Sending Touch (ACTION_UP): 0:(31.923828,564.08887)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-4.0)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,0.0)
+    //[calendar_time:2026-11-16 22:35:40.958  system_uptime:88537157]
+    // Sending event #600
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,-4.0)
+:Sending Touch (ACTION_DOWN): 0:(606.0,156.0)
+:Sending Touch (ACTION_UP): 0:(599.39844,150.77539)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,3.0)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,-1.0)
+:Sending Touch (ACTION_DOWN): 0:(8.0,559.0)
+:Sending Touch (ACTION_UP): 0:(5.9658203,555.1953)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,0.0)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(939.0,762.0)
+:Sending Touch (ACTION_UP): 0:(972.77734,762.14746)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,-4.0)
+:Sending Touch (ACTION_DOWN): 0:(29.0,1049.0)
+:Sending Touch (ACTION_UP): 0:(0.0,986.5615)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(17.0,1231.0)
+:Sending Touch (ACTION_UP): 0:(17.950195,1211.4258)
+    //[calendar_time:2026-11-16 22:35:43.471  system_uptime:88539670]
+    // Sending event #700
+    //[calendar_time:2026-11-16 22:35:43.573  system_uptime:88539772]
+    // Sending event #700
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,-4.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Sending Touch (ACTION_DOWN): 0:(711.0,1447.0)
+:Sending Touch (ACTION_UP): 0:(715.43555,1444.0107)
+:Sending Touch (ACTION_DOWN): 0:(1058.0,2317.0)
+:Sending Touch (ACTION_UP): 0:(1066.9795,2328.5146)
+:Sending Touch (ACTION_DOWN): 0:(26.0,1097.0)
+:Sending Touch (ACTION_UP): 0:(91.77539,1056.0459)
+:Sending Touch (ACTION_DOWN): 0:(381.0,1125.0)
+:Sending Touch (ACTION_UP): 0:(367.5332,1140.5195)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-2.0)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,3.0)
+:Sending Touch (ACTION_DOWN): 0:(66.0,1653.0)
+:Sending Touch (ACTION_UP): 0:(106.350586,1637.2842)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,0.0)
+:Sending Touch (ACTION_DOWN): 0:(286.0,382.0)
+:Sending Touch (ACTION_UP): 0:(279.02832,385.4414)
+:Sending Touch (ACTION_DOWN): 0:(467.0,1176.0)
+:Sending Touch (ACTION_UP): 0:(393.9912,1138.1631)
+:Sending Touch (ACTION_DOWN): 0:(297.0,46.0)
+:Sending Touch (ACTION_UP): 0:(283.44922,21.972656)
+:Sending Touch (ACTION_DOWN): 0:(479.0,1198.0)
+:Sending Touch (ACTION_UP): 0:(481.38086,1207.4043)
+:Sending Touch (ACTION_DOWN): 0:(1040.0,680.0)
+:Sending Touch (ACTION_UP): 0:(1047.8955,666.6133)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(445.0,843.0)
+:Sending Touch (ACTION_UP): 0:(444.61133,831.2197)
+:Sending Touch (ACTION_DOWN): 0:(651.0,1998.0)
+    //[calendar_time:2026-11-16 22:35:45.831  system_uptime:88542030]
+    // Sending event #800
+:Sending Touch (ACTION_UP): 0:(647.0244,1990.1104)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,0.0)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-2.0)
+:Sending Touch (ACTION_DOWN): 0:(932.0,2197.0)
+:Sending Touch (ACTION_UP): 0:(925.49805,2198.3975)
+    // Rejecting start of Intent { act=com.android.intent.action.SHOW_BRIGHTNESS_DIALOG cmp=com.android.systemui/.settings.brightness.BrightnessDialog } in package com.android.systemui
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,-2.0)
+:Sending Touch (ACTION_DOWN): 0:(351.0,373.0)
+:Sending Touch (ACTION_UP): 0:(384.8496,385.36035)
+:Sending Touch (ACTION_DOWN): 0:(947.0,1729.0)
+:Sending Touch (ACTION_UP): 0:(853.60547,1804.0049)
+:Sending Touch (ACTION_DOWN): 0:(1055.0,1075.0)
+:Sending Touch (ACTION_UP): 0:(1080.0,1170.081)
+:Sending Touch (ACTION_DOWN): 0:(977.0,1443.0)
+:Sending Touch (ACTION_UP): 0:(956.4756,1428.1094)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,-5.0)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,2.0)
+    //[calendar_time:2026-11-16 22:35:47.912  system_uptime:88544111]
+    // Sending event #900
+:Sending Touch (ACTION_DOWN): 0:(739.0,2248.0)
+:Sending Touch (ACTION_UP): 0:(772.6328,2245.8574)
+:Sending Touch (ACTION_DOWN): 0:(188.0,267.0)
+:Sending Touch (ACTION_UP): 0:(138.1289,321.62695)
+    // Rejecting start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] pkg=com.brave.browser cmp=com.brave.browser/com.google.android.apps.chrome.Main } in package com.brave.browser
+    // Rejecting start of Intent { pkg=com.google.android.googlequicksearchbox cmp=com.google.android.googlequicksearchbox/com.google.android.apps.search.assistant.surfaces.voice.robin.ui.floaty.activity.FloatyActivity } in package com.google.android.googlequicksearchbox
+:Sending Touch (ACTION_DOWN): 0:(262.0,445.0)
+:Sending Touch (ACTION_UP): 0:(275.66406,437.58105)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,1.0)
+:Sending Touch (ACTION_DOWN): 0:(877.0,1610.0)
+:Sending Touch (ACTION_UP): 0:(879.3447,1600.5879)
+:Sending Touch (ACTION_DOWN): 0:(548.0,627.0)
+:Sending Touch (ACTION_UP): 0:(580.61035,595.2002)
+:Sending Touch (ACTION_DOWN): 0:(728.0,706.0)
+:Sending Touch (ACTION_UP): 0:(663.3828,698.48145)
+:Sending Touch (ACTION_DOWN): 0:(992.0,528.0)
+:Sending Touch (ACTION_UP): 0:(1080.0,431.60352)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,2.0)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,-1.0)
+    //[calendar_time:2026-11-16 22:35:50.571  system_uptime:88546770]
+    // Sending event #1000
+:Sending Touch (ACTION_DOWN): 0:(936.0,1839.0)
+:Sending Touch (ACTION_UP): 0:(995.5303,1898.625)
+:Sending Touch (ACTION_DOWN): 0:(1004.0,447.0)
+:Sending Touch (ACTION_UP): 0:(1016.9668,456.97363)
+:Sending Touch (ACTION_DOWN): 0:(167.0,373.0)
+:Sending Touch (ACTION_UP): 0:(108.50586,327.64648)
+:Sending Touch (ACTION_DOWN): 0:(745.0,291.0)
+:Sending Touch (ACTION_UP): 0:(743.45215,291.15234)
+:Sending Touch (ACTION_DOWN): 0:(248.0,1822.0)
+:Sending Touch (ACTION_UP): 0:(255.96387,1812.0244)
+:Sending Touch (ACTION_DOWN): 0:(591.0,961.0)
+:Sending Touch (ACTION_UP): 0:(663.8076,1019.542)
+:Sending Touch (ACTION_DOWN): 0:(507.0,263.0)
+:Sending Touch (ACTION_UP): 0:(524.4209,181.87402)
+:Sending Touch (ACTION_DOWN): 0:(1038.0,244.0)
+:Sending Touch (ACTION_UP): 0:(1027.3994,221.69629)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-2.0)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,2.0)
+    //[calendar_time:2026-11-16 22:35:53.069  system_uptime:88549268]
+    // Sending event #1100
+:Sending Touch (ACTION_DOWN): 0:(876.0,1908.0)
+:Sending Touch (ACTION_UP): 0:(874.3457,1905.6523)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,-3.0)
+:Sending Touch (ACTION_DOWN): 0:(827.0,2337.0)
+:Sending Touch (ACTION_UP): 0:(827.5879,2326.5225)
+:Sending Touch (ACTION_DOWN): 0:(73.0,876.0)
+:Sending Touch (ACTION_UP): 0:(74.63281,875.3838)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,4.0)
+:Sending Touch (ACTION_DOWN): 0:(962.0,622.0)
+    // Injection Failed
+:Sending Touch (ACTION_UP): 0:(1038.9043,658.5488)
+    // Injection Failed
+:Sending Touch (ACTION_DOWN): 0:(984.0,1279.0)
+:Sending Touch (ACTION_UP): 0:(974.0635,1278.9883)
+:Sending Touch (ACTION_DOWN): 0:(671.0,2146.0)
+:Sending Touch (ACTION_UP): 0:(668.4121,2145.2393)
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,-4.0)
+:Sending Trackball (ACTION_MOVE): 0:(4.0,-2.0)
+:Sending Touch (ACTION_DOWN): 0:(765.0,2065.0)
+:Sending Touch (ACTION_UP): 0:(763.0342,2081.037)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(994.0,874.0)
+    //[calendar_time:2026-11-16 22:35:55.839  system_uptime:88552038]
+    // Sending event #1200
+:Sending Touch (ACTION_UP): 0:(996.91895,871.7207)
+:Sending Touch (ACTION_DOWN): 0:(182.0,1205.0)
+:Sending Touch (ACTION_UP): 0:(216.91992,1174.9385)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,-4.0)
+:Sending Touch (ACTION_DOWN): 0:(168.0,2355.0)
+:Sending Touch (ACTION_UP): 0:(272.40723,2321.2832)
+:Sending Touch (ACTION_DOWN): 0:(391.0,1748.0)
+:Sending Touch (ACTION_UP): 0:(389.48242,1748.751)
+:Sending Touch (ACTION_DOWN): 0:(868.0,1502.0)
+:Sending Touch (ACTION_UP): 0:(858.97754,1501.7656)
+:Sending Touch (ACTION_DOWN): 0:(497.0,491.0)
+:Sending Touch (ACTION_UP): 0:(491.83496,489.4619)
+    // Rejecting start of Intent { act=com.android.intent.action.SHOW_BRIGHTNESS_DIALOG cmp=com.android.systemui/.settings.brightness.BrightnessDialog } in package com.android.systemui
+:Sending Trackball (ACTION_MOVE): 0:(2.0,3.0)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,-2.0)
+:Sending Touch (ACTION_DOWN): 0:(162.0,1264.0)
+:Sending Touch (ACTION_UP): 0:(152.94629,1268.5381)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,2.0)
+:Sending Trackball (ACTION_MOVE): 0:(4.0,1.0)
+    //[calendar_time:2026-11-16 22:35:58.563  system_uptime:88554761]
+    // Sending event #1300
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,-1.0)
+:Sending Touch (ACTION_DOWN): 0:(18.0,2245.0)
+:Sending Touch (ACTION_UP): 0:(2.4355469,2246.7578)
+:Sending Touch (ACTION_DOWN): 0:(984.0,1411.0)
+:Sending Touch (ACTION_UP): 0:(939.9658,1443.8555)
+:Sending Touch (ACTION_DOWN): 0:(787.0,1914.0)
+:Sending Touch (ACTION_UP): 0:(794.7246,1910.1465)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(160.0,2168.0)
+:Sending Touch (ACTION_UP): 0:(159.83008,2166.3555)
+:Sending Touch (ACTION_DOWN): 0:(487.0,482.0)
+:Sending Touch (ACTION_UP): 0:(471.0879,492.1045)
+:Sending Trackball (ACTION_MOVE): 0:(4.0,1.0)
+:Sending Touch (ACTION_DOWN): 0:(884.0,1720.0)
+:Sending Touch (ACTION_UP): 0:(887.499,1708.8301)
+:Sending Touch (ACTION_DOWN): 0:(936.0,2002.0)
+:Sending Touch (ACTION_UP): 0:(940.5967,1989.3906)
+:Sending Touch (ACTION_DOWN): 0:(53.0,886.0)
+:Sending Touch (ACTION_UP): 0:(55.836914,885.7207)
+:Sending Touch (ACTION_DOWN): 0:(537.0,346.0)
+:Sending Touch (ACTION_UP): 0:(549.1455,344.3086)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,2.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,-4.0)
+    //[calendar_time:2026-11-16 22:36:00.986  system_uptime:88557185]
+    // Sending event #1400
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Sending Touch (ACTION_DOWN): 0:(121.0,499.0)
+:Sending Touch (ACTION_UP): 0:(139.68652,499.45117)
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,4.0)
+:Sending Touch (ACTION_DOWN): 0:(943.0,1069.0)
+:Sending Touch (ACTION_UP): 0:(947.86914,1077.5742)
+:Sending Touch (ACTION_DOWN): 0:(716.0,2166.0)
+:Sending Touch (ACTION_UP): 0:(716.875,2165.5488)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,1.0)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,-1.0)
+:Sending Touch (ACTION_DOWN): 0:(6.0,2157.0)
+:Sending Touch (ACTION_UP): 0:(6.8710938,2156.788)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(678.0,893.0)
+:Sending Touch (ACTION_UP): 0:(673.8779,842.30664)
+:Sending Touch (ACTION_DOWN): 0:(890.0,810.0)
+:Sending Touch (ACTION_UP): 0:(897.4424,816.47363)
+:Sending Touch (ACTION_DOWN): 0:(190.0,1665.0)
+:Sending Touch (ACTION_UP): 0:(183.48633,1639.5713)
+:Sending Touch (ACTION_DOWN): 0:(115.0,1045.0)
+:Sending Touch (ACTION_UP): 0:(113.42578,1026.1494)
+:Sending Touch (ACTION_DOWN): 0:(854.0,641.0)
+:Sending Touch (ACTION_UP): 0:(853.5,639.2041)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Trackball (ACTION_MOVE): 0:(1.0,-2.0)
+    //[calendar_time:2026-11-16 22:36:03.710  system_uptime:88559909]
+    // Sending event #1500
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,1.0)
+:Sending Touch (ACTION_DOWN): 0:(604.0,1282.0)
+:Sending Touch (ACTION_UP): 0:(585.8164,1318.7656)
+:Sending Touch (ACTION_DOWN): 0:(300.0,2264.0)
+:Sending Touch (ACTION_UP): 0:(319.91113,2297.2158)
+:Sending Touch (ACTION_DOWN): 0:(1074.0,1769.0)
+:Sending Touch (ACTION_UP): 0:(1080.0,1804.377)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,2.0)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(439.0,2155.0)
+:Sending Touch (ACTION_UP): 0:(428.0039,2152.873)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,0.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,4.0)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(831.0,137.0)
+:Sending Touch (ACTION_UP): 0:(829.01855,137.97559)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,-3.0)
+    // Rejecting start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=com.google.android.calculator/com.android.calculator2.Calculator } in package com.google.android.calculator
+:Sending Touch (ACTION_DOWN): 0:(198.0,1541.0)
+    //[calendar_time:2026-11-16 22:36:05.973  system_uptime:88562172]
+    // Sending event #1600
+:Sending Touch (ACTION_UP): 0:(102.541016,1564.3369)
+:Sending Touch (ACTION_DOWN): 0:(1009.0,1120.0)
+:Sending Touch (ACTION_UP): 0:(1010.18066,1131.6016)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-1.0)
+:Sending Touch (ACTION_DOWN): 0:(364.0,2162.0)
+:Sending Touch (ACTION_UP): 0:(371.43066,2203.7627)
+:Sending Touch (ACTION_DOWN): 0:(696.0,330.0)
+:Sending Touch (ACTION_UP): 0:(697.0596,322.33496)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,-4.0)
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,0.0)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(263.0,2309.0)
+:Sending Touch (ACTION_UP): 0:(267.5381,2307.621)
+:Sending Touch (ACTION_DOWN): 0:(488.0,474.0)
+:Sending Touch (ACTION_UP): 0:(476.65918,467.99805)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,3.0)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,3.0)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,4.0)
+    //[calendar_time:2026-11-16 22:36:08.086  system_uptime:88564285]
+    // Sending event #1700
+:Sending Touch (ACTION_DOWN): 0:(6.0,2153.0)
+:Sending Touch (ACTION_UP): 0:(0.0,2146.6084)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,1.0)
+:Sending Touch (ACTION_DOWN): 0:(791.0,2387.0)
+:Sending Touch (ACTION_UP): 0:(789.4365,2368.915)
+:Sending Touch (ACTION_DOWN): 0:(671.0,954.0)
+:Sending Touch (ACTION_UP): 0:(672.9385,955.3467)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-3.0)
+:Sending Touch (ACTION_DOWN): 0:(327.0,2055.0)
+:Sending Touch (ACTION_UP): 0:(341.36328,2049.0908)
+:Sending Touch (ACTION_DOWN): 0:(327.0,1194.0)
+:Sending Touch (ACTION_UP): 0:(394.0039,1168.0869)
+:Sending Touch (ACTION_DOWN): 0:(844.0,1123.0)
+:Sending Touch (ACTION_UP): 0:(851.3506,1137.5957)
+:Sending Trackball (ACTION_MOVE): 0:(4.0,-3.0)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,3.0)
+:Sending Touch (ACTION_DOWN): 0:(575.0,1885.0)
+    //[calendar_time:2026-11-16 22:36:10.860  system_uptime:88567059]
+    // Sending event #1800
+:Sending Touch (ACTION_UP): 0:(577.0332,1872.7207)
+:Sending Touch (ACTION_DOWN): 0:(395.0,1644.0)
+:Sending Touch (ACTION_UP): 0:(395.50195,1661.2275)
+:Sending Touch (ACTION_DOWN): 0:(142.0,1590.0)
+:Sending Touch (ACTION_UP): 0:(130.60547,1595.4385)
+:Sending Touch (ACTION_DOWN): 0:(241.0,1344.0)
+:Sending Touch (ACTION_UP): 0:(255.32422,1353.6709)
+:Sending Touch (ACTION_DOWN): 0:(89.0,1205.0)
+:Sending Touch (ACTION_UP): 0:(88.33008,1207.2422)
+:Sending Touch (ACTION_DOWN): 0:(983.0,1879.0)
+:Sending Touch (ACTION_UP): 0:(967.6377,1877.6611)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,3.0)
+:Sending Touch (ACTION_DOWN): 0:(741.0,846.0)
+:Sending Touch (ACTION_UP): 0:(749.31445,848.58203)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,1.0)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,3.0)
+:Sending Touch (ACTION_DOWN): 0:(71.0,2077.0)
+:Sending Touch (ACTION_UP): 0:(63.413086,2028.8076)
+:Sending Touch (ACTION_DOWN): 0:(122.0,93.0)
+:Sending Touch (ACTION_UP): 0:(122.15039,93.38965)
+:Sending Touch (ACTION_DOWN): 0:(1018.0,236.0)
+:Sending Touch (ACTION_UP): 0:(1004.73145,233.09277)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-5.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Sending Touch (ACTION_DOWN): 0:(487.0,590.0)
+:Sending Touch (ACTION_UP): 0:(506.29883,599.3926)
+:Sending Touch (ACTION_DOWN): 0:(357.0,2008.0)
+:Sending Touch (ACTION_UP): 0:(356.60547,2005.2461)
+:Sending Touch (ACTION_DOWN): 0:(91.0,2391.0)
+:Sending Touch (ACTION_UP): 0:(106.865234,2379.8184)
+    //[calendar_time:2026-11-16 22:36:13.555  system_uptime:88569754]
+    // Sending event #1900
+:Sending Touch (ACTION_DOWN): 0:(554.0,1598.0)
+:Sending Touch (ACTION_UP): 0:(548.66797,1595.5557)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,-4.0)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,-5.0)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,-5.0)
+:Sending Touch (ACTION_DOWN): 0:(928.0,2231.0)
+:Sending Touch (ACTION_UP): 0:(928.1426,2224.5166)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,4.0)
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,2.0)
+:Sending Touch (ACTION_DOWN): 0:(979.0,1572.0)
+:Sending Touch (ACTION_UP): 0:(979.23535,1575.3525)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(10.0,546.0)
+:Sending Touch (ACTION_UP): 0:(108.47656,606.41016)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-2.0)
+:Sending Touch (ACTION_DOWN): 0:(417.0,710.0)
+:Sending Touch (ACTION_UP): 0:(414.18066,685.50977)
+:Sending Touch (ACTION_DOWN): 0:(1020.0,1720.0)
+:Sending Touch (ACTION_UP): 0:(1023.2881,1682.9873)
+    //[calendar_time:2026-11-16 22:36:15.302  system_uptime:88571500]
+    // Sending event #2000
+:Sending Touch (ACTION_DOWN): 0:(1036.0,2221.0)
+:Sending Touch (ACTION_UP): 0:(1041.0918,2215.5488)
+:Sending Touch (ACTION_DOWN): 0:(24.0,1086.0)
+:Sending Touch (ACTION_UP): 0:(121.75391,1069.1094)
+:Sending Touch (ACTION_DOWN): 0:(635.0,1746.0)
+:Sending Touch (ACTION_UP): 0:(627.542,1749.6328)
+:Sending Touch (ACTION_DOWN): 0:(59.0,905.0)
+:Sending Touch (ACTION_UP): 0:(64.58984,936.749)
+:Sending Touch (ACTION_DOWN): 0:(425.0,243.0)
+:Sending Touch (ACTION_UP): 0:(413.47363,241.51367)
+:Sending Touch (ACTION_DOWN): 0:(601.0,1570.0)
+:Sending Touch (ACTION_UP): 0:(600.5996,1553.2559)
+:Sending Touch (ACTION_DOWN): 0:(1073.0,716.0)
+:Sending Touch (ACTION_UP): 0:(1063.3086,705.6865)
+:Sending Touch (ACTION_DOWN): 0:(396.0,1181.0)
+:Sending Touch (ACTION_UP): 0:(408.63477,1187.5586)
+    // Rejecting start of Intent { act=com.android.intent.action.SHOW_BRIGHTNESS_DIALOG cmp=com.android.systemui/.settings.brightness.BrightnessDialog } in package com.android.systemui
+:Sending Touch (ACTION_DOWN): 0:(588.0,1918.0)
+:Sending Touch (ACTION_UP): 0:(655.0078,1854.29)
+:Sending Touch (ACTION_DOWN): 0:(140.0,236.0)
+:Sending Touch (ACTION_UP): 0:(143.7207,221.10254)
+:Sending Touch (ACTION_DOWN): 0:(136.0,1694.0)
+:Sending Touch (ACTION_UP): 0:(137.50293,1704.3828)
+:Sending Touch (ACTION_DOWN): 0:(253.0,1790.0)
+:Sending Touch (ACTION_UP): 0:(249.16504,1802.8584)
+:Sending Touch (ACTION_DOWN): 0:(154.0,600.0)
+:Sending Touch (ACTION_UP): 0:(159.60156,617.8086)
+:Sending Touch (ACTION_DOWN): 0:(533.0,348.0)
+    //[calendar_time:2026-11-16 22:36:19.515  system_uptime:88575714]
+    // Sending event #2100
+:Sending Touch (ACTION_UP): 0:(478.31152,374.46094)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,1.0)
+:Sending Touch (ACTION_DOWN): 0:(786.0,2107.0)
+:Sending Touch (ACTION_UP): 0:(781.95996,2181.664)
+:Sending Touch (ACTION_DOWN): 0:(740.0,1412.0)
+:Sending Touch (ACTION_UP): 0:(747.459,1393.3506)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,-5.0)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,-2.0)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-5.0)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,0.0)
+    //[calendar_time:2026-11-16 22:36:21.645  system_uptime:88577844]
+    // Sending event #2200
+    //[calendar_time:2026-11-16 22:36:21.747  system_uptime:88577946]
+    // Sending event #2200
+:Sending Trackball (ACTION_MOVE): 0:(0.0,3.0)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,0.0)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,-1.0)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,3.0)
+:Sending Touch (ACTION_DOWN): 0:(488.0,936.0)
+:Sending Touch (ACTION_UP): 0:(486.82324,935.4092)
+:Sending Touch (ACTION_DOWN): 0:(151.0,1551.0)
+:Sending Touch (ACTION_UP): 0:(196.67773,1558.3828)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,4.0)
+:Sending Touch (ACTION_DOWN): 0:(556.0,975.0)
+:Sending Touch (ACTION_UP): 0:(555.5869,973.5156)
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.HOME] cmp=com.motorola.launcher3/com.android.launcher3.CustomizationPanelLauncher } in package com.motorola.launcher3
+:Sending Touch (ACTION_DOWN): 0:(313.0,1213.0)
+:Sending Touch (ACTION_UP): 0:(268.6621,1168.2891)
+    //[calendar_time:2026-11-16 22:36:24.006  system_uptime:88580205]
+    // Sending event #2300
+    //[calendar_time:2026-11-16 22:36:24.107  system_uptime:88580306]
+    // Sending event #2300
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-5.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Sending Touch (ACTION_DOWN): 0:(79.0,824.0)
+:Sending Touch (ACTION_UP): 0:(90.55371,830.3496)
+:Sending Touch (ACTION_DOWN): 0:(688.0,539.0)
+:Sending Touch (ACTION_UP): 0:(736.63574,639.66406)
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.HOME] cmp=com.motorola.launcher3/com.android.launcher3.CustomizationPanelLauncher } in package com.motorola.launcher3
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,-3.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+    // Rejecting start of Intent { act=com.android.intent.action.SHOW_BRIGHTNESS_DIALOG cmp=com.android.systemui/.settings.brightness.BrightnessDialog } in package com.android.systemui
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(399.0,2109.0)
+:Sending Touch (ACTION_UP): 0:(381.11816,2086.289)
+:Sending Trackball (ACTION_MOVE): 0:(4.0,-4.0)
+    //[calendar_time:2026-11-16 22:36:27.408  system_uptime:88583607]
+    // Sending event #2400
+:Sending Touch (ACTION_DOWN): 0:(950.0,253.0)
+:Sending Touch (ACTION_UP): 0:(874.97656,281.8789)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,-1.0)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,0.0)
+:Sending Touch (ACTION_DOWN): 0:(40.0,2037.0)
+:Sending Touch (ACTION_UP): 0:(37.731445,2013.707)
+:Sending Touch (ACTION_DOWN): 0:(411.0,1795.0)
+:Sending Touch (ACTION_UP): 0:(410.73438,1798.5938)
+:Sending Touch (ACTION_DOWN): 0:(475.0,2015.0)
+:Sending Touch (ACTION_UP): 0:(468.41992,2031.8574)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,-4.0)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-4.0)
+:Sending Touch (ACTION_DOWN): 0:(928.0,2384.0)
+:Sending Touch (ACTION_UP): 0:(921.7324,2387.874)
+    //[calendar_time:2026-11-16 22:36:30.287  system_uptime:88586486]
+    // Sending event #2500
+:Sending Flip keyboardOpen=false
+Got IOException performing flipjava.io.FileNotFoundException: /dev/input/event0: open failed: EACCES (Permission denied)
+    // Injection Failed
+:Sending Touch (ACTION_DOWN): 0:(131.0,85.0)
+:Sending Touch (ACTION_UP): 0:(122.302734,65.41797)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,-4.0)
+:Sending Touch (ACTION_DOWN): 0:(739.0,19.0)
+:Sending Touch (ACTION_UP): 0:(748.38965,4.2158203)
+:Sending Touch (ACTION_DOWN): 0:(310.0,972.0)
+:Sending Touch (ACTION_UP): 0:(324.88477,972.0342)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,3.0)
+:Sending Touch (ACTION_DOWN): 0:(44.0,1883.0)
+:Sending Touch (ACTION_UP): 0:(23.28125,1902.0732)
+:Sending Touch (ACTION_DOWN): 0:(594.0,637.0)
+:Sending Touch (ACTION_UP): 0:(597.916,644.9658)
+:Sending Touch (ACTION_DOWN): 0:(991.0,1215.0)
+:Sending Touch (ACTION_UP): 0:(979.0322,1213.7734)
+:Sending Touch (ACTION_DOWN): 0:(46.0,1859.0)
+:Sending Touch (ACTION_UP): 0:(58.393555,1849.7051)
+:Sending Touch (ACTION_DOWN): 0:(1018.0,1772.0)
+:Sending Touch (ACTION_UP): 0:(1015.8408,1792.1045)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-3.0)
+    //[calendar_time:2026-11-16 22:36:34.241  system_uptime:88590440]
+    // Sending event #2600
+:Sending Touch (ACTION_DOWN): 0:(393.0,1524.0)
+:Sending Touch (ACTION_UP): 0:(474.208,1482.6514)
+:Sending Touch (ACTION_DOWN): 0:(826.0,1754.0)
+:Sending Touch (ACTION_UP): 0:(818.4551,1776.9092)
+:Sending Touch (ACTION_DOWN): 0:(437.0,1494.0)
+:Sending Touch (ACTION_UP): 0:(501.43066,1470.1484)
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,3.0)
+:Sending Flip keyboardOpen=true
+Got IOException performing flipjava.io.FileNotFoundException: /dev/input/event0: open failed: EACCES (Permission denied)
+    // Injection Failed
+:Sending Touch (ACTION_DOWN): 0:(333.0,884.0)
+:Sending Touch (ACTION_UP): 0:(322.042,898.88477)
+:Sending Touch (ACTION_DOWN): 0:(939.0,1900.0)
+:Sending Touch (ACTION_UP): 0:(907.6621,1917.3467)
+:Sending Touch (ACTION_DOWN): 0:(835.0,183.0)
+:Sending Touch (ACTION_UP): 0:(750.0791,243.2793)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,-1.0)
+    //[calendar_time:2026-11-16 22:36:37.931  system_uptime:88594130]
+    // Sending event #2700
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,-3.0)
+:Sending Touch (ACTION_DOWN): 0:(481.0,1346.0)
+:Sending Touch (ACTION_UP): 0:(479.26758,1339.46)
+:Sending Touch (ACTION_DOWN): 0:(663.0,1293.0)
+:Sending Touch (ACTION_UP): 0:(571.7422,1264.6924)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,-1.0)
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,-2.0)
+:Sending Touch (ACTION_DOWN): 0:(1008.0,575.0)
+:Sending Touch (ACTION_UP): 0:(984.5928,578.22266)
+:Sending Touch (ACTION_DOWN): 0:(282.0,257.0)
+:Sending Touch (ACTION_UP): 0:(304.9336,278.1328)
+:Sending Touch (ACTION_DOWN): 0:(129.0,66.0)
+:Sending Touch (ACTION_UP): 0:(104.70801,76.94531)
+:Sending Touch (ACTION_DOWN): 0:(203.0,1461.0)
+:Sending Touch (ACTION_UP): 0:(213.26465,1458.9697)
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,-1.0)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-4.0)
+:Sending Touch (ACTION_DOWN): 0:(308.0,622.0)
+:Sending Touch (ACTION_UP): 0:(315.79883,628.98926)
+:Sending Touch (ACTION_DOWN): 0:(148.0,300.0)
+:Sending Touch (ACTION_UP): 0:(120.76953,320.90918)
+    //[calendar_time:2026-11-16 22:36:39.033  system_uptime:88595232]
+    // Sending event #2800
+    //[calendar_time:2026-11-16 22:36:39.134  system_uptime:88595333]
+    // Sending event #2800
+:Sending Touch (ACTION_DOWN): 0:(210.0,2331.0)
+:Sending Touch (ACTION_UP): 0:(193.20312,2367.0518)
+:Sending Touch (ACTION_DOWN): 0:(13.0,1453.0)
+:Sending Touch (ACTION_UP): 0:(50.375977,1526.3408)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,-4.0)
+:Sending Touch (ACTION_DOWN): 0:(670.0,668.0)
+:Sending Touch (ACTION_UP): 0:(600.4492,675.07715)
+:Sending Touch (ACTION_DOWN): 0:(380.0,1175.0)
+:Sending Touch (ACTION_UP): 0:(394.79492,1183.2178)
+:Sending Touch (ACTION_DOWN): 0:(1069.0,281.0)
+:Sending Touch (ACTION_UP): 0:(994.26465,288.76758)
+:Sending Touch (ACTION_DOWN): 0:(93.0,1671.0)
+:Sending Touch (ACTION_UP): 0:(89.47363,1675.5283)
+:Sending Touch (ACTION_DOWN): 0:(674.0,644.0)
+:Sending Touch (ACTION_UP): 0:(673.9961,646.3037)
+:Sending Touch (ACTION_DOWN): 0:(502.0,2249.0)
+:Sending Touch (ACTION_UP): 0:(491.52148,2231.0674)
+    // Rejecting start of Intent { act=com.android.intent.action.SHOW_BRIGHTNESS_DIALOG cmp=com.android.systemui/.settings.brightness.BrightnessDialog } in package com.android.systemui
+:Sending Touch (ACTION_DOWN): 0:(341.0,1265.0)
+:Sending Touch (ACTION_UP): 0:(348.29297,1277.5586)
+:Sending Touch (ACTION_DOWN): 0:(318.0,1569.0)
+:Sending Touch (ACTION_UP): 0:(318.2168,1569.665)
+    // Rejecting start of Intent { act=android.intent.action.MAIN cmp=com.google.android.inputmethod.latin/com.google.android.apps.inputmethod.latin.preference.SettingsActivity } in package com.google.android.inputmethod.latin
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,2.0)
+    //[calendar_time:2026-11-16 22:36:42.478  system_uptime:88598677]
+    // Sending event #2900
+    // Rejecting start of Intent { act=com.android.intent.action.SHOW_BRIGHTNESS_DIALOG cmp=com.android.systemui/.settings.brightness.BrightnessDialog } in package com.android.systemui
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,-2.0)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,2.0)
+:Sending Touch (ACTION_DOWN): 0:(711.0,1554.0)
+:Sending Touch (ACTION_UP): 0:(713.1367,1554.1143)
+:Sending Trackball (ACTION_MOVE): 0:(4.0,0.0)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,4.0)
+:Sending Touch (ACTION_DOWN): 0:(198.0,1677.0)
+:Sending Touch (ACTION_UP): 0:(197.70605,1667.1172)
+:Sending Touch (ACTION_DOWN): 0:(110.0,1798.0)
+:Sending Touch (ACTION_UP): 0:(113.61426,1793.0703)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,2.0)
+:Sending Touch (ACTION_DOWN): 0:(452.0,1976.0)
+:Sending Touch (ACTION_UP): 0:(460.64844,1980.2393)
+    //[calendar_time:2026-11-16 22:36:44.971  system_uptime:88601170]
+    // Sending event #3000
+:Sending Touch (ACTION_DOWN): 0:(1074.0,1341.0)
+:Sending Touch (ACTION_UP): 0:(1009.6211,1244.4648)
+:Sending Touch (ACTION_DOWN): 0:(550.0,206.0)
+:Sending Touch (ACTION_UP): 0:(482.11133,178.2832)
+:Sending Touch (ACTION_DOWN): 0:(382.0,1639.0)
+:Sending Touch (ACTION_UP): 0:(373.9834,1646.9199)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,4.0)
+:Sending Trackball (ACTION_MOVE): 0:(4.0,3.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,2.0)
+    //[calendar_time:2026-11-16 22:36:47.852  system_uptime:88604050]
+    // Sending event #3100
+    //[calendar_time:2026-11-16 22:36:47.953  system_uptime:88604152]
+    // Sending event #3100
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,-4.0)
+:Sending Touch (ACTION_DOWN): 0:(123.0,1424.0)
+:Sending Touch (ACTION_UP): 0:(105.56152,1508.7344)
+:Sending Touch (ACTION_DOWN): 0:(619.0,1030.0)
+:Sending Touch (ACTION_UP): 0:(620.85645,1037.9248)
+:Sending Touch (ACTION_DOWN): 0:(164.0,1351.0)
+:Sending Touch (ACTION_UP): 0:(178.77734,1349.7568)
+:Sending Touch (ACTION_DOWN): 0:(649.0,1606.0)
+:Sending Touch (ACTION_UP): 0:(644.5078,1604.6299)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,1.0)
+:Sending Touch (ACTION_DOWN): 0:(180.0,687.0)
+:Sending Touch (ACTION_UP): 0:(178.9541,628.3428)
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,-1.0)
+    // Rejecting start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=com.google.android.contacts/com.android.contacts.activities.PeopleActivity } in package com.google.android.contacts
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,-3.0)
+    //[calendar_time:2026-11-16 22:36:50.655  system_uptime:88606854]
+    // Sending event #3200
+:Sending Touch (ACTION_DOWN): 0:(467.0,1929.0)
+:Sending Touch (ACTION_UP): 0:(461.292,1935.6533)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-4.0)
+:Sending Touch (ACTION_DOWN): 0:(586.0,748.0)
+:Sending Touch (ACTION_UP): 0:(521.4883,762.19824)
+:Sending Touch (ACTION_DOWN): 0:(422.0,953.0)
+:Sending Touch (ACTION_UP): 0:(438.1787,955.89844)
+:Sending Touch (ACTION_DOWN): 0:(21.0,2165.0)
+:Sending Touch (ACTION_UP): 0:(47.896484,2190.0762)
+:Sending Touch (ACTION_DOWN): 0:(1041.0,678.0)
+:Sending Touch (ACTION_UP): 0:(995.75684,587.5801)
+:Sending Touch (ACTION_DOWN): 0:(829.0,55.0)
+:Sending Touch (ACTION_UP): 0:(731.46875,0.0)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,-3.0)
+:Sending Touch (ACTION_DOWN): 0:(944.0,537.0)
+:Sending Touch (ACTION_UP): 0:(939.8535,519.60156)
+:Sending Touch (ACTION_DOWN): 0:(1014.0,916.0)
+    //[calendar_time:2026-11-16 22:36:53.783  system_uptime:88609981]
+    // Sending event #3300
+:Sending Touch (ACTION_UP): 0:(1013.8994,916.21387)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,4.0)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,-2.0)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,2.0)
+:Sending Touch (ACTION_DOWN): 0:(685.0,1545.0)
+:Sending Touch (ACTION_UP): 0:(685.94824,1558.4844)
+:Sending Touch (ACTION_DOWN): 0:(875.0,1885.0)
+:Sending Touch (ACTION_UP): 0:(887.05176,1888.3301)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,4.0)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,-2.0)
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,2.0)
+:Sending Flip keyboardOpen=false
+Got IOException performing flipjava.io.FileNotFoundException: /dev/input/event0: open failed: EACCES (Permission denied)
+    // Injection Failed
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(1010.0,1221.0)
+:Sending Touch (ACTION_UP): 0:(998.45215,1240.5703)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,-2.0)
+    //[calendar_time:2026-11-16 22:36:56.126  system_uptime:88612325]
+    // Sending event #3400
+:Sending Flip keyboardOpen=true
+Got IOException performing flipjava.io.FileNotFoundException: /dev/input/event0: open failed: EACCES (Permission denied)
+    // Injection Failed
+:Sending Touch (ACTION_DOWN): 0:(181.0,2210.0)
+:Sending Touch (ACTION_UP): 0:(179.50293,2216.4883)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,4.0)
+:Sending Touch (ACTION_DOWN): 0:(199.0,2399.0)
+:Sending Touch (ACTION_UP): 0:(255.65332,2348.5781)
+:Sending Trackball (ACTION_MOVE): 0:(4.0,-1.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,-3.0)
+:Sending Touch (ACTION_DOWN): 0:(590.0,415.0)
+:Sending Touch (ACTION_UP): 0:(583.63477,411.00098)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-1.0)
+:Sending Touch (ACTION_DOWN): 0:(221.0,1725.0)
+:Sending Touch (ACTION_UP): 0:(274.36914,1744.8145)
+:Sending Touch (ACTION_DOWN): 0:(681.0,180.0)
+:Sending Touch (ACTION_UP): 0:(718.41406,187.64746)
+:Sending Touch (ACTION_DOWN): 0:(821.0,1248.0)
+:Sending Touch (ACTION_UP): 0:(824.35645,1246.5742)
+    //[calendar_time:2026-11-16 22:36:58.511  system_uptime:88614710]
+    // Sending event #3500
+    //[calendar_time:2026-11-16 22:36:58.612  system_uptime:88614811]
+    // Sending event #3500
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,4.0)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,2.0)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,-3.0)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,-1.0)
+:Sending Flip keyboardOpen=false
+Got IOException performing flipjava.io.FileNotFoundException: /dev/input/event0: open failed: EACCES (Permission denied)
+    // Injection Failed
+:Sending Touch (ACTION_DOWN): 0:(443.0,1434.0)
+:Sending Touch (ACTION_UP): 0:(442.63477,1457.9434)
+:Sending Touch (ACTION_DOWN): 0:(833.0,1329.0)
+:Sending Touch (ACTION_UP): 0:(777.7363,1420.2031)
+:Sending Touch (ACTION_DOWN): 0:(397.0,1252.0)
+:Sending Touch (ACTION_UP): 0:(440.0459,1234.8291)
+:Sending Touch (ACTION_DOWN): 0:(1050.0,1423.0)
+:Sending Touch (ACTION_UP): 0:(1029.8662,1435.6455)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,-1.0)
+    //[calendar_time:2026-11-16 22:37:01.209  system_uptime:88617407]
+    // Sending event #3600
+:Sending Touch (ACTION_DOWN): 0:(794.0,1519.0)
+:Sending Touch (ACTION_UP): 0:(794.79004,1520.7383)
+:Sending Flip keyboardOpen=true
+Got IOException performing flipjava.io.FileNotFoundException: /dev/input/event0: open failed: EACCES (Permission denied)
+    // Injection Failed
+:Sending Trackball (ACTION_MOVE): 0:(0.0,3.0)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,-5.0)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,2.0)
+:Sending Trackball (ACTION_MOVE): 0:(4.0,2.0)
+:Sending Touch (ACTION_DOWN): 0:(679.0,130.0)
+:Sending Touch (ACTION_UP): 0:(683.0176,126.59668)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,3.0)
+:Sending Touch (ACTION_DOWN): 0:(31.0,2216.0)
+:Sending Touch (ACTION_UP): 0:(35.682617,2227.169)
+:Sending Touch (ACTION_DOWN): 0:(341.0,1337.0)
+:Sending Touch (ACTION_UP): 0:(335.44336,1335.0596)
+:Sending Touch (ACTION_DOWN): 0:(891.0,1405.0)
+:Sending Touch (ACTION_UP): 0:(898.25195,1418.875)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,4.0)
+    //[calendar_time:2026-11-16 22:37:03.839  system_uptime:88620038]
+    // Sending event #3700
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-5.0)
+:Sending Touch (ACTION_DOWN): 0:(369.0,2258.0)
+:Sending Touch (ACTION_UP): 0:(359.4004,2257.5186)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,-1.0)
+:Sending Trackball (ACTION_MOVE): 0:(4.0,1.0)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,-2.0)
+:Sending Touch (ACTION_DOWN): 0:(585.0,653.0)
+:Sending Touch (ACTION_UP): 0:(587.00195,662.4541)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,3.0)
+:Sending Touch (ACTION_DOWN): 0:(55.0,1791.0)
+:Sending Touch (ACTION_UP): 0:(9.326172,1812.0107)
+:Sending Touch (ACTION_DOWN): 0:(796.0,583.0)
+:Sending Touch (ACTION_UP): 0:(757.01855,602.4326)
+    //[calendar_time:2026-11-16 22:37:05.802  system_uptime:88622001]
+    // Sending event #3800
+    //[calendar_time:2026-11-16 22:37:05.903  system_uptime:88622102]
+    // Sending event #3800
+:Sending Touch (ACTION_DOWN): 0:(829.0,418.0)
+:Sending Touch (ACTION_UP): 0:(831.1875,419.1787)
+:Sending Touch (ACTION_DOWN): 0:(177.0,534.0)
+:Sending Touch (ACTION_UP): 0:(177.46289,523.1504)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,0.0)
+:Sending Touch (ACTION_DOWN): 0:(845.0,1418.0)
+:Sending Touch (ACTION_UP): 0:(845.0,1406.1045)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,3.0)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,3.0)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,0.0)
+:Sending Touch (ACTION_DOWN): 0:(72.0,1787.0)
+:Sending Touch (ACTION_UP): 0:(73.37793,1791.6338)
+:Sending Touch (ACTION_DOWN): 0:(332.0,1645.0)
+:Sending Touch (ACTION_UP): 0:(398.1748,1642.6436)
+:Sending Touch (ACTION_DOWN): 0:(92.0,1586.0)
+:Sending Touch (ACTION_UP): 0:(98.62402,1583.6494)
+:Sending Touch (ACTION_DOWN): 0:(147.0,2368.0)
+:Sending Touch (ACTION_UP): 0:(38.00879,2328.1787)
+:Sending Touch (ACTION_DOWN): 0:(566.0,782.0)
+    //[calendar_time:2026-11-16 22:37:08.246  system_uptime:88624444]
+    // Sending event #3900
+:Sending Touch (ACTION_UP): 0:(572.73145,786.8867)
+:Sending Touch (ACTION_DOWN): 0:(330.0,2371.0)
+:Sending Touch (ACTION_UP): 0:(347.38184,2352.5312)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,-5.0)
+:Sending Touch (ACTION_DOWN): 0:(137.0,724.0)
+:Sending Touch (ACTION_UP): 0:(64.259766,734.44824)
+:Sending Touch (ACTION_DOWN): 0:(212.0,1840.0)
+:Sending Touch (ACTION_UP): 0:(223.95117,1837.3604)
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,-4.0)
+:Sending Touch (ACTION_DOWN): 0:(66.0,1825.0)
+:Sending Touch (ACTION_UP): 0:(65.88086,1820.2168)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,3.0)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,0.0)
+:Sending Touch (ACTION_DOWN): 0:(292.0,1832.0)
+:Sending Touch (ACTION_UP): 0:(304.2793,1811.456)
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.HOME] cmp=com.motorola.launcher3/com.android.launcher3.CustomizationPanelLauncher } in package com.motorola.launcher3
+:Sending Touch (ACTION_DOWN): 0:(437.0,1160.0)
+:Sending Touch (ACTION_UP): 0:(454.8623,1160.1064)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,3.0)
+    //[calendar_time:2026-11-16 22:37:10.791  system_uptime:88626990]
+    // Sending event #4000
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(592.0,17.0)
+:Sending Touch (ACTION_UP): 0:(586.66113,14.438477)
+:Sending Touch (ACTION_DOWN): 0:(841.0,111.0)
+:Sending Touch (ACTION_UP): 0:(853.0039,110.42969)
+:Sending Touch (ACTION_DOWN): 0:(364.0,1258.0)
+:Sending Touch (ACTION_UP): 0:(359.8457,1251.9424)
+:Sending Touch (ACTION_DOWN): 0:(944.0,1425.0)
+:Sending Touch (ACTION_UP): 0:(924.12305,1445.2451)
+:Sending Touch (ACTION_DOWN): 0:(330.0,28.0)
+:Sending Touch (ACTION_UP): 0:(337.9297,13.53418)
+    // Rejecting start of Intent { act=com.android.intent.action.SHOW_BRIGHTNESS_DIALOG cmp=com.android.systemui/.settings.brightness.BrightnessDialog } in package com.android.systemui
+:Sending Trackball (ACTION_MOVE): 0:(4.0,-3.0)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,0.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-3.0)
+:Sending Touch (ACTION_DOWN): 0:(712.0,1611.0)
+:Sending Touch (ACTION_UP): 0:(708.59766,1612.8428)
+:Sending Trackball (ACTION_MOVE): 0:(4.0,0.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+    //[calendar_time:2026-11-16 22:37:13.871  system_uptime:88630070]
+    // Sending event #4100
+:Sending Trackball (ACTION_MOVE): 0:(2.0,3.0)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-3.0)
+:Sending Touch (ACTION_DOWN): 0:(907.0,2215.0)
+:Sending Touch (ACTION_UP): 0:(907.95703,2222.793)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,-5.0)
+:Sending Touch (ACTION_DOWN): 0:(794.0,916.0)
+:Sending Touch (ACTION_UP): 0:(799.5469,899.8828)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-1.0)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(141.0,911.0)
+:Sending Touch (ACTION_UP): 0:(117.36426,942.24316)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,-1.0)
+:Sending Touch (ACTION_DOWN): 0:(436.0,905.0)
+:Sending Touch (ACTION_UP): 0:(432.1006,916.459)
+:Sending Touch (ACTION_DOWN): 0:(1069.0,656.0)
+:Sending Touch (ACTION_UP): 0:(1080.0,655.20215)
+    //[calendar_time:2026-11-16 22:37:16.333  system_uptime:88632532]
+    // Sending event #4200
+    //[calendar_time:2026-11-16 22:37:16.434  system_uptime:88632633]
+    // Sending event #4200
+:Sending Touch (ACTION_DOWN): 0:(862.0,488.0)
+:Sending Touch (ACTION_UP): 0:(868.7744,477.417)
+:Sending Touch (ACTION_DOWN): 0:(61.0,746.0)
+:Sending Touch (ACTION_UP): 0:(78.42383,747.28516)
+:Sending Touch (ACTION_DOWN): 0:(349.0,1262.0)
+:Sending Touch (ACTION_UP): 0:(348.31445,1266.9814)
+    // Rejecting start of Intent { act=android.settings.SETTINGS cmp=com.android.settings/.homepage.SettingsHomepageActivity } in package com.android.settings
+:Sending Touch (ACTION_DOWN): 0:(606.0,1362.0)
+:Sending Touch (ACTION_UP): 0:(619.3623,1370.3691)
+:Sending Touch (ACTION_DOWN): 0:(484.0,450.0)
+:Sending Touch (ACTION_UP): 0:(617.834,306.51367)
+:Sending Touch (ACTION_DOWN): 0:(381.0,56.0)
+:Sending Touch (ACTION_UP): 0:(385.36035,59.186523)
+:Sending Touch (ACTION_DOWN): 0:(555.0,794.0)
+:Sending Touch (ACTION_UP): 0:(567.1572,814.6465)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,-1.0)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,2.0)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,2.0)
+:Sending Touch (ACTION_DOWN): 0:(60.0,1815.0)
+    //[calendar_time:2026-11-16 22:37:19.012  system_uptime:88635211]
+    // Sending event #4300
+:Sending Touch (ACTION_UP): 0:(93.234375,1796.4658)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,1.0)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,-1.0)
+:Sending Touch (ACTION_DOWN): 0:(560.0,1859.0)
+:Sending Touch (ACTION_UP): 0:(609.6836,1777.1602)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(733.0,709.0)
+:Sending Touch (ACTION_UP): 0:(718.0674,712.6006)
+:Sending Touch (ACTION_DOWN): 0:(2.0,514.0)
+:Sending Touch (ACTION_UP): 0:(77.14453,477.29102)
+:Sending Trackball (ACTION_MOVE): 0:(4.0,-5.0)
+:Sending Touch (ACTION_DOWN): 0:(452.0,1770.0)
+:Sending Touch (ACTION_UP): 0:(566.45215,1731.4971)
+:Sending Touch (ACTION_DOWN): 0:(881.0,444.0)
+    //[calendar_time:2026-11-16 22:37:21.298  system_uptime:88637497]
+    // Sending event #4400
+:Sending Touch (ACTION_UP): 0:(925.80273,491.34473)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-3.0)
+:Sending Touch (ACTION_DOWN): 0:(986.0,1782.0)
+:Sending Touch (ACTION_UP): 0:(887.2119,1705.5479)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,1.0)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,-3.0)
+:Sending Touch (ACTION_DOWN): 0:(807.0,1291.0)
+:Sending Touch (ACTION_UP): 0:(834.4375,1303.9199)
+:Sending Touch (ACTION_DOWN): 0:(1022.0,2276.0)
+:Sending Touch (ACTION_UP): 0:(865.2998,2225.13)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,-2.0)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(587.0,1091.0)
+:Sending Touch (ACTION_UP): 0:(588.3633,1082.1924)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,0.0)
+    //[calendar_time:2026-11-16 22:37:23.203  system_uptime:88639402]
+    // Sending event #4500
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,-4.0)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,-2.0)
+:Sending Touch (ACTION_DOWN): 0:(605.0,1255.0)
+:Sending Touch (ACTION_UP): 0:(582.8789,1233.544)
+:Sending Touch (ACTION_DOWN): 0:(765.0,711.0)
+:Sending Touch (ACTION_UP): 0:(762.1377,702.02344)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,3.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Sending Touch (ACTION_DOWN): 0:(957.0,472.0)
+:Sending Touch (ACTION_UP): 0:(960.9424,488.40234)
+:Sending Touch (ACTION_DOWN): 0:(911.0,2232.0)
+:Sending Touch (ACTION_UP): 0:(920.7246,2226.914)
+:Sending Touch (ACTION_DOWN): 0:(516.0,196.0)
+:Sending Touch (ACTION_UP): 0:(496.07812,152.88379)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,-2.0)
+:Sending Touch (ACTION_DOWN): 0:(795.0,1508.0)
+:Sending Touch (ACTION_UP): 0:(829.4531,1564.5938)
+:Sending Touch (ACTION_DOWN): 0:(33.0,680.0)
+:Sending Touch (ACTION_UP): 0:(0.0,639.3037)
+    //[calendar_time:2026-11-16 22:37:25.569  system_uptime:88641768]
+    // Sending event #4600
+    //[calendar_time:2026-11-16 22:37:25.670  system_uptime:88641869]
+    // Sending event #4600
+:Sending Touch (ACTION_DOWN): 0:(458.0,601.0)
+:Sending Touch (ACTION_UP): 0:(426.95508,670.833)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-3.0)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,-4.0)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Touch (ACTION_DOWN): 0:(431.0,1517.0)
+:Sending Touch (ACTION_UP): 0:(418.97266,1518.8555)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,3.0)
+:Sending Flip keyboardOpen=false
+Got IOException performing flipjava.io.FileNotFoundException: /dev/input/event0: open failed: EACCES (Permission denied)
+    // Injection Failed
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,-3.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,4.0)
+:Sending Touch (ACTION_DOWN): 0:(414.0,735.0)
+:Sending Touch (ACTION_UP): 0:(426.86328,735.1133)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,-5.0)
+:Sending Touch (ACTION_DOWN): 0:(527.0,819.0)
+:Sending Touch (ACTION_UP): 0:(523.37695,815.9961)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-1.0)
+:Sending Touch (ACTION_DOWN): 0:(400.0,726.0)
+:Sending Touch (ACTION_UP): 0:(391.3457,720.5205)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,1.0)
+    //[calendar_time:2026-11-16 22:37:27.057  system_uptime:88643255]
+    // Sending event #4700
+:Sending Touch (ACTION_DOWN): 0:(141.0,937.0)
+:Sending Touch (ACTION_UP): 0:(161.78418,934.7832)
+:Sending Touch (ACTION_DOWN): 0:(499.0,558.0)
+:Sending Touch (ACTION_UP): 0:(518.4697,561.6553)
+:Sending Touch (ACTION_DOWN): 0:(1048.0,230.0)
+:Sending Touch (ACTION_UP): 0:(1054.2617,243.45703)
+:Sending Touch (ACTION_DOWN): 0:(274.0,505.0)
+:Sending Touch (ACTION_UP): 0:(267.1211,504.07715)
+:Sending Touch (ACTION_DOWN): 0:(463.0,492.0)
+:Sending Touch (ACTION_UP): 0:(431.53418,554.6162)
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.HOME] cmp=com.motorola.launcher3/com.android.launcher3.CustomizationPanelLauncher } in package com.motorola.launcher3
+:Sending Touch (ACTION_DOWN): 0:(942.0,229.0)
+:Sending Touch (ACTION_UP): 0:(1042.4678,135.11523)
+:Sending Touch (ACTION_DOWN): 0:(994.0,1586.0)
+:Sending Touch (ACTION_UP): 0:(994.5,1520.5986)
+:Sending Touch (ACTION_DOWN): 0:(1023.0,2360.0)
+:Sending Touch (ACTION_UP): 0:(986.06445,2279.7676)
+:Sending Touch (ACTION_DOWN): 0:(123.0,1625.0)
+:Sending Touch (ACTION_UP): 0:(194.31836,1666.3896)
+:Sending Touch (ACTION_DOWN): 0:(809.0,0.0)
+:Sending Touch (ACTION_UP): 0:(735.2881,42.875977)
+:Sending Touch (ACTION_DOWN): 0:(271.0,2202.0)
+:Sending Touch (ACTION_UP): 0:(274.91406,2203.6055)
+:Sending Touch (ACTION_DOWN): 0:(982.0,723.0)
+:Sending Touch (ACTION_UP): 0:(971.4219,724.0283)
+:Sending Touch (ACTION_DOWN): 0:(141.0,993.0)
+    //[calendar_time:2026-11-16 22:37:29.788  system_uptime:88645987]
+    // Sending event #4800
+:Sending Touch (ACTION_UP): 0:(194.82617,915.9971)
+:Sending Touch (ACTION_DOWN): 0:(1054.0,220.0)
+:Sending Touch (ACTION_UP): 0:(1058.5703,225.64062)
+:Sending Touch (ACTION_DOWN): 0:(580.0,908.0)
+:Sending Touch (ACTION_UP): 0:(579.2881,902.39844)
+:Sending Flip keyboardOpen=true
+Got IOException performing flipjava.io.FileNotFoundException: /dev/input/event0: open failed: EACCES (Permission denied)
+    // Injection Failed
+:Sending Trackball (ACTION_MOVE): 0:(3.0,0.0)
+:Sending Trackball (ACTION_MOVE): 0:(4.0,-3.0)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-1.0)
+:Sending Touch (ACTION_DOWN): 0:(403.0,189.0)
+:Sending Touch (ACTION_UP): 0:(373.69238,229.94824)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-5.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Sending Touch (ACTION_DOWN): 0:(450.0,158.0)
+:Sending Touch (ACTION_UP): 0:(380.9082,126.01953)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-2.0)
+:Sending Touch (ACTION_DOWN): 0:(794.0,797.0)
+:Sending Touch (ACTION_UP): 0:(779.08496,796.0537)
+:Sending Touch (ACTION_DOWN): 0:(154.0,2144.0)
+    //[calendar_time:2026-11-16 22:37:31.892  system_uptime:88648091]
+    // Sending event #4900
+:Sending Touch (ACTION_UP): 0:(152.12695,2126.794)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Trackball (ACTION_MOVE): 0:(1.0,3.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Sending Touch (ACTION_DOWN): 0:(948.0,1603.0)
+:Sending Touch (ACTION_UP): 0:(941.2324,1621.2812)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,-3.0)
+:Sending Touch (ACTION_DOWN): 0:(967.0,1226.0)
+:Sending Touch (ACTION_UP): 0:(895.70703,1301.4688)
+:Sending Touch (ACTION_DOWN): 0:(271.0,2283.0)
+:Sending Touch (ACTION_UP): 0:(232.01562,2248.045)
+:Sending Touch (ACTION_DOWN): 0:(457.0,563.0)
+:Sending Touch (ACTION_UP): 0:(463.19727,591.0596)
+:Sending Touch (ACTION_DOWN): 0:(716.0,519.0)
+:Sending Touch (ACTION_UP): 0:(730.01074,428.22266)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=cl.moncopulli.app/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=cl.moncopulli.app/.MainActivity } in package cl.moncopulli.app
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,-1.0)
+Events injected: 5000
+:Sending rotation degree=0, persist=false
+:Dropped: keys=0 pointers=2 trackballs=0 flips=8 rotations=0
+## Network stats: elapsed time=128177ms (0ms mobile, 0ms wifi, 128177ms not connected)
+// Monkey finished

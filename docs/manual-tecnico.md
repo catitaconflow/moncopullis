@@ -7,11 +7,12 @@ Los diagramas están en `docs/diagramas/` (archivos `.drawio` editables y `.png`
 
 | Carpeta | Qué contiene | Tecnología |
 |---------|--------------|------------|
-| `supabase/migrations/` | Esquema de la base: tablas, restricciones, RLS, triggers y funciones (0001 a 0013) | PostgreSQL 17 en Supabase |
+| `supabase/migrations/` | Esquema de la base: tablas, restricciones, RLS, triggers y funciones (0001 a 0015) | PostgreSQL 17 en Supabase |
 | `supabase/functions/crear-usuario/` | Alta de usuarios con contraseña temporal | Deno, Supabase Edge Functions |
 | `supabase/tests/` | Pruebas SQL que terminan en ROLLBACK | SQL |
 | `bot/` | Worker de la API: webhook de Telegram e importación | TypeScript, Cloudflare Workers |
 | `panel/` | Panel web para administración, operación y auditoría | React 18, React Router 7, Vite, TypeScript |
+| `movil/` | App Android para dosis, animales, registro en terreno e inventario con trabajo sin conexión | Kotlin, Jetpack Compose, Supabase, Room, WorkManager |
 | `pruebas/` | Carga (k6 y JMeter), seguridad (ZAP), respaldo, datos de prueba y E2E del panel | SQL, k6, Playwright |
 | `.github/workflows/ci.yml` | Integración continua en cada push | GitHub Actions |
 | `.github/workflows/respaldo.yml` | Respaldo diario cifrado con prueba de restauración y huella de auditoría | GitHub Actions, Docker, age |
@@ -19,7 +20,8 @@ Los diagramas están en `docs/diagramas/` (archivos `.drawio` editables y `.png`
 
 ## 2. Requisitos
 
-- Node.js 20 o superior (CI usa 24) y Git.
+- Node.js 20 o superior (CI usa 24), JDK 25 y Git.
+- Android 17 SDK Platform 37.0 desde el canal Canary para compilar la app móvil.
 - Cuenta de Supabase con acceso al proyecto `moncopulli` y cuenta de Cloudflare.
 - No se necesita instalar Supabase CLI ni Wrangler: se usan con `npx`.
 
@@ -44,6 +46,19 @@ npm run dev                          # http://localhost:5173
 ```
 
 La clave del panel es la `anon`. La clave `service_role` nunca va en el panel ni en el repositorio.
+
+### App Android
+
+Abre `movil/` en Android Studio y completa `movil/local.properties` con los valores indicados en `movil/local.properties.example`. Android Studio añade la ruta local del SDK. El archivo real está ignorado por Git; no lo subas.
+
+Desde la raíz del repositorio:
+
+```bash
+cd movil
+./gradlew --no-daemon testDebugUnitTest assembleDebug
+```
+
+En Windows usa `gradlew.bat`. El build compila la app y ejecuta las pruebas unitarias de JVM, sin iniciar sesión ni contactar Supabase. Para usar la app se necesita URL, clave pública `anon` y un usuario con rol ADMIN u OPERARIO. Nunca uses `service_role`.
 
 ## 4. Base de datos
 
@@ -90,12 +105,18 @@ Para revisar la tarea programada: `select jobname, schedule, active from cron.jo
 3. `npx supabase db push --dry-run`, luego `npx supabase db push`.
 4. Ejecutar todas las pruebas: `npx supabase db query --linked -f supabase/tests/<archivo>.sql`.
 
-### 4.5 Migraciones 0012 y 0013
+### 4.5 Migraciones 0012 a 0015
 
 - **0012** agrega `fn_crear_usuario` y `fn_rut_valido` (dígito verificador módulo 11, la misma regla de `panel/src/lib/rut.ts`). Se aplica antes de desplegar la función `crear-usuario`. Prueba: `supabase/tests/0012_pruebas_alta_usuarios.sql`.
 - **0013** es limpieza: borra las vistas `v_*` que nadie consulta (corrían con permisos del dueño y saltaban el RLS), el índice único de nombre que repetía `medicamento_nombre_ci_uk` y quita a `anon` el permiso sobre `fn_rol_actual`. No toca datos.
+- **0014** agrega las funciones idempotentes `fn_app_registrar_aplicacion` y `fn_app_aplicar_dosis`, usadas por los registros de terreno y la aplicación de dosis desde Android. Prueba: `supabase/tests/0014_pruebas_app_movil.sql`.
+- **0015** registra el origen `APPMOVIL` en dosis, movimientos y auditoría, y agrega `fn_app_omitir_dosis` y `fn_app_registrar_salida`. Prueba: `supabase/tests/0015_pruebas_origen_app.sql`.
 
-## 5. Panel web
+Las migraciones se aplican manualmente después de revisar `npx supabase db push --dry-run`; ningún workflow las ejecuta automáticamente.
+
+## 5. Panel web y app Android
+
+### Panel web
 
 ```
 panel/src/
@@ -113,6 +134,13 @@ panel/src/
 - `ejecutar()` convierte los errores en mensajes para el usuario: el texto de la función si es una validación, "No tienes permiso" si el rol no alcanza y un mensaje de conexión en cualquier otro caso.
 - Exportar genera el archivo en el navegador (CSV con `;` y BOM para Excel, con protección contra fórmulas), calcula el SHA-256 y lo registra antes de descargar.
 
+### App Android
+
+- La app es nativa y usa Compose con arquitectura MVVM e inyección Hilt. Room guarda la caché de lectura y una cola persistente para las escrituras idempotentes; WorkManager las reintenta cuando vuelve la red.
+- Lee con PostgREST bajo RLS y escribe solo mediante funciones `fn_app_*`. La autorización de ADMIN u OPERARIO y las reglas de stock, resguardo y auditoría siguen en Supabase.
+- `movil/local.properties` contiene la URL de Supabase y la clave pública `anon` para la compilación local. Se crea desde la referencia `movil/local.properties.example`, se mantiene ignorado por Git y no se necesita para compilar en CI.
+- Comandos desde `movil/`: `./gradlew testDebugUnitTest` ejecuta las pruebas unitarias y `./gradlew assembleDebug` compila el APK de depuración. Windows usa `gradlew.bat`.
+
 ## 6. Pruebas
 
 | Qué | Comando | Resultado esperado |
@@ -120,14 +148,15 @@ panel/src/
 | Funciones puras del panel | `cd panel && npm test` | 31 de 31 |
 | Calidad del código del panel | `cd panel && npm run lint` | Sin errores |
 | Bot | `cd bot && npm test` | 19 de 19 |
-| Base de datos | `npx supabase db query --linked -f supabase/tests/<archivo>.sql` (0001, 0002, 0003, 0005, 0007, 0008, 0010 y 0012) | Cada archivo informa que todas sus pruebas pasan |
+| App Android | `cd movil && ./gradlew testDebugUnitTest` | Pruebas unitarias de parámetros RPC, hora de cola y reglas de inventario |
+| Base de datos | `npx supabase db query --linked -f supabase/tests/<archivo>.sql` (0001, 0002, 0003, 0005, 0007, 0008, 0010, 0012, 0014 y 0015) | Cada archivo informa que todas sus pruebas pasan |
 | Interfaz | Playwright (ver `pruebas/panel/resultados_e2e.md`) | Todos los casos pasan |
 | Carga | GitHub, Actions, carga, Run workflow (`pruebas/carga/carga.k6.js`) | p95 menor a 500 ms y 0 fallas en las 3 corridas |
 | Estrés | GitHub, Actions, estres, Run workflow (`pruebas/carga/estres.k6.js`) | Sin fallas con 100, 200 y 400 usuarios |
 | Permisos por rol en la interfaz | Iniciar sesión con las cuentas OPERARIO y AUDITOR de prueba | Cada rol ve solo sus pantallas |
 | Seguridad | ZAP baseline, `npm audit`, Gitleaks | Sin alertas medias o altas |
 
-Cada push a `main` ejecuta las pruebas del bot y del panel, ESLint, el build, `npm audit` y Gitleaks (`.github/workflows/ci.yml`).
+En cada pull request y push a `main`, `.github/workflows/ci.yml` ejecuta las pruebas del bot y del panel, ESLint, el build web, las pruebas unitarias Android, `assembleDebug`, `npm audit` y Gitleaks. El job Android instala la plataforma `android-37.0` y Build-Tools `37.0.0` desde el canal Canary, usa JDK 25 y no necesita secretos de Supabase ni publica el APK.
 
 ## 7. Despliegue
 
