@@ -37,6 +37,11 @@ export function enlacesPara(rol: string | null | undefined): Enlace[] {
 }
 
 const ICONO_MAS = 'M5 12h.01M12 12h.01M19 12h.01'
+const ICONO_VACA = ENLACES[2].icono
+
+function iniciales(nombres?: string, apellidos?: string) {
+  return ((nombres?.trim()[0] ?? '') + (apellidos?.trim()[0] ?? '')).toUpperCase() || '·'
+}
 
 function Icono({ d }: { d: string }) {
   return (
@@ -96,10 +101,14 @@ export function Layout() {
         >
           Menú
         </button>
-        <span className="marca">Moncopulli</span>
+        <span className="marca">
+          <span className="marca-logo"><Icono d={ICONO_VACA} /></span>
+          Moncopulli
+        </span>
         <p className="usuario">
-          {perfil && <span className="usuario-nombre">{perfil.nombres} · </span>}
-          Rol: <strong>{rol}</strong>
+          {perfil && <span className="usuario-nombre">{perfil.nombres}</span>}
+          <span className="chip-rol">Rol: <strong>{rol}</strong></span>
+          <span className="avatar" aria-hidden="true">{iniciales(perfil?.nombres, perfil?.apellidos)}</span>
         </p>
         {puedeOperar(rol) && usuario?.email && <VincularTelegram correo={usuario.email} />}
         <button type="button" className="btn btn-salir-cabecera" onClick={() => void salir()}>
