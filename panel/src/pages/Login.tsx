@@ -34,11 +34,20 @@ export function Login() {
   }
 
   return (
-    <div className="pantalla-centrada">
+    <div className="login-pantalla">
+      <header className="login-portada">
+        <span className="login-logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="48" height="48" focusable="false">
+            <path d="M5 9a7 6 0 0 0 14 0M7 9V6l-3-2M17 9V6l3-2M8 15a4 3 0 0 0 8 0M10 12h.01M14 12h.01" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+        <h1>Moncopulli</h1>
+        <p>Medicamentos y tratamientos del campo</p>
+      </header>
       <Pagina>
         <main className="login">
-          <h1>Moncopulli</h1>
-          <p className="muted">Registro y control de tratamientos e inventario. Ingresa con tu cuenta.</p>
+          <h2>Iniciar sesión</h2>
+          <p className="muted">Usa la misma cuenta de la app móvil.</p>
           <form onSubmit={(e) => void enviar(e)} noValidate>
             <label htmlFor="email">Correo electrónico</label>
             <input
@@ -67,6 +76,7 @@ export function Login() {
             </button>
           </form>
         </main>
+        <p className="login-pie">Agrícola Moncopulli · Puyehue</p>
       </Pagina>
     </div>
   )

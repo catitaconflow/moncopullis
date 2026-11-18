@@ -1,18 +1,21 @@
 :root {
   color-scheme: light dark;
-  --bg: #f4f2ec;
+  --bg: #f3f4ef;
   --surface: #ffffff;
-  --text: #1a1c19;
-  --muted: #55594f;
-  --border: #cfcbbe;
+  --text: #1b1f1b;
+  --muted: #5a645c;
+  --border: #e0e4dc;
   --accent: #1f5c3a;
-  --accent-suave: #e3f0e7;
+  --accent-osc: #15432a;
+  --accent-suave: #e4efe7;
   --on-accent: #ffffff;
   --danger: #9b2226;
   --danger-bg: #fbe9e7;
   --warn: #8a5a00;
   --warn-bg: #fff4d6;
-  --radio: 6px;
+  --radio: 14px;
+  --radio-grande: 20px;
+  --sombra: 0 1px 2px rgb(20 30 20 / 0.05), 0 4px 14px rgb(20 30 20 / 0.05);
   --ancho-nav: 224px;
   --alto-cab: 56px;
   --alto-nav-inf: 64px;
@@ -26,6 +29,7 @@
     --muted: #aeb1a4;
     --border: #3a3e35;
     --accent: #8fd4a9;
+    --accent-osc: #12301f;
     --accent-suave: #1e3326;
     --on-accent: #0f1a13;
     --danger: #f4a6a9;
@@ -593,3 +597,107 @@ h3 { font-size: 1rem; margin: 1.25rem 0 0.5rem; }
   text-align: center;
 }
 .clave-temporal { letter-spacing: 0.08em; font-size: 1.75rem; overflow-wrap: anywhere; user-select: all; }
+
+/* ===== Rediseño v2: mismo lenguaje visual que la app móvil ===== */
+h1 { letter-spacing: -0.01em; }
+
+.btn { border-radius: 999px; padding: 0 1.25rem; }
+.btn-chico { padding: 0 0.9rem; }
+input, select, textarea { border: 1.5px solid var(--border); border-radius: 12px; transition: border-color 0.15s ease; }
+input:focus, select:focus, textarea:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-suave); }
+label { font-weight: 700; font-size: 0.9375rem; }
+
+/* Cabecera */
+.cabecera { background: var(--bg); border-bottom: 0; padding: 0.5rem 16px; }
+.marca { display: inline-flex; align-items: center; gap: 10px; font-size: 1.125rem; font-weight: 800; color: var(--text); }
+.marca-logo {
+  display: inline-grid; place-items: center; width: 36px; height: 36px;
+  color: #fff; background: var(--accent); border-radius: 11px;
+}
+.usuario { display: flex; align-items: center; gap: 10px; }
+.avatar {
+  display: inline-grid; place-items: center; flex: none; width: 40px; height: 40px;
+  font-size: 0.9375rem; font-weight: 800; color: #fff; background: var(--accent); border-radius: 50%;
+}
+.chip-rol {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
+  font-size: 0.8125rem; font-weight: 700; color: var(--accent); background: var(--accent-suave); border-radius: 999px;
+}
+.chip-rol::before { content: ''; width: 8px; height: 8px; background: currentColor; border-radius: 50%; }
+
+/* Barra lateral */
+.nav-lateral { background: var(--bg); border-right: 0; padding: 0.75rem 12px; gap: 4px; }
+.nav-lateral a { border-left: 0; border-radius: 12px; font-weight: 600; }
+.nav-lateral a:hover { background: var(--surface); }
+.nav-lateral a[aria-current='page'] { color: var(--accent); background: var(--accent-suave); }
+
+/* Tarjetas */
+.cifra, .panel-lista, .login, .dialogo, .menu-mas {
+  border: 1px solid var(--border); border-radius: var(--radio-grande); box-shadow: var(--sombra);
+}
+.cifra { padding: 20px; }
+.cifra h2 { font-size: 0.9375rem; font-weight: 700; }
+.cifra-enlace { border-left: 1px solid var(--border); }
+.cifra-tono-alerta { border-color: var(--danger); box-shadow: 0 0 0 1px var(--danger), var(--sombra); }
+.cifra-tono-ok { border-color: var(--border); }
+.cifra-enlace:hover { background: var(--surface); transform: translateY(-2px); box-shadow: 0 6px 20px rgb(20 30 20 / 0.08); }
+.panel-lista { padding: 20px; }
+.vacio { border-radius: var(--radio); background: var(--surface); }
+.error-caja, .form-error, .advertencia { border-radius: var(--radio); }
+.esqueleto-fila { border-radius: 12px; }
+
+/* Portada del resumen */
+.hero {
+  margin-bottom: 20px; padding: 24px; color: #fff;
+  background: var(--accent); border-radius: 24px; box-shadow: var(--sombra);
+}
+.hero-dia { margin: 0; font-weight: 700; color: #a9dcbc; }
+.hero h1 { margin: 2px 0 4px; color: #fff; }
+.hero p:last-child { margin: 0; color: #d8eadf; }
+
+/* Insignias y filtros como píldoras */
+.insignia { border-radius: 999px; padding: 3px 10px; }
+.filtro { border-radius: 999px; }
+.filtro-cantidad { border-radius: 999px; }
+.barra-stock { border-radius: 999px; border: 0; background: var(--border); }
+
+/* Tabla con esquinas redondeadas */
+.tabla { border-collapse: separate; border-spacing: 0; border-radius: var(--radio-grande); overflow: hidden; box-shadow: var(--sombra); }
+.tabla th { background: var(--surface); font-weight: 700; }
+.tabla tbody tr:last-child td { border-bottom: 0; }
+@media (max-width: 640px) {
+  .tabla { overflow: visible; box-shadow: none; border-radius: 0; }
+  .tabla tr { border-radius: var(--radio-grande); box-shadow: var(--sombra); overflow: hidden; }
+}
+
+/* Barra inferior móvil como la app */
+@media (max-width: 640px) {
+  .nav-inferior { background: var(--surface); border-top: 1px solid var(--border); padding-top: 6px; }
+  .nav-inferior a, .nav-inferior button { border-top: 0; gap: 4px; color: var(--muted); }
+  .nav-inferior .icono { width: 56px; height: 30px; padding: 5px 0; border-radius: 999px; }
+  .nav-inferior a[aria-current='page'] { color: var(--accent); }
+  .nav-inferior a[aria-current='page'] .icono { background: var(--accent-suave); }
+  .cabecera { padding-inline: 16px; }
+  .hero { border-radius: 20px; padding: 20px; }
+}
+
+/* Inicio de sesión con portada verde */
+.login-pantalla { min-height: 100dvh; background: var(--bg); }
+.login-portada {
+  padding: 56px 16px 96px; text-align: center; color: #fff;
+  background: var(--accent); border-radius: 0 0 36px 36px;
+}
+.login-logo {
+  display: inline-grid; place-items: center; width: 84px; height: 84px; margin-bottom: 12px;
+  background: rgb(255 255 255 / 0.14); border-radius: 24px;
+}
+.login-portada h1 { margin: 0; font-size: 2.25rem; color: #fff; }
+.login-portada p { margin: 4px 0 0; color: #d8eadf; }
+.login-pantalla .login { width: calc(100% - 32px); max-width: 420px; margin: -64px auto 0; padding: 24px; }
+.login-pantalla .login h2 { font-size: 1.375rem; margin: 0; }
+.login-pie { margin: 24px 0; font-size: 0.875rem; text-align: center; color: var(--muted); }
+@media (prefers-color-scheme: dark) {
+  .login-portada, .hero { background: var(--accent-osc); }
+  .marca-logo, .avatar { color: #0f1a13; }
+}
+@media (max-width: 640px) { .chip-rol { display: none; } }

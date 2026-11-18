@@ -163,9 +163,10 @@ export function Resumen() {
   const { perfil } = useSesion()
   return (
     <>
-      <header className="encabezado-pagina">
+      <header className="hero">
+        <p className="hero-dia">Hoy · {hoyFmt.format(new Date())}</p>
         <h1>{perfil ? `Hola, ${perfil.nombres}` : 'Resumen'}</h1>
-        <p className="muted">Estado del campo al {hoyFmt.format(new Date())}.</p>
+        <p>Así está el campo: stock, vencimientos y tratamientos pendientes.</p>
       </header>
       <div className="cifras">
         <Cifra
