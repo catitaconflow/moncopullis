@@ -4,7 +4,7 @@ Sistema de trazabilidad sanitaria e inventario de medicamentos para la lechería
 
 ## Componentes
 
-- `supabase/migrations/`: esquema y reglas de negocio, migraciones 0001 a 0015.
+- `supabase/migrations/`: esquema y reglas de negocio, migraciones 0001 a 0016 (todas aplicadas en producción).
 - `supabase/tests/`: pruebas SQL transaccionales; cada archivo termina en `ROLLBACK`.
 - `supabase/functions/crear-usuario/`: alta de usuarios desde el panel web.
 - `panel/`: panel de administración, operación y auditoría (React, TypeScript y Vite).
@@ -31,11 +31,12 @@ npx supabase db push --dry-run
 npx supabase db push
 ```
 
-Las migraciones 0014 y 0015 agregan funciones y el origen de las operaciones desde Android. Para probarlas en el proyecto enlazado:
+Las migraciones 0014 y 0015 agregan funciones y el origen de las operaciones desde Android; la 0016 cierra el acceso por la API a las funciones de trigger. Para probarlas en el proyecto enlazado:
 
 ```bash
 npx supabase db query --linked -f supabase/tests/0014_pruebas_app_movil.sql
 npx supabase db query --linked -f supabase/tests/0015_pruebas_origen_app.sql
+npx supabase db query --linked -f supabase/tests/0016_pruebas_funciones_trigger.sql
 ```
 
 Las pruebas SQL se ejecutan dentro de una transacción que termina en `ROLLBACK`. Si una base tiene objetos creados manualmente, no ejecutes `db push` sin revisar antes qué aplicaría.
@@ -63,7 +64,7 @@ Desde la carpeta `movil/`, ejecuta las pruebas unitarias y compila el APK de dep
 ./gradlew --no-daemon testDebugUnitTest assembleDebug
 ```
 
-En Windows usa `gradlew.bat` en lugar de `./gradlew`. La app necesita que Supabase tenga aplicadas las migraciones hasta 0015 para completar sus operaciones. Los pasos de instalación, configuración y release están en [`movil/README.md`](movil/README.md).
+En Windows usa `gradlew.bat` en lugar de `./gradlew`. La app necesita que Supabase tenga aplicadas las migraciones hasta 0015 para completar sus operaciones. Los pasos de instalación, configuración y release están en [`movil/README.md`](movil/README.md). Para verla en Windows sin teléfono Android, usa `movil/emulador/INICIAR_EMULADOR.bat` (instrucciones en `movil/emulador/LEEME.txt`).
 
 ## Bot de Telegram
 
