@@ -282,6 +282,8 @@ F(I / "02_resumen_escritorio.png", "Resumen del panel: indicadores con color (ro
 F(I / "07_inventario_movimientos.png", "Detalle de un medicamento: lotes, botones de entrada y ajuste e historial de movimientos.", 14)
 F(I / "08_tratamiento_aplicado.png", "Tratamiento con dosis aplicada y aviso de resguardo de leche.", 14)
 F(I / "panel_movil.png", "El mismo panel en un celular de 360 px: barra inferior y tablas convertidas en tarjetas.", 13)
+F(I / "panel_celular_real.jpg", "Panel publicado (moncopulli-panel.itskay666.workers.dev) usado desde un teléfono Android real el 15-11-2026: Alertas, Maestros → Usuarios, Ajustar lote y Nuevo tratamiento.", 16)
+P("El panel está publicado en un Worker de Cloudflare en https://moncopulli-panel.itskay666.workers.dev; es el enlace que se comparte para entrar desde cualquier navegador, en computador o celular. El bot usa otro Worker (moncopullis-bot.itskay666.workers.dev). La app Android no pasa por estos Workers: se conecta directo a Supabase con la sesión del usuario.")
 H("4.3 App móvil Android", 2)
 P("La app tiene cinco pestañas pensadas para el trabajo en terreno: Inicio (dosis de hoy y atrasadas), Animales (con filtro de resguardo), Registrar, Inventario y Actividad (lo enviado, pendiente y rechazado). Arriba siempre se ve si hay conexión o cuántos registros esperan envío.")
 F(I / "app_login_aplicar.png", "App móvil: mismo mensaje ante contraseña o correo incorrecto (no revela qué correos existen) y aviso tras aplicar una dosis con lote y fecha de resguardo.", 15)
