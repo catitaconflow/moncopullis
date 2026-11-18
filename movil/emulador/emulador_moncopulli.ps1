@@ -10,6 +10,8 @@ $Base   = Join-Path $env:LOCALAPPDATA "MoncopulliEmulador"
 $Sdk    = Join-Path $Base "sdk"
 $Jdk    = Join-Path $Base "jdk"
 $Imagen = "system-images;android-35;google_apis;x86_64"
+# Los .bat de Android pasan por cmd.exe, que corta los argumentos en cada ";": hay que enviarlos entre comillas.
+$ImagenArg = "`"$Imagen`""
 $Avd    = "Moncopulli"
 $Aqui   = Split-Path -Parent $MyInvocation.MyCommand.Path
 New-Item -ItemType Directory -Force -Path $Base, $Sdk | Out-Null
@@ -52,21 +54,38 @@ if (-not (Test-Path (Join-Path $Sdk "system-images\android-35\google_apis\x86_64
     Paso "Descargando emulador e imagen de Android 15 (puede tardar 10 a 30 minutos)..."
     $si = ("y`n" * 30)
     $si | & $sdkmanager --licenses | Out-Null
-    & $sdkmanager "platform-tools" "emulator" $Imagen
+    & $sdkmanager "platform-tools" "emulator" $ImagenArg
+}
+if (-not (Test-Path (Join-Path $Sdk "system-images\android-35\google_apis\x86_64"))) {
+    Write-Host "No se pudo descargar la imagen de Android 15. Revisa tu internet y vuelve a ejecutar." -ForegroundColor Red
+    Read-Host "Presiona Enter para cerrar"; exit 1
 }
 
 # 4. Teléfono virtual
 $avdmanager = Join-Path $Sdk "cmdline-tools\latest\bin\avdmanager.bat"
 if (-not (Test-Path (Join-Path $env:ANDROID_AVD_HOME "$Avd.avd"))) {
     Paso "Creando el teléfono virtual Moncopulli (Pixel 8)..."
-    "no" | & $avdmanager create avd -n $Avd -k $Imagen -d pixel_8 --force
+    "no" | & $avdmanager create avd -n $Avd -k $ImagenArg -d pixel_8 --force
+}
+if (-not (Test-Path (Join-Path $env:ANDROID_AVD_HOME "$Avd.avd"))) {
+    Write-Host "No se pudo crear el teléfono virtual." -ForegroundColor Red
+    Read-Host "Presiona Enter para cerrar"; exit 1
 }
 
 # 5. Iniciar el emulador
 Paso "Iniciando el emulador (la primera vez demora 1 a 3 minutos)..."
 Start-Process $emulador -ArgumentList "-avd", $Avd, "-netdelay", "none", "-netspeed", "full"
-& $adb wait-for-device
-do { Start-Sleep -Seconds 3; $listo = (& $adb shell getprop sys.boot_completed 2>$null) } while ($listo -notmatch "1")
+$limite = (Get-Date).AddMinutes(8)
+do {
+    Start-Sleep -Seconds 3
+    $listo = (& $adb shell getprop sys.boot_completed 2>$null)
+    Write-Host "." -NoNewline
+    if ((Get-Date) -gt $limite) {
+        Write-Host "`nEl emulador no terminó de arrancar en 8 minutos. Revisa que la virtualización esté activa (LEEME.txt)." -ForegroundColor Red
+        Read-Host "Presiona Enter para cerrar"; exit 1
+    }
+} while ($listo -notmatch "1")
+Write-Host ""
 
 # 6. Instalar el APK que esté en esta carpeta
 $apk = Get-ChildItem $Aqui -Filter *.apk | Sort-Object LastWriteTime -Descending | Select-Object -First 1
