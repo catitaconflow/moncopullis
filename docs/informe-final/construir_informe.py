@@ -27,6 +27,14 @@ for n, size in [("Heading 1", 16), ("Heading 2", 13), ("Heading 3", 11.5)]:
     h.paragraph_format.keep_with_next = True
 
 FIG = [0]; TAB = [0]
+import json as _json
+_REFS = pathlib.Path(__file__).with_name("refs_figuras.json")
+REF = _json.loads(_REFS.read_text()) if _REFS.exists() else {}
+FIGMAP = {}
+
+
+def fig(k):
+    return str(REF.get(k, "?"))
 
 
 def shade(cell, color):
@@ -98,8 +106,9 @@ def T(headers, rows, widths=None, titulo=None, font=9.5):
     return t
 
 
-def F(path, caption, width=16):
+def F(path, caption, width=16, clave=None):
     FIG[0] += 1
+    if clave: FIGMAP[clave] = FIG[0]
     p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.keep_with_next = True
     p.add_run().add_picture(str(path), width=Cm(width))
     c = doc.add_paragraph(); c.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -162,8 +171,17 @@ T(["Indicador", "Resultado"], [
     ["Base de datos en producción (verificado en vivo)", "18 tablas, 30 relaciones, 60 índices, RLS en las 18 tablas, 2 tareas programadas; migraciones 0001 a 0016 aplicadas"],
     ["Pruebas en producción de las migraciones nuevas", "0014: M1 a M17 · 0015: O1 a O11 · 0016: T1 a T4 — todas pasan (con ROLLBACK, sin dejar datos)"],
     ["Respaldo", "Diario, con restauración de prueba, verificación de auditoría y cifrado"],
+    ["Herramientas", "Herramientas en uso por capa, 14 reemplazadas durante el proyecto con su motivo y 8 alternativas descartadas (capítulo 3)"],
 ], widths=[6.5, 9.5], titulo="Estado del sistema a la fecha de entrega")
 
+H("Cómo está organizado este informe", 2)
+T(["Parte", "Capítulos", "Qué responde"], [
+    ["I. Contexto", "1 Introducción · 2 Metodología y equipo", "¿Qué problema resolvemos y cómo trabajamos?"],
+    ["II. Solución", "3 Arquitectura y herramientas · 4 Interfaces · 5 Base de datos · 6 Seguridad", "¿Qué construimos, con qué herramientas y por qué?"],
+    ["III. Puesta en marcha", "7 Configuración del entorno · 8 Documentación", "¿Cómo se instala, se publica y se mantiene?"],
+    ["IV. Calidad", "9 Plan · 10 Ejecución · 11 Validación · 12 Esperado vs. obtenido", "¿Cómo sabemos que funciona y qué falló?"],
+    ["V. Cierre", "13 Recomendaciones · 14 Preguntas de defensa · 15 Conclusión · Anexos", "¿Qué sigue y qué aprendimos?"],
+], widths=[3, 7, 6], titulo="Estructura del informe", font=9)
 H("Cómo leer este informe frente a la rúbrica", 2)
 P("Para facilitar la revisión, cada criterio de la rúbrica apunta a la sección donde está la evidencia.")
 T(["Criterio de la rúbrica", "Pts", "Dónde está la evidencia"], [
@@ -173,7 +191,7 @@ T(["Criterio de la rúbrica", "Pts", "Dónde está la evidencia"], [
     ["3.1.x.4 Optimización y normalización", "5", "Sección 5.5 y 5.6"],
     ["3.1.3.5 Patrones de seguridad", "5", "Sección 6"],
     ["3.1.3.6 Colaboración en equipo", "5", "Sección 2.3 a 2.5"],
-    ["3.1.4.7 Configuración del entorno", "10", "Sección 7 (paso a paso)"],
+    ["3.1.4.7 Configuración del entorno", "10", "Sección 7 (paso a paso) y 3.1 a 3.3 (herramientas en uso, reemplazadas y descartadas)"],
     ["3.1.4.8 Documentación de la implementación", "5", "Sección 8 y anexos"],
     ["3.1.5.9 Cobertura del plan de pruebas", "10", "Sección 9"],
     ["3.1.5.10 Ejecución del protocolo de pruebas", "10", "Sección 10"],
@@ -233,10 +251,17 @@ T(["Sprint", "Fechas", "Entregado"], [
 H("2.4 Cómo colaboramos (evidencia en el repositorio)", 2)
 B([("Un solo repositorio ", "en GitHub con una carpeta por componente (supabase/, panel/, bot/, movil/, pruebas/, docs/)."),
    ("Ramas y pull requests: ", "la app móvil se desarrolló en la rama feature/app-movil (pull request #1, con tres revisores asignados). El informe final, el rediseño de la app y el emulador entraron por el pull request #2, que incluyó el #1; se fusionó a main el 18-11-2026 con las cuatro revisiones automáticas en verde (bot, panel, Android y secretos)."),
-   ("Commits con formato tipo: descripción ", "(feat, fix, test, docs, ci, chore), para que el historial cuente qué cambió y por qué. La rama principal tiene 46 commits y la rama de la app 52."),
+   ("Commits con formato tipo: descripción ", "(feat, fix, test, docs, ci, chore), para que el historial cuente qué cambió y por qué. Al 18-11-2026 la rama principal suma 110 commits integrados por 4 pull requests."),
    ("Integración continua: ", "cada push ejecuta las pruebas del bot y del panel, revisa el código, compila, revisa dependencias vulnerables y busca secretos filtrados. En la rama de la app también compila Android y corre sus pruebas JUnit."),
    ("Documentación compartida ", "en docs/ (manual técnico, manual de usuario, modelo de datos, guía de entrevista, preguntas de defensa) y movil/README.md."),
    ("Diagramas reproducibles: ", "se generan con scripts (docs/diagramas/generar.py), así cualquier integrante puede corregirlos.")])
+T(["Pull request", "Contenido", "Revisiones automáticas", "Estado"], [
+    ["#1 feature/app-movil", "App Android, migraciones 0014 y 0015, 3 ciclos de pruebas", "bot, panel, android, secretos", "Fusionado 18-11 (dentro del #2)"],
+    ["#2", "Informe final, integración de la app, rediseño v2, emulador", "4/4 en verde", "Fusionado 18-11 01:00"],
+    ["#3", "Informe final, app móvil rediseñada y emulador (migración 0016, docs)", "4/4 en verde", "Fusionado 18-11 01:37"],
+    ["#4", "AUT-02, kit del ciclo 3 y herramientas del emulador", "4/4 en verde", "Fusionado 18-11 03:22"],
+], widths=[3, 6.5, 3.5, 3], titulo="Pull requests de la entrega final", font=8.5)
+P("Transparencia sobre herramientas de apoyo: parte del código, las pruebas y la documentación se redactó con asistentes de IA (Claude Code y Codex), que aparecen como autores en algunos commits. Todo ese trabajo entró por pull request, pasó las mismas revisiones automáticas y fue revisado y aprobado por el equipo antes de fusionarse.")
 H("2.5 Flujo de trabajo del equipo", 2)
 F(D / "ci_respaldo.png", "Del código a producción: rama, revisión, CI, despliegue, APK y respaldo diario.", 16.5)
 salto()
@@ -246,16 +271,76 @@ H("3. Arquitectura de la solución", 1)
 P("La idea central es simple: una sola base de datos que guarda y protege todo, y varias «puertas» de entrada según dónde esté el usuario. Ninguna puerta escribe directo en las tablas: todas llaman a funciones de la base que revisan el permiso, validan y dejan la auditoría.")
 F(D / "arquitectura.png", "Arquitectura general: personas, canales de uso, Supabase y GitHub.", 16.5)
 F(D / "casos_uso.png", "Casos de uso por rol.", 9)
-H("3.1 Tecnologías y por qué las elegimos", 2)
-T(["Tecnología", "Para qué", "Por qué", "Alternativa descartada"], [
-    ["PostgreSQL 17 en Supabase", "Base de datos", "Reglas en el motor (CHECK, triggers, índices parciales), RLS por rol, respaldos administrados", "Firebase/MongoDB: no garantiza relaciones ni transacciones entre tablas"],
-    ["Supabase Auth", "Cuentas y sesiones", "Contraseñas con hash y sesiones manejadas por un proveedor", "Hash y JWT propios: más riesgo de error"],
-    ["React + Vite + TypeScript", "Panel web", "Formularios con datos en vivo; el tipado detecta errores antes de publicar", "HTML estático sin sesión"],
-    ["Cloudflare Workers", "Panel y bot publicados", "Sin servidores que mantener, HTTPS incluido, plan gratuito suficiente", "Servidor propio (parches, SO)"],
-    ["Kotlin + Jetpack Compose", "App Android", "Nativa, rápida, base local (Room) y envío en segundo plano (WorkManager)", "Web en el navegador: sin modo sin conexión real"],
-    ["Telegram Bot API", "Registro rápido", "Gratis y conocida por el personal", "WhatsApp Business: cobra por conversación"],
-    ["GitHub Actions", "CI y respaldo", "Pruebas en cada cambio y respaldo automático diario", "Respaldo manual"],
-], widths=[3.3, 2.7, 5.5, 4.5], titulo="Tecnologías elegidas", font=9)
+H("3.1 Herramientas que usamos hoy", 2)
+P("El sistema se apoya en pocas herramientas, elegidas para que la empresa no tenga servidores que mantener y para que las reglas importantes vivan en la base de datos. La figura agrupa las herramientas por capa y la tabla explica para qué sirve cada una y por qué la elegimos.")
+F(D / "stack_capas.png", "Herramientas en uso, agrupadas por capa.", 16.5)
+T(["Categoría", "Herramienta (versión)", "Para qué la usamos", "Por qué esta y no otra"], [
+    ["**Base de datos", "PostgreSQL 17 en Supabase", "Guardar todo y aplicar las reglas (stock, permisos, auditoría)", "Restricciones, triggers e índices parciales en el motor; Supabase administra servidor y respaldos base"],
+    ["", "Supabase Auth", "Cuentas, contraseñas y sesiones", "Hash y sesiones de un proveedor probado, en vez de programarlos"],
+    ["", "Row Level Security + funciones fn_*", "Permitir solo leer; escribir por funciones que revisan el rol", "La autorización no depende de la pantalla"],
+    ["", "pg_cron", "Recalcular alertas cada hora y borrar texto del bot a los 30 días", "Corre dentro de la base, sin otro servidor"],
+    ["", "Edge Function (Deno)", "Crear cuentas con clave temporal", "La clave de servicio nunca llega al panel"],
+    ["**Panel web", "React 18.3, React Router 7.18, Vite 5.4, TypeScript 5.6", "Panel de oficina", "Formularios con datos en vivo; el tipado evita errores; carga liviana"],
+    ["", "Cloudflare Workers (assets)", "Publicar el panel", "HTTPS incluido, sin servidor, mismo proveedor que el bot"],
+    ["**App móvil", "Kotlin 2.3, Jetpack Compose (Material 3)", "App de terreno", "Nativa, rápida y con control total del modo sin señal"],
+    ["", "Room 2.8 y WorkManager 2.11", "Caché, cola de envíos y envío en segundo plano", "Registrar sin señal y enviar solo al volver la red"],
+    ["", "Hilt, supabase-kt 3.8, R8", "Inyección de dependencias, conexión a Supabase, ofuscación", "Código ordenado; APK de 2,9 MB sin secretos"],
+    ["**Bot", "Telegram Bot API + Cloudflare Worker (TypeScript)", "Registro rápido por botones", "Gratis y conocido por el personal"],
+    ["", "Durable Object", "No procesar dos veces el mismo mensaje", "Idempotencia sin base extra"],
+    ["", "Google Gemini (opcional)", "Interpretar texto libre", "Si falta, el bot usa un lector de reglas; siempre se confirma antes de guardar"],
+    ["**Pruebas", "Vitest 2.1 · node:test · JUnit 4 · Robolectric 4.18", "Pruebas unitarias del panel, bot y app; capturas y Room en la JVM", "Rápidas, corren en cada push"],
+    ["", "SQL con ROLLBACK", "Probar reglas de la base con cada rol", "No dejan datos; se pueden correr en producción"],
+    ["", "Playwright · k6 · Monkey", "Interfaz extremo a extremo, carga/estrés y toques al azar", "Automatizables y repetibles"],
+    ["**Seguridad", "OWASP ZAP · jadx · Gitleaks · npm audit · ESLint · Android Lint", "Buscar fallas, secretos y dependencias vulnerables", "Gratuitas y estándar en la industria"],
+    ["**Entorno y CI", "GitHub + GitHub Actions", "Repositorio, PR, CI (bot, panel, Android, secretos) y respaldo diario", "Todo el equipo ve el estado en cada cambio"],
+    ["", "age · Docker (supabase/postgres)", "Cifrar respaldos y probar la restauración", "Respaldo verificado todos los días"],
+    ["", "Emulador oficial de Android (script propio)", "Ver y probar la app en Windows", "El equipo no tiene teléfonos Android"],
+    ["**Gestión y documentos", "Trello (Kanban), Word/PDF, draw.io, Graphviz", "Tareas, informe y diagramas", "Diagramas ER generados desde la base real"],
+    ["", "Asistentes de IA (Claude Code, Codex)", "Apoyo en código, pruebas y redacción", "Todo pasa por PR y revisión del equipo"],
+], widths=[2.6, 4.4, 4.6, 4.4], titulo="Herramientas en uso y justificación", font=8)
+
+H("3.2 Herramientas que dejamos de usar y por qué", 2)
+P("Durante el proyecto cambiamos varias herramientas. En cada caso el cambio vino de un problema concreto que medimos o encontramos en una prueba, no de una preferencia. La figura muestra cada cambio y la tabla lo detalla con su evidencia.")
+F(D / "evolucion_herramientas.png", "Evolución de herramientas: qué dejamos (gris), qué usamos ahora (verde) y el motivo.", 15)
+T(["Antes", "Ahora", "Motivo del cambio", "Evidencia", "Cuándo"], [
+    ["Prototipo HTML estático (MoncoSmart)", "Panel React + Vite", "Solo mostraba datos: sin sesión, roles ni formularios", "Sección 7.2 del avance", "Sprint 1"],
+    ["Cloudflare Pages", "Cloudflare Workers con assets", "Mismo tipo de despliegue que el bot; un solo comando (wrangler deploy)", "panel/wrangler.jsonc", "Sprint 2"],
+    ["JMeter desde un computador", "k6 en GitHub Actions", "Con la misma carga el p95 variaba de 118 a 6 709 ms por la red local", "P12; resumen-1..3.json", "Sprint 2"],
+    ["Imagen de restauración en ECR público", "Imagen en Docker Hub", "El CI chocaba con el límite de descargas de ECR", "Commit 1582bc2", "Sprint 2"],
+    ["Cloudflare R2 (planificado para respaldos)", "Artefacto de GitHub cifrado con age", "Evita otra cuenta y credenciales; el respaldo queda junto a su prueba de restauración", "respaldo.yml; P27", "Sprint 2"],
+    ["Vistas v_* de consulta", "Consultas directas protegidas por RLS", "Las vistas corrían con permisos del dueño y saltaban el RLS", "Migración 0013", "Sprint 3"],
+    ["Bot solo con texto libre", "Bot con menú de botones y texto opcional", "Operarios con guantes, poca señal y poca práctica escribiendo", "Migración 0010; pruebas C1–C4", "Sprint 3"],
+    ["React Router 6", "React Router 7.18.4", "npm audit reportaba vulnerabilidades moderadas", "P18; commit 4c1df26", "Sprint 3"],
+    ["Firebase (prototipo IoT de un integrante)", "Supabase como único backend", "Datos relacionales con reglas que debe garantizar el motor; dos backends duplican seguridad y respaldo", "Sección 3.4", "Sprint 4"],
+    ["Flutter / versión iOS (evaluado)", "Android nativo en Kotlin", "Sin Mac para compilar iOS; la app Kotlin ya estaba probada en teléfono real", "Sección 13.1", "Sprint 4"],
+    ["Prueba de Room en un teléfono (AndroidX Test)", "Room en la JVM con Robolectric", "Corre en el CI sin dispositivo y no obliga a reemplazar el APK en prueba", "AUT-02, 6/6", "Entrega"],
+    ["captureToImage de Compose", "Dibujo de la vista raíz con Robolectric", "captureToImage no responde bajo Robolectric", "CapturasPantallaTest", "Entrega"],
+    ["Android Studio para mostrar la app", "Script de emulador de un clic", "El equipo usa iPhone y Windows; Android Studio pesa 8 GB", "movil/emulador", "Entrega"],
+    ["Diagramas ER dibujados a mano", "ER generados desde el Supabase real", "Siempre coinciden con producción y se regeneran en segundos", f"Figuras {fig('er_general')} a {fig('er_auditoria')}", "Entrega"],
+], widths=[3.6, 3.3, 4.6, 2.6, 1.9], titulo="Herramientas reemplazadas", font=8)
+
+H("3.3 Alternativas que descartamos desde el inicio", 2)
+T(["Alternativa", "Se consideró para", "Por qué no", "Qué usamos"], [
+    ["MySQL 8", "Base de datos", "Menos soporte para índices parciales y lógica en el motor", "PostgreSQL"],
+    ["MongoDB / Firebase", "Base de datos", "No garantizan relaciones ni transacciones entre tablas", "PostgreSQL"],
+    ["Python + FastAPI en un servidor EC2", "API", "Habría que mantener sistema operativo, parches y certificados", "Cloudflare Workers"],
+    ["Hash y JWT propios", "Autenticación", "Mayor riesgo de cometer un error de seguridad", "Supabase Auth"],
+    ["WhatsApp Business API", "Registro en terreno", "Cobra por conversación y exige plantillas aprobadas", "Telegram"],
+    ["Formulario paso a paso en el bot", "Registro por texto", "Lento en terreno; se combinó con botones", "Botones + texto opcional"],
+    ["App web en el navegador del teléfono", "Terreno sin señal", "Sin cola de envíos confiable ni trabajo en segundo plano", "App Android nativa"],
+    ["pytest", "Pruebas", "El proyecto no tiene código Python de producción", "Vitest, node:test, JUnit y SQL"],
+], widths=[3.8, 3, 6, 3.2], titulo="Alternativas descartadas", font=8.5)
+
+H("3.4 Comparación: Supabase frente a Firebase", 2)
+T(["Criterio", "Supabase (elegido)", "Firebase"], [
+    ["Modelo de datos", "Relacional: tablas con claves y relaciones", "Documentos (NoSQL)"],
+    ["Reglas de negocio", "En el motor: CHECK, triggers, transacciones", "En el código de cada cliente o en Cloud Functions"],
+    ["Stock que no puede quedar negativo", "Garantizado por restricción y transacción", "Hay que programarlo y probarlo en cada canal"],
+    ["Auditoría inmutable", "Trigger de solo inserción + huella SHA-256", "Requiere reglas y funciones extra"],
+    ["Trabajo sin señal", "Lo resuelve la app con su cola local", "Incluido en el SDK"],
+    ["Consultas para el SAG", "SQL con joins y exportación CSV/JSON", "Consultas limitadas entre colecciones"],
+    ["Costo para el piloto", "Plan gratuito suficiente", "Plan gratuito suficiente"],
+], widths=[4, 6, 6], titulo="Supabase frente a Firebase para este proyecto", font=8.5)
 CAJA("¿Por qué Supabase y no Firebase?", "Un integrante exploró Firebase para un monitor de temperatura. Decidimos mantener un solo backend en Supabase porque nuestros datos son muy relacionados (animal → tratamiento → dosis → lote → movimiento) y las reglas críticas (stock no negativo, una sola salida por dosis, auditoría que no se borra) las garantiza PostgreSQL. El trabajo sin señal en terreno lo resuelve la app móvil con su cola local, que era la principal ventaja de Firebase. El monitor de temperatura se propone migrarlo a Supabase en la fase 2 (sección 13.4).")
 salto()
 
@@ -280,23 +365,23 @@ T(["Proceso del negocio", "Quién", "Panel web", "App móvil", "Bot"], [
 ], widths=[5, 2.6, 3.4, 3.2, 1.8], titulo="Matriz proceso del negocio → interfaz", font=8.5)
 P("Resultado: los 13 procesos definidos tienen al menos una interfaz que los resuelve; los que ocurren en terreno tienen además una vía móvil.")
 H("4.2 Panel web", 2)
-F(I / "02_resumen_escritorio.png", "Resumen del panel: indicadores con color (rojo requiere atención, verde en orden) que llevan al detalle.", 14)
+F(I / "02_resumen_escritorio.png", "Resumen del panel: indicadores con color (rojo requiere atención, verde en orden) que llevan al detalle.", 14, clave="resumen")
 F(I / "07_inventario_movimientos.png", "Detalle de un medicamento: lotes, botones de entrada y ajuste e historial de movimientos.", 14)
 F(I / "08_tratamiento_aplicado.png", "Tratamiento con dosis aplicada y aviso de resguardo de leche.", 14)
-F(I / "panel_movil.png", "El mismo panel en un celular de 360 px: barra inferior y tablas convertidas en tarjetas.", 13)
+F(I / "panel_movil.png", "El mismo panel en un celular de 360 px: barra inferior y tablas convertidas en tarjetas.", 13, clave="panel_movil")
 F(I / "panel_celular_real.jpg", "Panel publicado (moncopulli-panel.itskay666.workers.dev) usado desde un teléfono Android real el 15-11-2026: Alertas, Maestros → Usuarios, Ajustar lote y Nuevo tratamiento.", 16)
 P("El panel está publicado en un Worker de Cloudflare en https://moncopulli-panel.itskay666.workers.dev; es el enlace que se comparte para entrar desde cualquier navegador, en computador o celular. El bot usa otro Worker (moncopullis-bot.itskay666.workers.dev). La app Android no pasa por estos Workers: se conecta directo a Supabase con la sesión del usuario.")
 H("4.3 App móvil Android", 2)
 P("La app tiene cinco pestañas pensadas para el trabajo en terreno: Inicio (dosis de hoy y atrasadas), Animales (con filtro de resguardo), Registrar, Inventario y Actividad (lo enviado, pendiente y rechazado). Arriba siempre se ve si hay conexión o cuántos registros esperan envío.")
 F(I / "app_login_aplicar.png", "App móvil: mismo mensaje ante contraseña o correo incorrecto (no revela qué correos existen) y aviso tras aplicar una dosis con lote y fecha de resguardo.", 15)
 F(I / "app_v2_a.png", "App v2 (rediseño): Login con encabezado verde, Inicio con resumen del día y tarjetas de dosis, Animales con aviso de resguardo.", 16)
-F(I / "app_v2_b.png", "App v2: Inventario con barra de stock frente al mínimo y lotes, y Actividad con rechazados, por enviar y enviados.", 12)
+F(I / "app_v2_b.png", "App v2: Inventario con barra de stock frente al mínimo y lotes, y Actividad con rechazados, por enviar y enviados.", 12, clave="app_v2_b")
 F(D / "app_offline.png", "Cómo la app registra sin señal y envía al volver la conexión.", 12)
 H("4.4 Lineamientos estéticos y funcionales", 2)
 T(["Lineamiento", "Cómo se cumple", "Evidencia"], [
-    ["Identidad visual común", "Paleta verde del predio en panel y app; logo de Moncopulli en login, ícono y pestaña Animales; fuente Nunito en la app", "Figuras 4 a 11"],
+    ["Identidad visual común", "Paleta verde del predio en panel y app; logo de Moncopulli en login, ícono y pestaña Animales; fuente Nunito en la app", f"Figuras {fig('resumen')} a {fig('app_v2_b')}"],
     ["Contraste legible (WCAG 2.2 AA)", "Texto oscuro sobre fondo crema; modo oscuro automático en el panel", "panel/src/index.css"],
-    ["Botones grandes para usar con guantes", "Área táctil mínima de 44 px en panel; botones de ancho completo en la app; menú de botones en el bot", "Figuras 7 a 11"],
+    ["Botones grandes para usar con guantes", "Área táctil mínima de 44 px en panel; botones de ancho completo en la app; menú de botones en el bot", f"Figuras {fig('panel_movil')} a {fig('app_v2_b')}"],
     ["Retroalimentación en cada acción", "Estados de carga, vacío, error y éxito; botones deshabilitados mientras se guarda; mensajes en lenguaje simple", "Casos E5, E8, W1, MOV-11"],
     ["Responsive", "Panel de 360 px a escritorio; app adaptada a fuente grande", "P20, P25, MOV-37"],
     ["Prevención de errores", "Confirmación antes de guardar en el bot; fechas futuras bloqueadas; DIIO de 9 dígitos validado", "MOV-10, MOV-13"],
@@ -307,12 +392,12 @@ P("El equipo y la persona de la prueba de uso consideraron que la app se veía f
 T(["Antes (v1)", "Después (v2)", "Por qué"], [
     ["Barra superior verde y plana", "Barra clara con título grande, pastilla de conexión y avatar con iniciales", "Más espacio visual y estado de red legible de un vistazo"],
     ["Inicio: lista de dosis", "Resumen del día con contadores (por aplicar y atrasadas) y tarjetas con pastilla de estado", "El operario ve primero lo urgente"],
-    ["Tarjeta: hora en una columna que quitaba ancho al DIIO", "Hora y estado arriba; DIIO y medicamento a todo el ancho; botones apilados con fuente grande", "Corrige DEF-02 (verificado en la Figura 13)"],
+    ["Tarjeta: hora en una columna que quitaba ancho al DIIO", "Hora y estado arriba; DIIO y medicamento a todo el ancho; botones apilados con fuente grande", f"Corrige DEF-02 (verificado en la Figura {fig('def02')})"],
     ["Inventario: texto de stock", "Cifra grande, barra de stock frente al mínimo y lotes en filas con su vencimiento", "Se entiende el stock sin leer números"],
     ["Menú de cuenta solo con «Cerrar sesión»", "Nombre, rol, «Abrir panel web» y «Cerrar sesión» en rojo", "Acceso directo al panel para lo que la app no hace (crear cuentas, entradas)"],
     ["Esquinas de 6 dp, bordes marcados", "Esquinas de 16 dp, sombras suaves, tipografía Nunito en títulos y botones", "Aspecto actual y coherente con la marca"],
 ], widths=[4.5, 6.5, 5], titulo="Cambios del rediseño de la app", font=8.5)
-F(I / "app_def02.png", "DEF-02: ciclo 2 (izquierda, DIIO y medicamento cortados con «…») y app v2 con fuente al doble (derecha, todo legible y botones apilados).", 11)
+F(I / "app_def02.png", "DEF-02: ciclo 2 (izquierda, DIIO y medicamento cortados con «…») y app v2 con fuente al doble (derecha, todo legible y botones apilados).", 11, clave="def02")
 P("Las capturas de esta sección no son maquetas: las genera una prueba automática (CapturasPantallaTest) que dibuja las pantallas reales de la app con datos ficticios, sin emulador. Así cada cambio futuro de diseño deja su evidencia.")
 H("4.6 Qué hace cada canal (panel, app y bot)", 2)
 P("La base de datos es una sola y las reglas son las mismas para todos. Cada canal ofrece solo lo que tiene sentido donde se usa. Por ejemplo, crear cuentas de usuario es tarea del administrador en la oficina, por eso está en el panel y no en la app de terreno; desde la app, el menú de cuenta lleva directo al panel.")
@@ -337,10 +422,10 @@ H("5. Base de datos", 1)
 P("Los diagramas de esta sección se generaron leyendo directamente la base de datos de producción en Supabase el 18 de noviembre de 2026, por lo que muestran exactamente lo que está funcionando y no un diseño teórico.")
 H("5.1 Cómo leer los diagramas", 2)
 P("Cada caja es una tabla. 🔑 marca la clave primaria (el identificador único de cada fila), ↗ marca una clave foránea (un dato que apunta a otra tabla) y UK indica que el valor no se puede repetir. En cada línea, el número junto a una tabla dice cuántas filas de esa tabla se relacionan con una de la otra. Ejemplo: entre propietario y animal aparece 0..1 junto a propietario (un animal tiene uno o ningún propietario) y 0..* junto a animal (un propietario puede tener muchos animales). Los colores agrupan las áreas: verde sanitario, azul inventario, naranja usuarios/bot/auditoría y gris intercambio de datos.")
-F(D / "er_general.png", "Vista general del modelo: 18 tablas y 30 relaciones (solo columnas clave).", 16.5)
+F(D / "er_general.png", "Vista general del modelo: 18 tablas y 30 relaciones (solo columnas clave).", 16.5, clave="er_general")
 F(D / "er_sanitario.png", "ER 1: animales, tratamientos, dosis y documentos veterinarios.", 15)
 F(D / "er_inventario.png", "ER 2: inventario por lote, movimientos y alertas.", 15)
-F(D / "er_auditoria.png", "ER 3: usuarios, bot, auditoría e intercambio de datos.", 12)
+F(D / "er_auditoria.png", "ER 3: usuarios, bot, auditoría e intercambio de datos.", 12, clave="er_auditoria")
 H("5.2 Tablas y su función", 2)
 T(["Tabla", "Qué guarda", "Reglas principales"], [
     ["usuario", "Personas con acceso y su rol", "Ligada a la cuenta de Supabase Auth; RUT con dígito verificador; rol ADMIN, OPERARIO o AUDITOR"],
@@ -654,7 +739,7 @@ T(["ID", "Esperado", "Obtenido", "Causa", "Acción / estado"], [
     ["P24", "14 formularios abren", "No abrían", "Doble montaje de React en desarrollo cerraba el diálogo", "Corregido en Dialogo.tsx; 14/14"],
     ["P32", "Importación auditada", "No auditaba; uuid mal formado daba error técnico", "El informe describía algo que el código no hacía", "Migración 0011; pruebas I7 e I8"],
     ["MOV-37 c1 (DEF-01)", "Textos legibles con fuente máxima", "Palabras partidas", "Etiquetas sin límite de líneas; columna de hora de ancho fijo", "Parcialmente corregido (6d25a75)"],
-    ["MOV-37 c2 (DEF-02)", "DIIO y medicamento legibles", "Terminan en «…»", "«Atrasada» bajo la hora agranda la columna y quita ancho", "Corregido en app v2: hora arriba, DIIO a todo el ancho (Figura 13)"],
+    ["MOV-37 c2 (DEF-02)", "DIIO y medicamento legibles", "Terminan en «…»", "«Atrasada» bajo la hora agranda la columna y quita ancho", f"Corregido en app v2: hora arriba, DIIO a todo el ancho (Figura {fig('def02')})"],
     ["MOV-11 (OBS-01)", "Botón conserva su texto", "Cambiaba a «Reintentar»", "No distinguía error de validación de error de red", "Corregido y verificado"],
     ["MOV-25 (OBS-02)", "Solo «Descartar»", "Ofrecía «Volver a enviar»", "Todos los rechazos se trataban igual", "Corregido y verificado"],
     ["MOV-30 (OBS-03)", "Formulario se conserva", "Se perdían los campos", "Estado solo en memoria, sin SavedStateHandle", "Corregido: 7 campos se conservan"],
@@ -744,6 +829,11 @@ for ref in [
     "Supabase. (s. f.). Row Level Security. https://supabase.com/docs/guides/database/postgres/row-level-security",
     "Telegram. (s. f.). Telegram Bot API. https://core.telegram.org/bots/api",
     "W3C. (2023). Web Content Accessibility Guidelines (WCAG) 2.2. https://www.w3.org/TR/WCAG22/",
+    "Grafana Labs. (s. f.). k6 documentation. https://grafana.com/docs/k6/",
+    "Robolectric. (s. f.). Robolectric: fast and reliable Android tests. https://robolectric.org",
+    "JetBrains. (s. f.). Kotlin documentation. https://kotlinlang.org/docs/",
+    "Android Developers. (s. f.). Run apps on the Android Emulator. https://developer.android.com/studio/run/emulator",
+    "Microsoft. (s. f.). Playwright documentation. https://playwright.dev",
 ]:
     p = doc.add_paragraph(ref); p.paragraph_format.left_indent = Cm(1); p.paragraph_format.first_line_indent = Cm(-1)
 
@@ -778,4 +868,5 @@ for s in doc.sections:
     field(p, "PAGE")
 
 doc.save(OUT)
+_REFS.write_text(_json.dumps(FIGMAP))
 print("ok", OUT, "figuras", FIG[0], "tablas", TAB[0])

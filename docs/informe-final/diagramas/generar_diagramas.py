@@ -247,3 +247,46 @@ r [label="Supabase Realtime\\n→ panel en vivo"]; a [label="Alerta TEMPERATURA_
 s -> t [label="cada 1 min"]; t -> r; t -> a [label="fuera de rango\\no sin señal 60 s"];
 ''')
 print("listo", sorted(p.name for p in OUT.glob("*.png")))
+
+# ---------------------------------------------------------------- Herramientas por capa (stack actual)
+def capa(nombre, color, items):
+    filas = "".join(f'<td bgcolor="white" border="1" cellpadding="6"><font point-size="10">{i}</font></td>' for i in items)
+    return (f'<tr><td bgcolor="{color}" width="150" cellpadding="8"><font color="white"><b>{nombre}</b></font></td>{filas}'
+            + "".join('<td bgcolor="white" border="0"></td>' for _ in range(6 - len(items))) + '</tr>')
+
+capas = [
+    ("Personas y canales", AZUL, ["Panel web<br/>React 18 + Vite", "App Android<br/>Kotlin + Compose", "Bot Telegram<br/>Worker TypeScript", "Navegador<br/>Chrome / Edge"]),
+    ("Publicación", NAR, ["Cloudflare Workers<br/>panel y bot", "Durable Object<br/>sin duplicados", "APK release<br/>firmado + R8", "Emulador oficial<br/>Android 15"]),
+    ("Datos y reglas", VERDE, ["PostgreSQL 17<br/>Supabase", "RLS + funciones<br/>SECURITY DEFINER", "Supabase Auth", "pg_cron", "Edge Function<br/>crear-usuario"]),
+    ("Calidad y seguridad", ROJO, ["GitHub Actions CI", "Vitest · node:test<br/>JUnit · Robolectric", "Playwright · k6", "OWASP ZAP · jadx", "Gitleaks · npm audit", "Android Lint<br/>ESLint"]),
+    ("Equipo y documentos", GRIS, ["GitHub + PR", "Trello Kanban", "draw.io · Graphviz", "Word / PDF", "Asistentes IA<br/>(apoyo revisado)"]),
+]
+tabla_html = "".join(capa(*c) for c in capas)
+render("stack_capas", f'''
+label=<<b>Herramientas en uso, por capa (noviembre 2026)</b>>; labelloc=t; fontsize=16;
+t [shape=plain, label=<<table border="0" cellspacing="6" cellpadding="0">{tabla_html}</table>>];
+''')
+
+# ---------------------------------------------------------------- Evolución de herramientas (antes -> ahora)
+pares = [
+    ("Prototipo HTML estático", "Panel React + Vite", "sin sesión ni datos reales"),
+    ("Cloudflare Pages", "Cloudflare Workers (assets)", "un solo tipo de despliegue con el bot"),
+    ("JMeter desde un PC", "k6 en GitHub Actions", "p95 variaba 118–6 709 ms por la red local"),
+    ("Imagen de restauración en ECR", "Imagen en Docker Hub", "límite de descargas de ECR en el CI"),
+    ("Cloudflare R2 (planificado)", "Artefacto cifrado con age en GitHub", "sin costo ni credenciales extra"),
+    ("Vistas v_* de consulta", "Consultas directas con RLS", "las vistas saltaban el RLS (0013)"),
+    ("Bot de texto libre", "Bot con botones + texto opcional", "operarios con guantes y poca señal"),
+    ("Firebase (prototipo IoT)", "Supabase como único backend", "datos relacionales y reglas en el motor"),
+    ("Flutter / iOS (evaluado)", "Android nativo (Kotlin)", "sin Mac; app ya probada en teléfono"),
+    ("Prueba Room en teléfono", "Room con Robolectric en la JVM", "corre en CI sin dispositivo"),
+    ("Android Studio para ver la app", "Script de emulador en 1 clic", "el equipo usa iPhone y Windows"),
+    ("Diagramas ER a mano", "ER generados del Supabase real", "siempre iguales a producción"),
+]
+cuerpo = ['rankdir=LR; label=<<b>Evolución de herramientas: qué dejamos y por qué</b>>; labelloc=t; fontsize=16; nodesep=0.12; ranksep=0.5;',
+          f'node [shape=box, style="rounded,filled", fontsize=10, width=2.9];']
+for i, (a, b, r) in enumerate(pares):
+    cuerpo.append(f'a{i} [label="{a}", fillcolor="#eeeeea", color="{GRIS}", fontcolor="{GRIS}"];')
+    cuerpo.append(f'b{i} [label="{b}", fillcolor="{VERDE_CL}", color="{VERDE}"];')
+    cuerpo.append(f'a{i} -> b{i} [label="{r}", fontsize=9, color="{VERDE}"];')
+render("evolucion_herramientas", "\n".join(cuerpo))
+print("extra ok")
