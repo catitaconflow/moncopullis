@@ -170,6 +170,7 @@ T(["Indicador", "Resultado"], [
     ["Carga y estrés", "50 usuarios: p95 entre 27 y 34 ms · hasta 400 usuarios sin fallas"],
     ["Base de datos en producción (verificado en vivo)", "18 tablas, 30 relaciones, 60 índices, RLS en las 18 tablas, 2 tareas programadas; migraciones 0001 a 0016 aplicadas"],
     ["Pruebas en producción de las migraciones nuevas", "0014: M1 a M17 · 0015: O1 a O11 · 0016: T1 a T4 — todas pasan (con ROLLBACK, sin dejar datos)"],
+    ["Ciclo 3 de la app v2 (Chrome automatizado contra producción)", "13 de 13 casos pasan; la base confirma origen APPMOVIL, hora original en envíos diferidos y cero duplicados"],
     ["Respaldo", "Diario, con restauración de prueba, verificación de auditoría y cifrado"],
     ["Herramientas", "Herramientas en uso por capa, 14 reemplazadas durante el proyecto con su motivo y 8 alternativas descartadas (capítulo 3)"],
 ], widths=[6.5, 9.5], titulo="Estado del sistema a la fecha de entrega")
@@ -669,6 +670,7 @@ T(["Fecha", "Qué se ejecutó", "Versión", "Responsable", "Resultado"], [
     ["18 nov", "Migraciones 0014, 0015 y 0016 en producción con sus pruebas", "main 6e0d925", "Equipo", "M1–M17, O1–O11 y T1–T4 pasan"],
     ["18 nov", "App v2 instalada y abierta en emulador Android (Pixel 8, Android 15)", "APK release", "Andy Timbles", "Inicia y conecta con Supabase"],
     ["18 nov", "AUT-02: cola de envíos con Room en memoria (Robolectric)", "029a5af+", "Equipo", "6/6: orden, id repetido, enviado, fallo, rechazo y limpieza"],
+    ["18 nov", "Ciclo 3: app v2 por API con Chrome automatizado y verificación en panel y base", "main 129e23c", "Equipo", "13/13; origen APPMOVIL; sin duplicados"],
 ], widths=[2, 5.5, 2.6, 2.6, 3.3], titulo="Bitácora de ejecución", font=8.5)
 H("10.3 Resultados por componente", 2)
 T(["Componente", "Casos", "Pasan", "Evidencia"], [
@@ -699,6 +701,33 @@ T(["Grupo", "Casos", "Ejecutados", "Pasan", "No pasan", "No ejecutados"], [
 F(I / "app_rechazo.png", "App: rechazo «ya aplicada por otro usuario» en el ciclo 1 (ofrecía reenviar) y en el ciclo 2 (solo Descartar), y botón «Siguiente» destacado.", 15)
 F(I / "MOV-27_c1.png", "Auditoría tras doble toque en Confirmar: una sola fila por acción, origen APPMOVIL.", 11)
 F(I / "MOV-34a_c1.png", "Búsqueda de «service_role» en el APK con jadx: 0 resultados.", 10)
+H("10.5 Ciclo 3: app v2 en producción con Chrome automatizado (18-11-2026)", 2)
+P("Protocolo: se creó un tratamiento [FALSO] con dos dosis programadas (animal 900000001, medicamento [FALSO] Prueba E2E 98266, lote PRUEBA-E2E-1 con 20 ml). Un Chrome automatizado (Playwright) inició sesión en el panel publicado con la cuenta ADMIN y, con esa misma sesión de Supabase Auth, ejecutó las acciones de la app por las mismas funciones que llama Android (fn_app_*). Después se revisó el resultado en el panel y en la base. Las credenciales se pasaron solo en memoria y se cambiarán al terminar.")
+T(["ID", "Caso", "Esperado", "Obtenido", "Pasa"], [
+    ["C3-02", "Inicio de sesión con contraseña incorrecta", "No entra y muestra error", "Se queda en el login con mensaje de error", "Sí"],
+    ["C3-01", "Inicio de sesión ADMIN", "Entra al Resumen", "Entra al Resumen (/)", "Sí"],
+    ["C3-04", "Aplicar dosis programada (Inicio → Aplicar)", "creado, lote PRUEBA-E2E-1, con resguardo", "HTTP 200: creado, lote PRUEBA-E2E-1, resguardo 2026-11-20T03:56:31.665777+00:00", "Sí"],
+    ["C3-04b", "Reintento de la misma dosis", "ya_registrado, sin descontar de nuevo", "HTTP 200: ya_registrado", "Sí"],
+    ["C3-05", "Registrar salida de 1 ml (Inventario)", "Devuelve el id del movimiento", "HTTP 200: movimiento 90", "Sí"],
+    ["C3-07", "Envío de la cola al volver la red (aplicada 3 min antes)", "creado y con la hora original", "HTTP 200: creado (hora enviada 2026-11-18T03:53:33.228Z)", "Sí"],
+    ["C3-08", "Registrar aplicación en terreno y reenviarla", "creado y luego ya_registrado", "creado → ya_registrado", "Sí"],
+    ["C3-09a", "DIIO de 8 dígitos", "«El DIIO debe tener 9 dígitos.»", "El DIIO debe tener 9 dígitos.", "Sí"],
+    ["C3-09b", "Cantidad 0", "«La cantidad debe ser mayor que 0.»", "La cantidad debe ser mayor que 0.", "Sí"],
+    ["C3-09c", "Salida mayor al stock", "«Stock insuficiente…»", "Stock insuficiente: el lote PRUEBA-E2E-1 tiene 14.00.", "Sí"],
+    ["C3-09d", "Fecha de aplicación futura", "«…no puede ser futura.»", "La fecha de aplicación no puede ser futura.", "Sí"],
+    ["C3-11", "Llamar a la app sin sesión", "Rechazo (401/403/42501)", "HTTP 401: permission denied for function fn_app_aplicar_dosis", "Sí"],
+    ["C3-12", "Auditoría del panel muestra el origen APPMOVIL", "Filas con APPMOVIL", "Aparecen filas con APPMOVIL", "Sí"]
+], widths=[1.6, 4.2, 3.6, 5.4, 1.2], titulo="Ciclo 3: resultados (13 de 13 pasan)", font=8)
+T(["Comprobación en la base", "Resultado"], [
+    ["Dosis 26 aplicada desde Inicio", "APLICADA, origen APPMOVIL, lote PRUEBA-E2E-1, resguardo hasta el 20-11 00:56"],
+    ["Reintento de la dosis 26", "Una sola salida de stock: el reintento no duplicó"],
+    ["Dosis 27 enviada más tarde (simula la cola sin señal)", "Fecha de aplicación 00:53:33, la hora original y no la del envío"],
+    ["Registro en terreno con uuid (dosis 28)", "Fecha indicada conservada; el reenvío con el mismo uuid no duplicó"],
+    ["Stock del lote", "20 → 14 (2 + 1 + 2 + 1); el stock del medicamento es igual a la suma de sus lotes"],
+    ["Auditoría", "5 filas con origen APPMOVIL, visibles en la pantalla Auditoría del panel"],
+], widths=[6, 10], titulo="Ciclo 3: verificación en Supabase", font=8.5)
+F(I / "C3-12_auditoria.png", "Ciclo 3: pantalla Auditoría del panel con las acciones hechas por la app (origen APPMOVIL) junto a las del panel (WEBAPP).", 15, clave="c3_auditoria")
+P("Alcance y límite: este ciclo comprueba de punta a punta la lógica de la app contra producción, pero no los toques en la pantalla del teléfono ni el corte real de la red del dispositivo. Esas partes quedan cubiertas por las capturas automáticas de la interfaz (sección 4.5), la prueba AUT-02 de la cola local y los ciclos 1 y 2 en teléfono real; repetirlas con la v2 en el emulador sigue recomendado (R-15).")
 salto()
 
 # ===================================================================== 11 VALIDACIÓN
@@ -719,6 +748,7 @@ T(["Criterio", "Meta", "Resultado", "¿Cumple?"], [
 H("11.2 ¿Son confiables los resultados?", 2)
 B([("Repetibilidad: ", "la carga con JMeter desde un computador variaba de 118 a 6 709 ms con la misma carga. Lo repetimos con k6 desde GitHub Actions tres veces y el p95 quedó entre 27 y 34 ms. Concluimos que la variación era de la red del computador, no del sistema."),
    ("Verificación cruzada: ", "cada caso de la app se verificó también en el panel (stock, tratamiento y auditoría) y, cuando importaba, con una consulta SQL (20 registros, 20 distintos)."),
+   ("Ciclo 3 en producción: ", "el 18-11 un Chrome automatizado ejecutó 13 casos de la app v2 contra la base real y cada resultado se comprobó por separado en la base de datos (sección 10.5)."),
    ("Regresión: ", "el 18-11 repetimos las pruebas automáticas sobre la versión de entrega con los mismos resultados del informe de avance."),
    ("Independencia: ", "las pruebas de caja blanca y caja negra las hizo un integrante distinto del que programó."),
    ("Límites declarados: ", "no damos por hecha ninguna prueba sin evidencia; lo no ejecutado aparece como «No ejecutado».")])
@@ -773,7 +803,7 @@ T(["ID", "Recomendación", "Origen", "Prioridad", "Cómo sabremos que está cerr
     ["R-06b", "Entorno de staging (Supabase + Worker) con E2E en cada PR", "Pruebas en producción con datos ficticios", "Media", "CI despliega a staging"],
     ["R-12", "Revisar los avisos de npm en dependencias de desarrollo", "npm ci 17-11", "Baja", "npm audit sin críticos"],
     ["R-02/R-10", "Terminar DEF-01 en Inventario; limpiar recursos sin uso", "DEF-01, Lint", "Cerrada", "Hecho: nombre a todo el ancho; Lint sin UnusedResources"],
-    ["R-15", "Repetir en la app v2 los casos clave del ciclo 2 (MOV-07, 17, 21, 22, 25, 37) en el emulador o un teléfono", "Rediseño", "Alta", "Planilla del ciclo 3 con resultados"],
+    ["R-15", "Repetir en la app v2 los casos clave del ciclo 2 (MOV-07, 17, 21, 22, 25, 37) en el emulador o un teléfono", "Rediseño", "Media", "Lógica cerrada: ciclo 3 13/13 en producción (10.5). Falta solo la parte táctil en el emulador con la planilla del kit"],
 ], widths=[1.6, 5.4, 3, 1.6, 4.4], titulo="Recomendaciones priorizadas", font=8.5)
 H("13.1 Versión para iPhone", 2)
 P("Decisión del 18-11-2026: se mantiene solo Android. Para mostrar la app desde un computador se entrega un emulador para Windows (sección 7.7.1). El equipo evaluó ofrecer la app también en iOS. La app actual es nativa de Android (Kotlin). Para no mantener dos aplicaciones distintas, la alternativa recomendada es reescribir la interfaz en Flutter, que genera desde un mismo código el APK de Android y la app de iOS, reutilizando las mismas funciones fn_app_* de Supabase. Hay que considerar que instalar en un iPhone requiere un Mac con Xcode y una cuenta de Apple Developer; un APK solo se instala en Android.")
