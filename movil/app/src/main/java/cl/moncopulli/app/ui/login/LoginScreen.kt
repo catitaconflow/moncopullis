@@ -6,6 +6,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.ui.graphics.Brush
+import cl.moncopulli.app.ui.comun.TarjetaMonco
+import cl.moncopulli.app.ui.comun.formaCampo
+import cl.moncopulli.app.ui.theme.Principal
+import cl.moncopulli.app.ui.theme.PrincipalOscuro
+import cl.moncopulli.app.ui.theme.SobrePrincipal
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -54,59 +62,93 @@ fun LoginScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .imePadding()
-            .verticalScroll(rememberScrollState())
-            .padding(24.dp),
+            .verticalScroll(rememberScrollState()),
     ) {
-        Spacer(Modifier.height(48.dp))
-        // Encabezado centrado; los campos y el botón siguen a todo el ancho.
+        // Encabezado verde con el logo (rediseño).
         Column(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 32.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    Brush.verticalGradient(listOf(Principal, PrincipalOscuro)),
+                    RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
+                )
+                .statusBarsPadding()
+                .padding(top = 40.dp, bottom = 48.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             LogoMoncopulli(Modifier.padding(bottom = 16.dp))
-            Text("Moncopulli", style = MaterialTheme.typography.headlineLarge)
+            Text("Moncopulli", style = MaterialTheme.typography.headlineLarge, color = SobrePrincipal)
             Text(
-                "Medicamentos y tratamientos",
+                "Medicamentos y tratamientos en terreno",
                 style = MaterialTheme.typography.bodyMedium,
+                color = SobrePrincipal.copy(alpha = 0.85f),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 4.dp),
             )
         }
-        OutlinedTextField(
-            value = correo,
-            onValueChange = { correo = it },
-            label = { Text("Correo") },
-            singleLine = true,
-            enabled = !ui.enviando,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
-            modifier = Modifier.fillMaxWidth(),
-        )
-        OutlinedTextField(
-            value = clave,
-            onValueChange = { clave = it },
-            label = { Text("Contraseña") },
-            singleLine = true,
-            enabled = !ui.enviando,
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { enviar() }),
-            modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
-        )
-        ui.mensaje?.let {
-            Text(it, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 12.dp))
-        }
-        Button(
-            onClick = { enviar() },
-            enabled = !ui.enviando,
-            modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
-        ) {
-            if (ui.enviando) {
-                CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
-            } else {
-                Text("Iniciar sesión")
+        TarjetaMonco(Modifier.padding(horizontal = 20.dp).offset(y = (-24).dp)) {
+            Text("Iniciar sesión", style = MaterialTheme.typography.titleLarge)
+            Text(
+                "Usa la misma cuenta del panel web.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 8.dp),
+            )
+            OutlinedTextField(
+                value = correo,
+                onValueChange = { correo = it },
+                label = { Text("Correo") },
+                singleLine = true,
+                enabled = !ui.enviando,
+                shape = formaCampo,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
+                modifier = Modifier.fillMaxWidth(),
+            )
+            OutlinedTextField(
+                value = clave,
+                onValueChange = { clave = it },
+                label = { Text("Contraseña") },
+                singleLine = true,
+                enabled = !ui.enviando,
+                shape = formaCampo,
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { enviar() }),
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+            )
+            ui.mensaje?.let {
+                Text(
+                    it,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier
+                        .padding(top = 12.dp)
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.errorContainer, MaterialTheme.shapes.small)
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                )
+            }
+            Button(
+                onClick = { enviar() },
+                enabled = !ui.enviando,
+                modifier = Modifier.fillMaxWidth().padding(top = 20.dp).height(52.dp),
+            ) {
+                if (ui.enviando) {
+                    CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp, color = SobrePrincipal)
+                } else {
+                    Text("Entrar")
+                }
             }
         }
+        Text(
+            "Agrícola Moncopulli · Puyehue",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
+        )
     }
 }
 
@@ -117,7 +159,7 @@ private fun LogoMoncopulli(modifier: Modifier = Modifier) {
         modifier = modifier
             .size(80.dp)
             // Esquinas más redondeadas que el resto de la app (6 dp) a propósito: imita el ícono del lanzador.
-            .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(20.dp)),
+            .background(SobrePrincipal.copy(alpha = 0.14f), RoundedCornerShape(24.dp)),
         contentAlignment = Alignment.Center,
     ) {
         Image(

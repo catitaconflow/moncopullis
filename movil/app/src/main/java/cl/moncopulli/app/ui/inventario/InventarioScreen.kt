@@ -1,6 +1,11 @@
 package cl.moncopulli.app.ui.inventario
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.material3.FilledTonalButton
+import cl.moncopulli.app.ui.comun.BarraStock
+import cl.moncopulli.app.ui.comun.CampoBusqueda
+import cl.moncopulli.app.ui.comun.TarjetaMonco
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -91,17 +96,15 @@ fun InventarioScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 item(key = "filtros") {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        OutlinedTextField(
-                            value = ui.busqueda,
-                            onValueChange = viewModel::buscar,
-                            label = { Text("Buscar medicamento o principio activo") },
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                            modifier = Modifier.fillMaxWidth(),
+                        CampoBusqueda(
+                            valor = ui.busqueda,
+                            onCambio = viewModel::buscar,
+                            sugerencia = "Buscar medicamento o principio activo",
+                            teclado = KeyboardOptions(imeAction = ImeAction.Search),
                         )
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             // Con fuente grande el chip se acorta con "…" y el contador no se parte (DEF-01).
@@ -174,49 +177,48 @@ fun InventarioScreen(
 }
 
 @Composable
-private fun TarjetaMedicamento(
+internal fun TarjetaMedicamento(
     m: MedicamentoStock,
     hoy: LocalDate,
     puedeRegistrarSalida: Boolean,
     onRegistrarSalida: () -> Unit,
 ) {
-    OutlinedCard(modifier = Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    m.nombre,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.weight(1f),
-                )
-                // El panel usa rojo aquí; la app usa ámbar (rojo solo para lo urgente).
-                if (m.bajoMinimo) Insignia("Bajo mínimo", Advertencia, AdvertenciaFondo)
-            }
-            m.principioActivo?.let {
-                Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
+    TarjetaMonco {
+        // Nombre a todo el ancho y la pastilla debajo: el nombre nunca se parte (DEF-01, R-02).
+        Text(m.nombre, style = MaterialTheme.typography.titleMedium)
+        m.principioActivo?.let {
+            Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        if (m.bajoMinimo) Insignia("Bajo mínimo", Advertencia, AdvertenciaFondo, Modifier.padding(top = 4.dp))
+        Row(Modifier.fillMaxWidth().padding(top = 8.dp), verticalAlignment = Alignment.Bottom) {
             Text(
-                "Stock: ${cantidadConUnidad(m.stockActual, m.unidad)} · mínimo ${cantidadConUnidad(m.stockMinimo, m.unidad)}",
-                style = MaterialTheme.typography.bodyMedium,
+                cantidadConUnidad(m.stockActual, m.unidad),
+                style = MaterialTheme.typography.headlineSmall,
                 color = if (m.bajoMinimo) Advertencia else MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.weight(1f),
             )
-            HorizontalDivider(Modifier.padding(vertical = 4.dp))
-            if (m.lotes.isEmpty()) {
-                Text(
-                    "Sin lotes con stock.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-            m.lotes.forEach { FilaLote(it, m.unidad, hoy) }
-            if (m.lotes.isNotEmpty()) {
-                // Desactivado sin conexión: fn_app_registrar_salida no es idempotente (no puede esperar en el outbox).
-                TextButton(
-                    onClick = onRegistrarSalida,
-                    enabled = puedeRegistrarSalida,
-                    modifier = Modifier.align(Alignment.End),
-                ) { Text("Registrar salida") }
-            }
+            Text(
+                "mínimo ${cantidadConUnidad(m.stockMinimo, m.unidad)}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        BarraStock(m.stockActual.toDouble(), m.stockMinimo.toDouble(), Modifier.padding(top = 4.dp, bottom = 6.dp))
+        if (m.lotes.isEmpty()) {
+            Text(
+                "Sin lotes con stock.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        m.lotes.forEach { FilaLote(it, m.unidad, hoy) }
+        if (m.lotes.isNotEmpty()) {
+            // Desactivado sin conexión: fn_app_registrar_salida no es idempotente (no puede esperar en el outbox).
+            FilledTonalButton(
+                onClick = onRegistrarSalida,
+                enabled = puedeRegistrarSalida,
+                modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
+            ) { Text("Registrar salida") }
         }
     }
 }
@@ -224,9 +226,16 @@ private fun TarjetaMedicamento(
 @Composable
 private fun FilaLote(l: LoteStock, unidad: String, hoy: LocalDate) {
     val dias = l.diasParaVencer(hoy)
-    Row(Modifier.fillMaxWidth().padding(vertical = 2.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 2.dp)
+            .background(MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.shapes.small)
+            .padding(horizontal = 12.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
         Column(Modifier.weight(1f)) {
-            Text("Lote ${l.numero}", style = MaterialTheme.typography.bodyMedium)
+            Text("Lote ${l.numero}", style = MaterialTheme.typography.labelLarge)
             Text(
                 "Vence ${fechaCorta(l.vencimiento)}",
                 style = MaterialTheme.typography.bodySmall,

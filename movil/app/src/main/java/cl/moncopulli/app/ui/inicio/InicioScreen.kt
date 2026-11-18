@@ -1,6 +1,23 @@
 package cl.moncopulli.app.ui.inicio
 
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.painterResource
+import cl.moncopulli.app.R
+import cl.moncopulli.app.ui.comun.Insignia
+import cl.moncopulli.app.ui.comun.TarjetaMonco
+import cl.moncopulli.app.ui.theme.Info
+import cl.moncopulli.app.ui.theme.InfoFondo
+import cl.moncopulli.app.ui.theme.Principal
+import cl.moncopulli.app.ui.theme.PrincipalClaro
+import cl.moncopulli.app.ui.theme.PrincipalOscuro
+import cl.moncopulli.app.ui.theme.SobrePrincipal
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -92,21 +109,15 @@ fun InicioScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 item {
-                    // Sin saludo: el nombre ya está en el menú de cuenta.
-                    Column(Modifier.padding(bottom = 8.dp)) {
-                        Text(fechaLarga(hoy), style = MaterialTheme.typography.titleLarge)
-                        // Solo con dosis: si está cargando o vacía, el indicador o el aviso de abajo ya lo dicen.
-                        if (!ui.cargando && ui.dosis.isNotEmpty()) {
-                            Text(
-                                resumenDosis(ui.dosis.size, atrasadas),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                        }
-                    }
+                    ResumenDia(
+                        fecha = fechaLarga(hoy),
+                        total = ui.dosis.size,
+                        atrasadas = atrasadas,
+                        cargando = ui.cargando,
+                    )
                 }
                 when {
                     ui.cargando -> item {
@@ -165,7 +176,7 @@ fun InicioScreen(
 }
 
 /** Misma regla que el servidor (0005). La usan la tarjeta y el resumen, para que siempre coincidan. */
-private fun DosisDelDia.atrasada(ahora: OffsetDateTime) = fechaProgramada.isBefore(ahora)
+internal fun DosisDelDia.atrasada(ahora: OffsetDateTime) = fechaProgramada.isBefore(ahora)
 
 /** "5 por aplicar · 2 atrasadas": el total incluye las atrasadas, que van en rojo. */
 private fun resumenDosis(total: Int, atrasadas: Int): AnnotatedString = buildAnnotatedString {
@@ -178,8 +189,52 @@ private fun resumenDosis(total: Int, atrasadas: Int): AnnotatedString = buildAnn
     }
 }
 
+/** Encabezado verde con la fecha y los contadores del día (rediseño). */
 @Composable
-private fun TarjetaDosis(
+internal fun ResumenDia(fecha: String, total: Int, atrasadas: Int, cargando: Boolean) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp)
+            .clip(MaterialTheme.shapes.large)
+            .background(Brush.linearGradient(listOf(Principal, PrincipalOscuro)))
+            .padding(20.dp),
+    ) {
+        Text("Hoy", style = MaterialTheme.typography.labelLarge, color = PrincipalClaro)
+        Text(
+            fecha.replaceFirstChar { it.uppercase() },
+            style = MaterialTheme.typography.titleLarge,
+            color = SobrePrincipal,
+        )
+        Row(Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Contador(if (cargando) "–" else "$total", "por aplicar", Modifier.weight(1f))
+            Contador(if (cargando) "–" else "$atrasadas", if (atrasadas == 1) "atrasada" else "atrasadas",
+                Modifier.weight(1f), alerta = atrasadas > 0)
+        }
+    }
+}
+
+@Composable
+private fun Contador(valor: String, etiqueta: String, modifier: Modifier = Modifier, alerta: Boolean = false) {
+    Column(
+        modifier
+            .clip(MaterialTheme.shapes.medium)
+            .background(if (alerta) UrgenteFondo else SobrePrincipal.copy(alpha = 0.12f))
+            .padding(horizontal = 14.dp, vertical = 10.dp),
+    ) {
+        Text(valor, style = MaterialTheme.typography.headlineMedium, color = if (alerta) Urgente else SobrePrincipal)
+        Text(etiqueta, style = MaterialTheme.typography.labelMedium,
+            color = if (alerta) Urgente else SobrePrincipal.copy(alpha = 0.85f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+    }
+}
+
+/**
+ * Tarjeta de dosis (rediseño, corrige DEF-02): arriba la pastilla de estado y la hora, abajo el DIIO y el
+ * medicamento a TODO el ancho, en hasta dos líneas, así nunca compiten por espacio con la hora.
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+internal fun TarjetaDosis(
     d: DosisDelDia,
     ahora: OffsetDateTime,
     hoy: LocalDate,
@@ -190,67 +245,65 @@ private fun TarjetaDosis(
 ) {
     val atrasada = d.atrasada(ahora)
     val esDeHoy = d.fechaProgramada.atZoneSameInstant(ZONA_CHILE).toLocalDate() == hoy
+    val cuando = if (esDeHoy) horaChile(d.fechaProgramada)
+    else "${diaCortoChile(d.fechaProgramada)} · ${horaChile(d.fechaProgramada)}"
 
-    OutlinedCard(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.outlinedCardColors(
-            containerColor = if (atrasada) UrgenteFondo else MaterialTheme.colorScheme.surface,
-        ),
-        border = BorderStroke(1.dp, if (atrasada) Urgente else MaterialTheme.colorScheme.outline),
-    ) {
-        Column(Modifier.padding(12.dp)) {
+    TarjetaMonco(acento = if (atrasada) Urgente else null) {
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            itemVerticalAlignment = Alignment.CenterVertically,
+        ) {
+            if (atrasada) Insignia("Atrasada", Urgente, UrgenteFondo)
+            else Insignia(if (esDeHoy) "Hoy" else "Próxima", Info, InfoFondo)
             Row(verticalAlignment = Alignment.CenterVertically) {
-                // Ancho mínimo, no fijo: con fuente grande la hora crece en vez de partirse (DEF-01).
-                // "Atrasada" va bajo la hora para dejar más ancho al DIIO y al medicamento.
-                Column(Modifier.widthIn(min = 64.dp).padding(end = 8.dp)) {
-                    Text(
-                        horaChile(d.fechaProgramada),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = if (atrasada) Urgente else MaterialTheme.colorScheme.onSurface,
-                        softWrap = false,
-                    )
-                    if (!esDeHoy) {
-                        Text(
-                            diaCortoChile(d.fechaProgramada),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = if (atrasada) Urgente else MaterialTheme.colorScheme.onSurfaceVariant,
-                            softWrap = false,
-                        )
-                    }
-                    if (atrasada) {
-                        Text("Atrasada", style = MaterialTheme.typography.labelMedium, color = Urgente, softWrap = false)
-                    }
-                }
-                // Una línea con "…": el texto completo está en el diálogo de Aplicar y lo lee TalkBack.
-                Column(Modifier.weight(1f)) {
-                    Text(
-                        d.diio ?: "Sin DIIO",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    Text(
-                        "${d.medicamento} · ${cantidadConUnidad(d.cantidad, d.unidad)}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    Text(
-                        etiquetaCategoria(d.categoria),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
+                Icon(
+                    painterResource(R.drawable.ic_reloj), contentDescription = null,
+                    tint = if (atrasada) Urgente else MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(16.dp),
+                )
+                Text(
+                    cuando,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = if (atrasada) Urgente else MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(start = 4.dp),
+                )
             }
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
-            ) {
-                TextButton(onClick = onOmitir, enabled = habilitada && puedeOmitir) { Text("Omitir") }
-                Button(onClick = onAplicar, enabled = habilitada) { Text("Aplicar") }
+        }
+        Text(
+            d.diio ?: "Sin DIIO",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(top = 6.dp),
+        )
+        Text(
+            d.medicamento,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Medium,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Text(
+            "${cantidadConUnidad(d.cantidad, d.unidad)} · ${etiquetaCategoria(d.categoria)}",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        // Con fuente muy grande los botones van uno sobre otro, a todo el ancho, para que no se corte el texto.
+        val apilar = LocalDensity.current.fontScale >= 1.5f
+        val omitir: @Composable (Modifier) -> Unit = { m ->
+            OutlinedButton(onClick = onOmitir, enabled = habilitada && puedeOmitir, modifier = m) { Text("Omitir") }
+        }
+        val aplicar: @Composable (Modifier) -> Unit = { m ->
+            Button(onClick = onAplicar, enabled = habilitada, modifier = m) { Text("Aplicar dosis") }
+        }
+        if (apilar) {
+            Column(Modifier.fillMaxWidth().padding(top = 10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                aplicar(Modifier.fillMaxWidth())
+                omitir(Modifier.fillMaxWidth())
+            }
+        } else {
+            Row(Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                omitir(Modifier.weight(1f))
+                aplicar(Modifier.weight(1.4f))
             }
         }
     }

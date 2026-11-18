@@ -1,6 +1,5 @@
 package cl.moncopulli.app.ui.navegacion
 
-import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,7 +25,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,13 +33,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -78,8 +77,6 @@ fun AppPrincipal(
         entrada?.destination?.hierarchy?.any { it.hasRoute(p.ruta::class) } == true
     } ?: Pestana.INICIO
 
-    IconosClarosEnBarraDeEstado()
-
     fun irA(p: Pestana) {
         navController.navigate(p.ruta) {
             // Una sola copia de cada pestaña; "atrás" vuelve a Inicio y luego sale.
@@ -92,15 +89,22 @@ fun AppPrincipal(
     Scaffold(
         modifier = modifier,
         topBar = {
-            // Verde con texto e íconos blancos; el color también cubre la zona de la barra de estado.
+            // Rediseño: barra clara del color del fondo, título grande en Nunito y acciones en pastillas.
             TopAppBar(
                 // Una línea: con fuente grande se corta con "…" en vez de partir la palabra (DEF-01).
-                title = { Text(actual.etiqueta, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                title = {
+                    Text(
+                        actual.etiqueta,
+                        style = MaterialTheme.typography.headlineSmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    scrolledContainerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                    actionIconContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 actions = {
                     ChipConexion(enLinea, pendientes, onClick = { irA(Pestana.ACTIVIDAD) })
@@ -145,23 +149,6 @@ fun AppPrincipal(
     }
 }
 
-/**
- * Mientras se ve la app principal (barra superior verde), la hora y la batería van en blanco.
- * Al salir (cerrar sesión → Login crema) vuelven a oscuras, como las deja enableEdgeToEdge en MainActivity.
- * La barra de navegación del sistema no se toca: abajo el fondo es verde claro y sus íconos siguen oscuros.
- */
-@Composable
-private fun IconosClarosEnBarraDeEstado() {
-    val vista = LocalView.current
-    if (vista.isInEditMode) return // la vista previa de Android Studio no tiene ventana
-    DisposableEffect(vista) {
-        val ventana = (vista.context as? Activity)?.window
-        val control = ventana?.let { WindowCompat.getInsetsController(it, vista) }
-        control?.isAppearanceLightStatusBars = false // false = íconos claros
-        onDispose { control?.isAppearanceLightStatusBars = true }
-    }
-}
-
 @Composable
 private fun DialogoCerrarSesion(
     pendientes: Int,
@@ -194,10 +181,10 @@ private fun DialogoCerrarSesion(
 }
 
 @Composable
-private fun BarraInferior(actual: Pestana, pendientes: Int, rechazados: Int, onElegir: (Pestana) -> Unit) {
-    // Verde claro (PrincipalSuave). El indicador por defecto es de ese mismo color, así que la pestaña
-    // activa usa un indicador blanco para seguir distinguiéndose.
-    NavigationBar(containerColor = MaterialTheme.colorScheme.primaryContainer) {
+internal fun BarraInferior(actual: Pestana, pendientes: Int, rechazados: Int, onElegir: (Pestana) -> Unit) {
+    // Barra blanca con borde superior sutil; la pestaña activa lleva una pastilla verde claro.
+    HorizontalDivider(color = MaterialTheme.colorScheme.outline)
+    NavigationBar(containerColor = MaterialTheme.colorScheme.surface, tonalElevation = 0.dp) {
         Pestana.entries.forEach { p ->
             val esRegistrar = p == Pestana.REGISTRAR
             NavigationBarItem(
@@ -208,7 +195,7 @@ private fun BarraInferior(actual: Pestana, pendientes: Int, rechazados: Int, onE
                         // Registrar destacado: círculo verde siempre visible.
                         Box(
                             modifier = Modifier
-                                .size(36.dp)
+                                .size(44.dp)
                                 .background(MaterialTheme.colorScheme.primary, CircleShape),
                             contentAlignment = Alignment.Center,
                         ) {
@@ -228,7 +215,13 @@ private fun BarraInferior(actual: Pestana, pendientes: Int, rechazados: Int, onE
                 colors = if (esRegistrar) {
                     NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent)
                 } else {
-                    NavigationBarItemDefaults.colors(indicatorColor = MaterialTheme.colorScheme.surface)
+                    NavigationBarItemDefaults.colors(
+                        indicatorColor = MaterialTheme.colorScheme.secondaryContainer,
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
                 },
             )
         }
@@ -262,24 +255,43 @@ private fun IconoConInsignia(p: Pestana, pendientes: Int, rechazados: Int) {
 }
 
 @Composable
-private fun MenuCuenta(perfil: Perfil, onCerrarSesion: () -> Unit) {
+internal fun MenuCuenta(perfil: Perfil, onCerrarSesion: () -> Unit) {
     var abierto by remember { mutableStateOf(false) }
-    Box {
-        IconButton(onClick = { abierto = true }) {
-            Icon(painterResource(R.drawable.ic_cuenta), contentDescription = "Cuenta")
+    val uri = LocalUriHandler.current
+    val iniciales = (perfil.nombres.take(1) + perfil.apellidos.take(1)).uppercase()
+    Box(Modifier.padding(end = 8.dp, start = 4.dp)) {
+        // Avatar con iniciales en vez de un ícono genérico.
+        Box(
+            modifier = Modifier
+                .size(38.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primary)
+                .clickable(onClickLabel = "Cuenta") { abierto = true },
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(iniciales.ifBlank { "?" }, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onPrimary)
         }
-        DropdownMenu(expanded = abierto, onDismissRequest = { abierto = false }) {
-            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+        DropdownMenu(expanded = abierto, onDismissRequest = { abierto = false }, shape = MaterialTheme.shapes.large) {
+            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)) {
                 Text("${perfil.nombres} ${perfil.apellidos}", style = MaterialTheme.typography.titleSmall)
                 Text(
-                    perfil.rol,
+                    etiquetaRol(perfil.rol),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
             HorizontalDivider()
             DropdownMenuItem(
-                text = { Text("Cerrar sesión") },
+                text = { Text("Abrir panel web") },
+                leadingIcon = { Icon(painterResource(R.drawable.ic_abrir), contentDescription = null) },
+                onClick = {
+                    abierto = false
+                    uri.openUri(URL_PANEL)
+                },
+            )
+            DropdownMenuItem(
+                text = { Text("Cerrar sesión", color = Urgente) },
+                leadingIcon = { Icon(painterResource(R.drawable.ic_salir), contentDescription = null, tint = Urgente) },
                 onClick = {
                     abierto = false
                     onCerrarSesion()
@@ -287,4 +299,14 @@ private fun MenuCuenta(perfil: Perfil, onCerrarSesion: () -> Unit) {
             )
         }
     }
+}
+
+/** Panel web publicado en Cloudflare Workers (mismo sistema y cuentas que la app). */
+const val URL_PANEL = "https://moncopulli-panel.itskay666.workers.dev/"
+
+private fun etiquetaRol(rol: String) = when (rol) {
+    "ADMIN" -> "Administrador"
+    "OPERARIO" -> "Operario"
+    "AUDITOR" -> "Auditor"
+    else -> rol
 }

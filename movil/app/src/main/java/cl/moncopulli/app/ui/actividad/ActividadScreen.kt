@@ -1,6 +1,9 @@
 package cl.moncopulli.app.ui.actividad
 
-import androidx.compose.foundation.BorderStroke
+import cl.moncopulli.app.ui.comun.EncabezadoSeccion
+import cl.moncopulli.app.ui.comun.TarjetaMonco
+import cl.moncopulli.app.ui.theme.Info
+import cl.moncopulli.app.ui.theme.InfoFondo
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -57,7 +60,7 @@ fun ActividadScreen(
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         if (ui.cargando) {
             item {
@@ -136,11 +139,7 @@ fun ActividadScreen(
 
 @Composable
 private fun Encabezado(titulo: String, cantidad: Int, modifier: Modifier = Modifier) {
-    Text(
-        "$titulo ($cantidad)",
-        style = MaterialTheme.typography.titleMedium,
-        modifier = modifier.padding(top = 8.dp),
-    )
+    EncabezadoSeccion(titulo, modifier, cantidad)
 }
 
 @Composable
@@ -153,28 +152,30 @@ private fun Nota(texto: String) {
 }
 
 @Composable
-private fun TarjetaEnvio(
+internal fun TarjetaEnvio(
     e: Envio,
     ahora: OffsetDateTime,
     acciones: @Composable () -> Unit = {},
 ) {
     val rechazado = e.estado == EstadoEnvio.RECHAZADO
-    OutlinedCard(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.outlinedCardColors(
-            containerColor = if (rechazado) UrgenteFondo else MaterialTheme.colorScheme.surface,
-        ),
-        border = BorderStroke(1.dp, if (rechazado) Urgente else MaterialTheme.colorScheme.outline),
-    ) {
-        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-            Text(
-                when (e.tipo) {
-                    TipoEnvio.APLICAR_DOSIS -> "Dosis programada"
-                    TipoEnvio.REGISTRAR_APLICACION -> "Aplicación en terreno"
-                },
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+    TarjetaMonco(acento = if (rechazado) Urgente else null) {
+        run {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    when (e.tipo) {
+                        TipoEnvio.APLICAR_DOSIS -> "Dosis programada"
+                        TipoEnvio.REGISTRAR_APLICACION -> "Aplicación en terreno"
+                    },
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.weight(1f),
+                )
+                when (e.estado) {
+                    EstadoEnvio.ENVIADO -> Insignia("Enviado", MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondaryContainer)
+                    EstadoEnvio.PENDIENTE -> Insignia("Por enviar", Info, InfoFondo)
+                    EstadoEnvio.RECHAZADO -> Insignia("Rechazado", Urgente, UrgenteFondo)
+                }
+            }
             Text(e.resumen, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
             Text(
                 "Aplicada: ${fechaHoraCortaChile(e.aplicadaEn ?: e.guardadoEn)}",

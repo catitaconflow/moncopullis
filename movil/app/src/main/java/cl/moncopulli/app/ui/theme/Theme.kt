@@ -11,18 +11,20 @@ private val EsquemaClaro = lightColorScheme(
     primary = Principal,
     onPrimary = SobrePrincipal,
     primaryContainer = PrincipalSuave,
-    onPrimaryContainer = Principal,
+    onPrimaryContainer = PrincipalOscuro,
     secondary = Principal,
     onSecondary = SobrePrincipal,
-    secondaryContainer = PrincipalSuave,   // indicador de la pestaña activa
-    onSecondaryContainer = Principal,
-    tertiary = Principal,
+    secondaryContainer = PrincipalSuave,   // indicador de la pestaña activa y chips seleccionados
+    onSecondaryContainer = PrincipalOscuro,
+    tertiary = Info,
     onTertiary = SobrePrincipal,
+    tertiaryContainer = InfoFondo,
+    onTertiaryContainer = Info,
     background = Fondo,
     onBackground = Texto,
     surface = Superficie,
     onSurface = Texto,
-    surfaceVariant = Fondo,
+    surfaceVariant = SuperficieSuave,
     onSurfaceVariant = TextoSecundario,
     surfaceTint = Superficie,              // sin tinte verde en superficies elevadas
     surfaceBright = Superficie,
@@ -30,26 +32,31 @@ private val EsquemaClaro = lightColorScheme(
     surfaceContainerLowest = Superficie,
     surfaceContainerLow = Superficie,
     surfaceContainer = Superficie,
-    surfaceContainerHigh = Superficie,
-    surfaceContainerHighest = Superficie,
+    surfaceContainerHigh = Superficie,     // diálogos y menús en blanco
+    surfaceContainerHighest = SuperficieSuave,
     outline = Borde,
-    outlineVariant = Borde,                // borde de OutlinedCard y divisores
+    outlineVariant = Borde,
     error = Urgente,
     onError = SobrePrincipal,
     errorContainer = UrgenteFondo,
     onErrorContainer = Urgente,
 )
 
-// Radio de 6 dp como el panel. extraLarge (diálogos) queda con el valor por defecto.
-private val Radio = RoundedCornerShape(6.dp)
-private val Formas = Shapes(extraSmall = Radio, small = Radio, medium = Radio, large = Radio)
+// Esquinas más redondeadas que la v1 (6 dp): aspecto actual y más amable para uso en terreno.
+private val Formas = Shapes(
+    extraSmall = RoundedCornerShape(8.dp),
+    small = RoundedCornerShape(10.dp),     // campos de texto, insignias
+    medium = RoundedCornerShape(16.dp),    // tarjetas
+    large = RoundedCornerShape(20.dp),
+    extraLarge = RoundedCornerShape(28.dp), // diálogos
+)
 
 /** Tema único: solo modo claro y sin dynamicColor (colores del fondo de pantalla del teléfono). */
 @Composable
 fun MoncopulliTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = EsquemaClaro,
-        typography = Typography,   // Type.kt: fuente del sistema, no se toca
+        typography = Typography,
         shapes = Formas,
         content = content,
     )

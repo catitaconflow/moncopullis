@@ -1,6 +1,9 @@
 package cl.moncopulli.app.ui.registrar
 
 import androidx.compose.foundation.clickable
+import cl.moncopulli.app.ui.comun.TarjetaMonco
+import cl.moncopulli.app.ui.comun.coloresCampo
+import cl.moncopulli.app.ui.comun.formaCampo
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -78,11 +81,14 @@ fun RegistrarScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Text(
-                "Aplicación en terreno: crea el tratamiento y descuenta el stock en un solo paso.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            TarjetaMonco(fondo = MaterialTheme.colorScheme.secondaryContainer, acento = MaterialTheme.colorScheme.secondaryContainer) {
+                Text("Aplicación en terreno", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSecondaryContainer)
+                Text(
+                    "Crea el tratamiento y descuenta el stock en un solo paso. Funciona sin señal: se envía solo al volver la conexión.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                )
+            }
 
             ui.errorCatalogos?.let {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -102,6 +108,8 @@ fun RegistrarScreen(
                 enabled = habilitado,
                 supportingText = { InfoAnimal(ui) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+                shape = formaCampo,
+                colors = coloresCampo(),
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -121,6 +129,8 @@ fun RegistrarScreen(
                 singleLine = true,
                 enabled = habilitado,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
+                shape = formaCampo,
+                colors = coloresCampo(),
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -134,6 +144,8 @@ fun RegistrarScreen(
                     capitalization = KeyboardCapitalization.Words,
                     imeAction = ImeAction.Next,
                 ),
+                shape = formaCampo,
+                colors = coloresCampo(),
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -146,6 +158,8 @@ fun RegistrarScreen(
                 supportingText = { Text("${ui.motivo.length}/$MAX_MOTIVO") },
                 enabled = habilitado,
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                shape = formaCampo,
+                colors = coloresCampo(),
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -156,6 +170,8 @@ fun RegistrarScreen(
                 minLines = 2,
                 enabled = habilitado,
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                shape = formaCampo,
+                colors = coloresCampo(),
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -164,7 +180,7 @@ fun RegistrarScreen(
             Button(
                 onClick = viewModel::registrar,
                 enabled = habilitado,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
             ) {
                 if (ui.enviando) CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
                 else Text(if (ui.error != null && ui.errorReintentable) "Reintentar" else "Registrar aplicación")
@@ -217,8 +233,8 @@ private fun CampoMedicamento(
     enabled: Boolean,
     onClick: () -> Unit,
 ) {
-    OutlinedCard(onClick = onClick, enabled = enabled, modifier = Modifier.fillMaxWidth()) {
-        Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+    TarjetaMonco(onClick = onClick, enabled = enabled) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text(
                     "Medicamento",

@@ -1,6 +1,10 @@
 package cl.moncopulli.app.ui.animales
 
 import androidx.compose.foundation.background
+import cl.moncopulli.app.R
+import cl.moncopulli.app.ui.comun.CampoBusqueda
+import cl.moncopulli.app.ui.comun.IconoCirculo
+import cl.moncopulli.app.ui.comun.TarjetaMonco
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -56,20 +60,15 @@ fun AnimalesScreen(
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             item(key = "filtros") {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    OutlinedTextField(
-                        value = ui.busqueda,
-                        onValueChange = viewModel::buscar,
-                        label = { Text("Buscar por DIIO") },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Search,
-                        ),
-                        modifier = Modifier.fillMaxWidth(),
+                    CampoBusqueda(
+                        valor = ui.busqueda,
+                        onCambio = viewModel::buscar,
+                        sugerencia = "Buscar por DIIO",
+                        teclado = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Search),
                     )
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         FilterChip(
@@ -109,39 +108,34 @@ fun AnimalesScreen(
 }
 
 @Composable
-private fun TarjetaAnimal(a: AnimalResumen, enResguardo: Boolean) {
+internal fun TarjetaAnimal(a: AnimalResumen, enResguardo: Boolean) {
     val tipo = listOfNotNull(
         etiquetaCategoria(a.categoria),
         a.estadoProductivo?.let(::etiquetaEstadoProductivo),
     ).joinToString(" · ")
 
-    OutlinedCard(modifier = Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    a.diio ?: "Sin DIIO",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.weight(1f),
-                )
-                Text(tipo, style = MaterialTheme.typography.bodyMedium)
+    TarjetaMonco {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            IconoCirculo(R.drawable.ic_animales, MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondaryContainer)
+            Column(Modifier.weight(1f).padding(start = 12.dp)) {
+                Text(a.diio ?: "Sin DIIO", style = MaterialTheme.typography.titleLarge)
+                Text(tipo, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            a.propietario?.let { Detalle("Propietario: $it") }
-            a.fechaNacimiento?.let { Detalle("Nacimiento: ${fechaCorta(it)}") }
-            a.observaciones?.let { Detalle(it) }
-            if (enResguardo && a.resguardoHasta != null) {
-                Text(
-                    "No entregar leche hasta ${fechaHoraCortaChile(a.resguardoHasta)}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = Advertencia,
-                    modifier = Modifier
-                        .padding(top = 6.dp)
-                        .fillMaxWidth()
-                        .background(AdvertenciaFondo, MaterialTheme.shapes.small)
-                        .padding(horizontal = 10.dp, vertical = 6.dp),
-                )
-            }
+        }
+        a.propietario?.let { Detalle("Propietario: $it") }
+        a.fechaNacimiento?.let { Detalle("Nacimiento: ${fechaCorta(it)}") }
+        a.observaciones?.let { Detalle(it) }
+        if (enResguardo && a.resguardoHasta != null) {
+            Text(
+                "No entregar leche hasta ${fechaHoraCortaChile(a.resguardoHasta)}",
+                style = MaterialTheme.typography.labelLarge,
+                color = Advertencia,
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth()
+                    .background(AdvertenciaFondo, MaterialTheme.shapes.small)
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+            )
         }
     }
 }

@@ -14,6 +14,7 @@ val localProps = Properties().apply {
 }
 
 android {
+    testOptions { unitTests { isIncludeAndroidResources = true } }
     namespace = "cl.moncopulli.app"
     compileSdk {
         version = release(37)
@@ -32,8 +33,20 @@ android {
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"${localProps.getProperty("SUPABASE_ANON_KEY", "")}\"")
     }
 
+    // Firma de release opcional desde local.properties (nunca en el repositorio):
+    // RELEASE_STORE_FILE, RELEASE_STORE_PASSWORD, RELEASE_KEY_ALIAS, RELEASE_KEY_PASSWORD.
+    val firma = localProps.getProperty("RELEASE_STORE_FILE")?.let { ruta ->
+        signingConfigs.create("release") {
+            storeFile = rootProject.file(ruta)
+            storePassword = localProps.getProperty("RELEASE_STORE_PASSWORD")
+            keyAlias = localProps.getProperty("RELEASE_KEY_ALIAS")
+            keyPassword = localProps.getProperty("RELEASE_KEY_PASSWORD")
+        }
+    }
+
     buildTypes {
         release {
+            firma?.let { signingConfig = it }
             optimization {
                 enable = true
             }
@@ -59,6 +72,10 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     testImplementation(libs.junit)
+    // Capturas de pantalla en la JVM (sin emulador): Robolectric con gráficos nativos.
+    testImplementation("org.robolectric:robolectric:4.18")
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)

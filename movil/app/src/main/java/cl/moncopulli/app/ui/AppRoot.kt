@@ -2,6 +2,7 @@ package cl.moncopulli.app.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -34,7 +35,7 @@ fun AppRoot(
 
     when (val e = estado) {
         EstadoSesion.Cargando, EstadoSesion.Verificando -> PantallaCargando(sinBarras)
-        EstadoSesion.SinSesion -> LoginScreen(login, viewModel::iniciarSesion, sinBarras)
+        EstadoSesion.SinSesion -> LoginScreen(login, viewModel::iniciarSesion, modifier.navigationBarsPadding())
         is EstadoSesion.Autorizado -> AppPrincipal(e.perfil, viewModel::cerrarSesion, modifier)
         is EstadoSesion.ErrorConexion ->
             PantallaError(e.mensaje, viewModel::reintentar, viewModel::cerrarSesion, sinBarras)
