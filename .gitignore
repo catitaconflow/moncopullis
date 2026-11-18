@@ -40,3 +40,4 @@ movil/**/*.apk
 movil/**/*.aab
 *.hprof
 entrega_movil/
+docs/informe-final/refs_figuras.json
