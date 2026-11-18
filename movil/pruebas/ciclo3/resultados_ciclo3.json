@@ -1,0 +1,93 @@
+[
+  {
+    "id": "C3-02",
+    "caso": "Inicio de sesión con contraseña incorrecta",
+    "esperado": "No entra y muestra error",
+    "obtenido": "Se queda en el login con mensaje de error",
+    "pasa": true
+  },
+  {
+    "id": "C3-01",
+    "caso": "Inicio de sesión ADMIN",
+    "esperado": "Entra al Resumen",
+    "obtenido": "Entra al Resumen (/)",
+    "pasa": true
+  },
+  {
+    "id": "C3-04",
+    "caso": "Aplicar dosis programada (Inicio → Aplicar)",
+    "esperado": "creado, lote PRUEBA-E2E-1, con resguardo",
+    "obtenido": "HTTP 200: creado, lote PRUEBA-E2E-1, resguardo 2026-11-20T03:56:31.665777+00:00",
+    "pasa": true
+  },
+  {
+    "id": "C3-04b",
+    "caso": "Reintento de la misma dosis",
+    "esperado": "ya_registrado, sin descontar de nuevo",
+    "obtenido": "HTTP 200: ya_registrado",
+    "pasa": true
+  },
+  {
+    "id": "C3-05",
+    "caso": "Registrar salida de 1 ml (Inventario)",
+    "esperado": "Devuelve el id del movimiento",
+    "obtenido": "HTTP 200: movimiento 90",
+    "pasa": true
+  },
+  {
+    "id": "C3-07",
+    "caso": "Envío de la cola al volver la red (aplicada 3 min antes)",
+    "esperado": "creado y con la hora original",
+    "obtenido": "HTTP 200: creado (hora enviada 2026-11-18T03:53:33.228Z)",
+    "pasa": true
+  },
+  {
+    "id": "C3-08",
+    "caso": "Registrar aplicación en terreno y reenviarla",
+    "esperado": "creado y luego ya_registrado",
+    "obtenido": "creado → ya_registrado",
+    "pasa": true
+  },
+  {
+    "id": "C3-09a",
+    "caso": "DIIO de 8 dígitos",
+    "esperado": "«El DIIO debe tener 9 dígitos.»",
+    "obtenido": "El DIIO debe tener 9 dígitos.",
+    "pasa": true
+  },
+  {
+    "id": "C3-09b",
+    "caso": "Cantidad 0",
+    "esperado": "«La cantidad debe ser mayor que 0.»",
+    "obtenido": "La cantidad debe ser mayor que 0.",
+    "pasa": true
+  },
+  {
+    "id": "C3-09c",
+    "caso": "Salida mayor al stock",
+    "esperado": "«Stock insuficiente…»",
+    "obtenido": "Stock insuficiente: el lote PRUEBA-E2E-1 tiene 14.00.",
+    "pasa": true
+  },
+  {
+    "id": "C3-09d",
+    "caso": "Fecha de aplicación futura",
+    "esperado": "«…no puede ser futura.»",
+    "obtenido": "La fecha de aplicación no puede ser futura.",
+    "pasa": true
+  },
+  {
+    "id": "C3-11",
+    "caso": "Llamar a la app sin sesión",
+    "esperado": "Rechazo (401/403/42501)",
+    "obtenido": "HTTP 401: permission denied for function fn_app_aplicar_dosis",
+    "pasa": true
+  },
+  {
+    "id": "C3-12",
+    "caso": "Auditoría del panel muestra el origen APPMOVIL",
+    "esperado": "Filas con APPMOVIL",
+    "obtenido": "Aparecen filas con APPMOVIL",
+    "pasa": true
+  }
+]
