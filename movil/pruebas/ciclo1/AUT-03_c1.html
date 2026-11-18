@@ -1,0 +1,2747 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Lint Report</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+ <link rel="stylesheet" href="https://www.gstatic.com/external_hosted/material_design_lite/mdl_css-blue-indigo-bundle.css" />
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+<script defer src="https://www.gstatic.com/external_hosted/material_design_lite/mdl_all_js_compiled.js"></script>
+<style>
+section.section--center {
+    max-width: 860px;
+}
+.mdl-card__supporting-text + .mdl-card__actions {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+main > .mdl-layout__tab-panel {
+  padding: 8px;
+  padding-top: 48px;
+}
+
+.mdl-card__actions {
+    margin: 0;
+    padding: 4px 40px;
+    color: inherit;
+}
+.mdl-card > * {
+    height: auto;
+}
+.mdl-card__actions a {
+    color: #00BCD4;
+    margin: 0;
+}
+.error-icon {
+    color: #bb7777;
+    vertical-align: bottom;
+}
+.warning-icon {
+    vertical-align: bottom;
+}
+.mdl-layout__content section:not(:last-of-type) {
+  position: relative;
+  margin-bottom: 48px;
+}
+
+.mdl-card .mdl-card__supporting-text {
+  margin: 40px;
+  -webkit-flex-grow: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  padding: 0;
+  color: inherit;
+  width: calc(100% - 80px);
+}
+div.mdl-layout__drawer-button .material-icons {
+    line-height: 48px;
+}
+.mdl-card .mdl-card__supporting-text {
+    margin-top: 0px;
+}
+.chips {
+    float: right;
+    vertical-align: middle;
+}
+
+pre.errorlines {
+    background-color: white;
+    font-family: monospace;
+    border: 1px solid #e0e0e0;
+    line-height: 0.9rem;
+    font-size: 0.9rem;    padding: 1px 0px 1px; 1px;
+    overflow: scroll;
+}
+.prefix {
+    color: #660e7a;
+    font-weight: bold;
+}
+.attribute {
+    color: #0000ff;
+    font-weight: bold;
+}
+.value {
+    color: #008000;
+    font-weight: bold;
+}
+.tag {
+    color: #000080;
+    font-weight: bold;
+}
+.comment {
+    color: #808080;
+    font-style: italic;
+}
+.javadoc {
+    color: #808080;
+    font-style: italic;
+}
+.annotation {
+    color: #808000;
+}
+.string {
+    color: #008000;
+    font-weight: bold;
+}
+.number {
+    color: #0000ff;
+}
+.keyword {
+    color: #000080;
+    font-weight: bold;
+}
+.caretline {
+    background-color: #fffae3;
+}
+.lineno {
+    color: #999999;
+    background-color: #f0f0f0;
+}
+.error {
+    display: inline-block;
+    position:relative;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AwCFR4T/3uLMgAAADxJREFUCNdNyLERQEAABMCjL4lQwIzcjErpguAL+C9AvgKJDbeD/PRpLdm35Hm+MU+cB+tCKaJW4L4YBy+CAiLJrFs9mgAAAABJRU5ErkJggg==) bottom repeat-x;
+}
+.warning {
+    text-decoration: none;
+    background-color: #f6ebbc;
+}
+.overview {
+    padding: 10pt;
+    width: 100%;
+    overflow: auto;
+    border-collapse:collapse;
+}
+.overview tr {
+    border-bottom: solid 1px #eeeeee;
+}
+.categoryColumn a {
+     text-decoration: none;
+     color: inherit;
+}
+.countColumn {
+    text-align: right;
+    padding-right: 20px;
+    width: 50px;
+}
+.issueColumn {
+   padding-left: 16px;
+}
+.categoryColumn {
+   position: relative;
+   left: -50px;
+   padding-top: 20px;
+   padding-bottom: 5px;
+}
+.options {
+   padding-left: 16px;
+}
+</style>
+<script language="javascript" type="text/javascript">
+<!--
+function reveal(id) {
+if (document.getElementById) {
+document.getElementById(id).style.display = 'block';
+document.getElementById(id+'Link').style.display = 'none';
+}
+}
+function hideid(id) {
+if (document.getElementById) {
+document.getElementById(id).style.display = 'none';
+}
+}
+//-->
+</script>
+</head>
+<body class="mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <span class="mdl-layout-title">Lint Report: 20 warnings</span>
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation mdl-layout--large-screen-only">Check performed at Mon Nov 16 13:48:47 GMT-03:00 2026 by AGP (9.5.1)</nav>
+    </div>
+  </header>
+  <div class="mdl-layout__drawer">
+    <span class="mdl-layout-title">Issue Types</span>
+    <nav class="mdl-navigation">
+      <a class="mdl-navigation__link" href="#overview"><i class="material-icons">dashboard</i>Overview</a>
+      <a class="mdl-navigation__link" href="#RedundantLabel"><i class="material-icons warning-icon">warning</i>Redundant label on activity (1)</a>
+      <a class="mdl-navigation__link" href="#AndroidGradlePluginVersion"><i class="material-icons warning-icon">warning</i>Obsolete Android Gradle Plugin Version (1)</a>
+      <a class="mdl-navigation__link" href="#GradleDependency"><i class="material-icons warning-icon">warning</i>Obsolete Gradle Dependency (3)</a>
+      <a class="mdl-navigation__link" href="#NewerVersionAvailable"><i class="material-icons warning-icon">warning</i>Newer Library Versions Available (5)</a>
+      <a class="mdl-navigation__link" href="#VectorPath"><i class="material-icons warning-icon">warning</i>Long vector paths (3)</a>
+      <a class="mdl-navigation__link" href="#UnusedResources"><i class="material-icons warning-icon">warning</i>Unused resources (7)</a>
+    </nav>
+  </div>
+  <main class="mdl-layout__content">
+    <div class="mdl-layout__tab-panel is-active">
+<a name="overview"></a>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="OverviewCard" style="display: block;">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Overview</h2>
+  </div>
+              <div class="mdl-card__supporting-text">
+<table class="overview">
+<tr><td class="countColumn"></td><td class="categoryColumn"><a href="#Correctness">Correctness</a>
+</td></tr>
+<tr>
+<td class="countColumn">1</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<a href="#RedundantLabel">RedundantLabel</a>: Redundant label on activity</td></tr>
+<tr>
+<td class="countColumn">1</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<a href="#AndroidGradlePluginVersion">AndroidGradlePluginVersion</a>: Obsolete Android Gradle Plugin Version</td></tr>
+<tr>
+<td class="countColumn">3</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<a href="#GradleDependency">GradleDependency</a>: Obsolete Gradle Dependency</td></tr>
+<tr>
+<td class="countColumn">5</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<a href="#NewerVersionAvailable">NewerVersionAvailable</a>: Newer Library Versions Available</td></tr>
+<tr><td class="countColumn"></td><td class="categoryColumn"><a href="#Performance">Performance</a>
+</td></tr>
+<tr>
+<td class="countColumn">3</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<a href="#VectorPath">VectorPath</a>: Long vector paths</td></tr>
+<tr>
+<td class="countColumn">7</td><td class="issueColumn"><i class="material-icons warning-icon">warning</i>
+<a href="#UnusedResources">UnusedResources</a>: Unused resources</td></tr>
+<tr><td></td><td class="categoryColumn"><a href="#ExtraIssues">Included Additional Checks (102)</a>
+</td></tr>
+<tr><td></td><td class="categoryColumn"><a href="#MissingIssues">Disabled Checks (47)</a>
+</td></tr>
+</table>
+<br/>              </div>
+              <div class="mdl-card__actions mdl-card--border">
+<button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="OverviewCardLink" onclick="hideid('OverviewCard');">
+Dismiss</button>            </div>
+            </div>
+          </section>
+<a name="Correctness"></a>
+<a name="RedundantLabel"></a>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="RedundantLabelCard" style="display: block;">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Redundant label on activity</h2>
+  </div>
+              <div class="mdl-card__supporting-text">
+<div class="issue">
+<div class="warningslist">
+<span class="location"><a href="../../src/main/AndroidManifest.xml">../../src/main/AndroidManifest.xml</a>:21</span>: <span class="message">Redundant label can be removed</span><br /><pre class="errorlines">
+<span class="lineno"> 18 </span>        <span class="tag">&lt;activity</span><span class="attribute">
+</span><span class="lineno"> 19 </span><span class="attribute">            </span><span class="prefix">android:</span><span class="attribute">name</span>=<span class="value">".MainActivity"</span>
+<span class="lineno"> 20 </span>            <span class="prefix">android:</span><span class="attribute">exported</span>=<span class="value">"true"</span>
+<span class="caretline"><span class="lineno"> 21 </span>            <span class="warning"><span class="prefix">android:</span><span class="attribute">label</span>=<span class="value">"@string/app_name"</span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 22 </span>            <span class="prefix">android:</span><span class="attribute">theme</span>=<span class="value">"@style/Theme.Moncopulli"</span>
+<span class="lineno"> 23 </span>            <span class="prefix">android:</span><span class="attribute">windowSoftInputMode</span>=<span class="value">"adjustResize"</span>>
+<span class="lineno"> 24 </span>            <span class="tag">&lt;intent-filter></span></pre>
+
+</div>
+<div class="metadata"><div class="explanation" id="explanationRedundantLabel" style="display: none;">
+When an activity does not have a label attribute, it will use the one from the application tag. Since the application has already specified the same label, the label on this activity can be omitted.<br/>To suppress this error, use the issue id "RedundantLabel" as explained in the <a href="#SuppressInfo">Suppressing Warnings and Errors</a> section.<br/>
+<br/></div>
+</div>
+</div>
+<div class="chips">
+<span class="mdl-chip">
+    <span class="mdl-chip__text">RedundantLabel</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Correctness</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Warning</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Priority 5/10</span>
+</span>
+</div>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+<button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="explanationRedundantLabelLink" onclick="reveal('explanationRedundantLabel');">
+Explain</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="RedundantLabelCardLink" onclick="hideid('RedundantLabelCard');">
+Dismiss</button>            </div>
+            </div>
+          </section><a name="AndroidGradlePluginVersion"></a>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="AndroidGradlePluginVersionCard" style="display: block;">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Obsolete Android Gradle Plugin Version</h2>
+  </div>
+              <div class="mdl-card__supporting-text">
+<div class="issue">
+<div class="warningslist">
+<span class="location"><a href="../../../gradle/wrapper/gradle-wrapper.properties">../../../gradle/wrapper/gradle-wrapper.properties</a>:5</span>: <span class="message">A newer version of Gradle than 9.6.0 is available: 9.9.1</span><br /><pre class="errorlines">
+<span class="lineno">  2 </span>distributionBase=GRADLE_USER_HOME
+<span class="lineno">  3 </span>distributionPath=wrapper/dists
+<span class="lineno">  4 </span>distributionSha256Sum=bbaeb2fef8710818cf0e261201dab964c572f92b942812df0c3620d62a529a01
+<span class="caretline"><span class="lineno">  5 </span>distributionUrl=<span class="warning">https\://services.gradle.org/distributions/gradle-9.6.0-bin.zip</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  6 </span>networkTimeout=10000
+<span class="lineno">  7 </span>validateDistributionUrl=true
+<span class="lineno">  8 </span>zipStoreBase=GRADLE_USER_HOME
+</pre>
+
+</div>
+<div class="metadata"><div class="explanation" id="explanationAndroidGradlePluginVersion" style="display: none;">
+This detector looks for usage of the Android Gradle Plugin where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find.<br/>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+To suppress this error, use the issue id "AndroidGradlePluginVersion" as explained in the <a href="#SuppressInfo">Suppressing Warnings and Errors</a> section.<br/>
+<br/></div>
+</div>
+</div>
+<div class="chips">
+<span class="mdl-chip">
+    <span class="mdl-chip__text">AndroidGradlePluginVersion</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Correctness</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Warning</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Priority 4/10</span>
+</span>
+</div>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+<button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="explanationAndroidGradlePluginVersionLink" onclick="reveal('explanationAndroidGradlePluginVersion');">
+Explain</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="AndroidGradlePluginVersionCardLink" onclick="hideid('AndroidGradlePluginVersionCard');">
+Dismiss</button>            </div>
+            </div>
+          </section><a name="GradleDependency"></a>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="GradleDependencyCard" style="display: block;">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Obsolete Gradle Dependency</h2>
+  </div>
+              <div class="mdl-card__supporting-text">
+<div class="issue">
+<div class="warningslist">
+<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:10</span>: <span class="message">A newer version of androidx.compose:compose-bom than 2026.02.01 is available: 2026.09.00</span><br /><pre class="errorlines">
+<span class="lineno">  7 </span>lifecycleRuntimeKtx = "2.11.0"
+<span class="lineno">  8 </span>activityCompose = "1.13.0"
+<span class="lineno">  9 </span>kotlin = "2.3.20"
+<span class="caretline"><span class="lineno"> 10 </span>composeBom = <span class="warning">"2026.02.01"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 11 </span>ksp = "2.3.12"
+<span class="lineno"> 12 </span>hilt = "2.60.1"
+<span class="lineno"> 13 </span>androidxHilt = "1.4.0"
+</pre>
+
+<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:15</span>: <span class="message">A newer version of androidx.work:work-runtime-ktx than 2.11.2 is available: 2.12.0</span><br /><pre class="errorlines">
+<span class="lineno"> 12 </span>hilt = "2.60.1"
+<span class="lineno"> 13 </span>androidxHilt = "1.4.0"
+<span class="lineno"> 14 </span>room = "2.8.5"
+<span class="caretline"><span class="lineno"> 15 </span>work = <span class="warning">"2.11.2"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 16 </span>navigationCompose = "2.9.7"
+<span class="lineno"> 17 </span>kotlinxSerialization = "1.11.0"
+<span class="lineno"> 18 </span>supabase = "3.8.0"
+</pre>
+
+<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:16</span>: <span class="message">A newer version of androidx.navigation:navigation-compose than 2.9.7 is available: 2.10.2</span><br /><pre class="errorlines">
+<span class="lineno"> 13 </span>androidxHilt = "1.4.0"
+<span class="lineno"> 14 </span>room = "2.8.5"
+<span class="lineno"> 15 </span>work = "2.11.2"
+<span class="caretline"><span class="lineno"> 16 </span>navigationCompose = <span class="warning">"2.9.7"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 17 </span>kotlinxSerialization = "1.11.0"
+<span class="lineno"> 18 </span>supabase = "3.8.0"
+<span class="lineno"> 19 </span>ktor = "3.5.1"
+</pre>
+
+</div>
+<div class="metadata"><div class="explanation" id="explanationGradleDependency" style="display: none;">
+This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find.<br/>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+To suppress this error, use the issue id "GradleDependency" as explained in the <a href="#SuppressInfo">Suppressing Warnings and Errors</a> section.<br/>
+<br/></div>
+</div>
+</div>
+<div class="chips">
+<span class="mdl-chip">
+    <span class="mdl-chip__text">GradleDependency</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Correctness</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Warning</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Priority 4/10</span>
+</span>
+</div>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+<button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="explanationGradleDependencyLink" onclick="reveal('explanationGradleDependency');">
+Explain</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="GradleDependencyCardLink" onclick="hideid('GradleDependencyCard');">
+Dismiss</button>            </div>
+            </div>
+          </section><a name="NewerVersionAvailable"></a>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="NewerVersionAvailableCard" style="display: block;">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Newer Library Versions Available</h2>
+  </div>
+              <div class="mdl-card__supporting-text">
+<div class="issue">
+<div class="warningslist">
+<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:9</span>: <span class="message">A newer version of org.jetbrains.kotlin.plugin.compose than 2.3.20 is available: 2.4.21</span><br /><pre class="errorlines">
+<span class="lineno">  6 </span>espressoCore = "3.7.0"
+<span class="lineno">  7 </span>lifecycleRuntimeKtx = "2.11.0"
+<span class="lineno">  8 </span>activityCompose = "1.13.0"
+<span class="caretline"><span class="lineno">  9 </span>kotlin = <span class="warning">"2.3.20"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 10 </span>composeBom = "2026.02.01"
+<span class="lineno"> 11 </span>ksp = "2.3.12"
+<span class="lineno"> 12 </span>hilt = "2.60.1"
+</pre>
+
+<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:9</span>: <span class="message">A newer version of org.jetbrains.kotlin.plugin.serialization than 2.3.20 is available: 2.4.21</span><br /><pre class="errorlines">
+<span class="lineno">  6 </span>espressoCore = "3.7.0"
+<span class="lineno">  7 </span>lifecycleRuntimeKtx = "2.11.0"
+<span class="lineno">  8 </span>activityCompose = "1.13.0"
+<span class="caretline"><span class="lineno">  9 </span>kotlin = <span class="warning">"2.3.20"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 10 </span>composeBom = "2026.02.01"
+<span class="lineno"> 11 </span>ksp = "2.3.12"
+<span class="lineno"> 12 </span>hilt = "2.60.1"
+</pre>
+
+<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:17</span>: <span class="message">A newer version of org.jetbrains.kotlinx:kotlinx-serialization-json than 1.11.0 is available: 1.13.0</span><br /><pre class="errorlines">
+<span class="lineno"> 14 </span>room = "2.8.5"
+<span class="lineno"> 15 </span>work = "2.11.2"
+<span class="lineno"> 16 </span>navigationCompose = "2.9.7"
+<span class="caretline"><span class="lineno"> 17 </span>kotlinxSerialization = <span class="warning">"1.11.0"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 18 </span>supabase = "3.8.0"
+<span class="lineno"> 19 </span>ktor = "3.5.1"
+</pre>
+
+<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:18</span>: <span class="message">A newer version of io.github.jan-tennert.supabase:bom than 3.8.0 is available: 3.9.0</span><br /><pre class="errorlines">
+<span class="lineno"> 15 </span>work = "2.11.2"
+<span class="lineno"> 16 </span>navigationCompose = "2.9.7"
+<span class="lineno"> 17 </span>kotlinxSerialization = "1.11.0"
+<span class="caretline"><span class="lineno"> 18 </span>supabase = <span class="warning">"3.8.0"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 19 </span>ktor = "3.5.1"
+<span class="lineno"> 20 </span>
+<span class="lineno"> 21 </span>[libraries]
+</pre>
+
+<span class="location"><a href="../../../gradle/libs.versions.toml">../../../gradle/libs.versions.toml</a>:19</span>: <span class="message">A newer version of io.ktor:ktor-client-okhttp than 3.5.1 is available: 3.6.1</span><br /><pre class="errorlines">
+<span class="lineno"> 16 </span>navigationCompose = "2.9.7"
+<span class="lineno"> 17 </span>kotlinxSerialization = "1.11.0"
+<span class="lineno"> 18 </span>supabase = "3.8.0"
+<span class="caretline"><span class="lineno"> 19 </span>ktor = <span class="warning">"3.5.1"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 20 </span>
+<span class="lineno"> 21 </span>[libraries]
+<span class="lineno"> 22 </span>androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+</pre>
+
+</div>
+<div class="metadata"><div class="explanation" id="explanationNewerVersionAvailable" style="display: none;">
+This detector checks with a central repository to see if there are newer versions available for the dependencies used by this project. This is similar to the <code>GradleDependency</code> check, which checks for newer versions available in the Android SDK tools and libraries, but this works with any MavenCentral dependency, and connects to the library every time, which makes it more flexible but also <b>much</b> slower.<br/>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+To suppress this error, use the issue id "NewerVersionAvailable" as explained in the <a href="#SuppressInfo">Suppressing Warnings and Errors</a> section.<br/>
+<br/></div>
+</div>
+</div>
+<div class="chips">
+<span class="mdl-chip">
+    <span class="mdl-chip__text">NewerVersionAvailable</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Correctness</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Warning</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Priority 4/10</span>
+</span>
+</div>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+<button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="explanationNewerVersionAvailableLink" onclick="reveal('explanationNewerVersionAvailable');">
+Explain</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="NewerVersionAvailableCardLink" onclick="hideid('NewerVersionAvailableCard');">
+Dismiss</button>            </div>
+            </div>
+          </section>
+<a name="Performance"></a>
+<a name="VectorPath"></a>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="VectorPathCard" style="display: block;">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Long vector paths</h2>
+  </div>
+              <div class="mdl-card__supporting-text">
+<div class="issue">
+<div class="warningslist">
+<span class="location"><a href="../../src/main/res/drawable/ic_animales.xml">../../src/main/res/drawable/ic_animales.xml</a>:12</span>: <span class="message">Very long vector path (7414 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.</span><br /><pre class="errorlines">
+<span class="lineno">  9 </span>    <span class="tag">&lt;path</span><span class="attribute">
+</span><span class="lineno"> 10 </span><span class="attribute">        </span><span class="prefix">android:</span><span class="attribute">fillColor</span>=<span class="value">"#FF000000"</span>
+<span class="lineno"> 11 </span>        <span class="prefix">android:</span><span class="attribute">fillType</span>=<span class="value">"evenOdd"</span>
+<span class="caretline"><span class="lineno"> 12 </span>        <span class="prefix">android:</span><span class="attribute">pathData</span>=<span class="value">"</span><span class="warning"><span class="value">M15.29,10.60L15.17,10.60 15.04,10.63 14.91,10.71 14.80,10.80 14.72,10.91 14.67,11.01 14.61,11.15 14.57,11.33 14.56,11.49 14.58,11.62 14.62,11.76 14.67,11.86 14.72,11.94 14.85,12.04 14.93,12.09 15.09,12.13 15.21,12.13 15.32,12.11 15.42,12.07 15.54,11.98 15.62,11.88 15.68,11.77 15.74,11.64 15.77,11.51 15.78,11.32 15.77,11.14 15.74,11.00 15.69,10.90 15.63,10.80 15.53,10.70 15.42,10.64zM8.74,10.60L8.65,10.62 8.53,10.68 8.43,10.76 8.35,10.87 8.29,10.98 8.25,11.13 8.23,11.30 8.24,11.43 8.27,11.61 8.33,11.77 8.40,11.88 8.49,11.99 8.57,12.05 8.67,12.10 8.81,12.13 8.95,12.13 9.10,12.08 9.18,12.04 9.30,11.94 9.35,11.85 9.40,11.77 9.44,11.61 9.45,11.53 9.45,11.32 9.40,11.11 9.35,11.00 9.27,10.86 9.18,10.76 9.07,10.68 8.99,10.63 8.84,10.60zM6.50,3.89L6.42,3.94 6.34,4.02 6.17,4.24 6.02,4.52 5.90,4.86 5.83,5.14 5.80,5.43 5.80,5.74 5.83,6.02 5.89,6.26 6.01,6.59 6.17,6.86 6.34,7.08 6.50,7.24 6.76,7.44 7.05,7.60 7.38,7.72 7.38,7.75 7.33,7.85 7.24,7.99 7.18,8.04 7.11,8.09 7.02,8.10 6.92,8.10 6.74,8.03 6.32,7.86 6.04,7.75 5.56,7.63 5.24,7.58 5.02,7.56 4.66,7.56 4.36,7.59 4.05,7.64 3.67,7.75 3.36,7.87 2.99,8.05 2.72,8.21 2.54,8.33 2.25,8.54 2.07,8.71 2.03,8.77 2.01,8.85 2.00,8.90 2.02,9.00 2.13,9.24 2.33,9.56 2.60,9.92 2.78,10.12 3.07,10.40 3.30,10.58 3.60,10.76 3.91,10.91 4.10,10.97 4.28,11.01 4.61,11.06 4.87,11.06 5.12,11.03 5.36,10.97 5.67,10.86 5.88,10.76 6.17,10.58 6.59,10.30 6.74,10.22 6.76,10.21 6.78,10.23 6.80,10.29 6.82,10.81 6.88,11.49 6.94,11.94 7.04,12.42 7.15,12.84 7.33,13.36 7.87,14.62 7.96,14.88 8.04,15.19 8.12,15.64 8.16,16.14 8.15,16.45 8.14,16.64 8.11,16.85 8.00,17.12 7.92,17.36 7.87,17.53 7.83,17.74 7.80,18.04 7.80,18.22 7.81,18.38 7.84,18.58 7.90,18.82 8.05,19.18 8.25,19.47 8.34,19.57 8.47,19.70 8.67,19.83 8.77,19.89 9.06,20.02 9.39,20.10 9.76,20.14 10.10,20.14 10.41,20.11 10.71,20.06 11.28,19.94 11.60,19.90 11.87,19.88 12.16,19.88 12.54,19.91 12.77,19.95 13.33,20.07 13.60,20.11 14.01,20.15 14.25,20.14 14.50,20.12 14.80,20.06 14.99,20.00 15.25,19.88 15.46,19.75 15.61,19.62 15.74,19.49 15.89,19.29 16.01,19.07 16.07,18.92 16.17,18.55 16.20,18.21 16.20,18.05 16.17,17.76 16.08,17.36 15.90,16.87 15.87,16.67 15.85,16.40 15.85,16.06 15.88,15.66 15.96,15.21 16.02,14.98 16.12,14.68 16.27,14.29 16.65,13.44 16.84,12.91 16.94,12.54 17.00,12.27 17.11,11.58 17.17,11.01 17.20,10.36 17.22,10.23 17.25,10.21 17.38,10.28 17.81,10.57 18.17,10.78 18.35,10.87 18.68,10.98 19.01,11.05 19.13,11.06 19.36,11.06 19.65,11.03 19.95,10.95 20.28,10.83 20.61,10.64 20.78,10.52 20.99,10.35 21.28,10.06 21.65,9.60 21.78,9.40 21.90,9.20 21.95,9.09 22.00,8.94 22.00,8.85 21.97,8.76 21.93,8.70 21.83,8.61 21.51,8.36 21.17,8.14 20.93,8.01 20.62,7.86 20.25,7.72 19.98,7.65 19.68,7.59 19.36,7.56 19.01,7.56 18.55,7.61 18.25,7.67 17.91,7.77 17.63,7.88 17.15,8.08 17.06,8.10 16.96,8.10 16.90,8.09 16.83,8.05 16.77,8.00 16.68,7.87 16.62,7.76 16.62,7.73 16.98,7.59 17.15,7.50 17.33,7.38 17.46,7.28 17.67,7.08 17.81,6.89 17.98,6.62 18.11,6.27 18.17,6.01 18.20,5.78 18.21,5.65 18.20,5.33 18.15,5.04 18.11,4.86 18.05,4.68 17.90,4.35 17.77,4.16 17.62,3.97 17.53,3.90 17.46,3.87 17.40,3.85 17.36,3.86 17.32,3.88 17.28,3.93 17.26,4.45 17.20,4.75 17.16,4.88 17.07,5.10 16.96,5.31 16.86,5.46 16.72,5.65 16.61,5.77 16.44,5.92 16.27,6.05 16.07,6.18 15.86,6.28 15.69,6.34 15.53,6.38 15.33,6.41 15.17,6.41 14.81,6.26 14.43,6.13 14.10,6.03 13.72,5.94 13.32,5.87 12.92,5.81 12.58,5.78 12.23,5.77 11.63,5.77 11.27,5.80 10.86,5.84 10.37,5.93 10.03,6.00 9.58,6.13 9.24,6.25 8.83,6.41 8.62,6.41 8.49,6.39 8.33,6.34 8.03,6.22 7.71,6.04 7.45,5.83 7.30,5.67 7.17,5.50 7.07,5.35 6.97,5.17 6.89,5.00 6.81,4.76 6.76,4.54 6.74,4.37 6.73,3.98 6.72,3.93 6.69,3.88 6.64,3.86 6.58,3.86zM14.05,17.48L14.11,17.56 14.15,17.64 14.16,17.79 14.15,17.91 14.12,18.03 14.05,18.21 13.97,18.35 13.86,18.51 13.72,18.65 13.66,18.71 13.52,18.79 13.42,18.83 13.32,18.85 13.20,18.85 13.11,18.83 13.01,18.78 12.94,18.70 12.88,18.59 12.86,18.51 12.86,18.38 12.89,18.28 12.94,18.12 13.01,18.01 13.11,17.88 13.33,17.67 13.46,17.57 13.65,17.48 13.78,17.43 13.89,17.42 13.99,17.45zM9.97,17.48L10.05,17.44 10.14,17.42 10.23,17.44 10.36,17.48 10.54,17.57 10.70,17.69 10.86,17.84 10.95,17.95 11.03,18.07 11.09,18.19 11.13,18.30 11.14,18.39 11.14,18.51 11.12,18.60 11.08,18.68 10.99,18.78 10.90,18.82 10.80,18.85 10.68,18.85 10.55,18.82 10.42,18.76 10.31,18.68 10.21,18.59 10.05,18.39 9.99,18.27 9.91,18.09 9.87,17.95 9.85,17.85 9.85,17.70 9.86,17.64 9.90,17.55zM8.39,17.88L8.47,17.58 8.59,17.25 8.78,16.92 8.88,16.79 9.02,16.62 9.21,16.43 9.42,16.28 9.65,16.17 9.87,16.09 10.14,16.02 10.39,15.98 10.77,15.94 11.66,15.90 12.53,15.90 12.95,15.92 13.61,15.98 13.86,16.02 14.12,16.08 14.36,16.17 14.55,16.27 14.68,16.35 14.85,16.49 15.01,16.64 15.21,16.90 15.33,17.10 15.46,17.37 15.56,17.64 15.61,17.84 15.64,18.09 15.64,18.29 15.61,18.50 15.55,18.70 15.46,18.92 15.36,19.07 15.32,19.11 15.30,19.08 15.30,18.62 15.28,18.37 15.24,18.14 15.16,17.82 15.07,17.56 14.93,17.28 14.78,17.05 14.68,16.94 14.55,16.81 14.35,16.66 14.20,16.58 13.96,16.49 13.73,16.43 13.49,16.40 13.10,16.36 12.71,16.33 12.23,16.32 11.60,16.32 10.96,16.35 10.55,16.39 10.19,16.45 9.95,16.52 9.73,16.62 9.56,16.73 9.35,16.91 9.18,17.11 9.02,17.38 8.89,17.69 8.79,18.03 8.73,18.37 8.70,18.67 8.70,19.08 8.69,19.10 8.66,19.08 8.62,19.03 8.52,18.85 8.44,18.65 8.40,18.51 8.37,18.31 8.37,18.04zM14.56,6.74L14.65,6.74 14.82,6.77 14.96,6.82 15.08,6.87 15.40,7.04 15.68,7.28 15.86,7.47 16.04,7.70 16.23,8.02 16.43,8.41 16.52,8.55 16.65,8.68 16.81,8.76 16.89,8.79 17.02,8.79 17.11,8.78 17.22,8.75 17.40,8.66 17.60,8.55 17.90,8.40 18.16,8.29 18.38,8.22 18.82,8.14 19.19,8.11 19.46,8.12 19.74,8.16 19.97,8.22 20.29,8.33 20.42,8.38 20.75,8.55 21.05,8.74 21.16,8.82 21.19,8.85 21.12,8.91 20.59,9.31 20.25,9.55 19.98,9.72 19.62,9.89 19.36,9.97 19.22,10.01 18.98,10.04 18.73,10.05 18.38,10.01 17.99,9.91 17.74,9.81 17.41,9.67 17.22,9.62 17.10,9.61 17.02,9.63 16.95,9.66 16.86,9.74 16.78,9.88 16.73,10.05 16.70,10.32 16.67,10.99 16.62,11.43 16.56,11.81 16.46,12.23 16.36,12.57 16.24,12.90 15.86,13.74 15.71,14.12 15.59,14.50 15.50,14.87 15.42,15.31 15.37,15.85 15.36,16.35 15.34,16.36 15.29,16.33 14.93,16.01 14.74,15.84 14.51,15.59 14.22,15.21 13.93,14.75 13.44,13.89 13.25,13.50 13.13,13.22 13.03,12.97 12.97,12.74 12.92,12.53 12.88,12.23 12.88,11.78 12.92,11.43 12.96,11.14 13.03,10.84 13.17,10.30 13.47,9.31 13.56,8.99 13.65,8.54 13.77,7.80 13.86,7.47 13.98,7.17 14.13,6.95 14.21,6.87 14.31,6.81 14.43,6.76zM9.48,6.74L9.59,6.77 9.73,6.83 9.87,6.95 10.02,7.15 10.12,7.38 10.17,7.54 10.25,7.87 10.35,8.53 10.45,8.98 10.57,9.40 10.86,10.35 10.99,10.85 11.05,11.13 11.09,11.40 11.13,11.76 11.13,12.26 11.09,12.59 11.02,12.86 10.97,13.03 10.78,13.49 10.62,13.82 10.19,14.59 9.87,15.10 9.55,15.52 9.21,15.89 8.84,16.22 8.66,16.36 8.64,16.34 8.64,15.88 8.60,15.40 8.54,15.01 8.49,14.75 8.39,14.41 8.28,14.08 8.16,13.76 7.78,12.90 7.62,12.47 7.53,12.14 7.44,11.76 7.37,11.27 7.31,10.38 7.27,10.06 7.23,9.88 7.14,9.74 7.07,9.67 7.01,9.64 6.92,9.61 6.82,9.61 6.59,9.67 6.04,9.90 5.71,9.99 5.50,10.03 5.31,10.05 5.07,10.05 4.81,10.01 4.57,9.96 4.26,9.84 3.95,9.67 3.69,9.51 3.41,9.31 2.82,8.86 2.81,8.84 2.83,8.82 2.95,8.74 3.22,8.57 3.52,8.41 3.68,8.34 3.93,8.25 4.21,8.18 4.52,8.13 4.68,8.11 5.10,8.12 5.34,8.16 5.56,8.21 5.82,8.29 6.01,8.36 6.25,8.47 6.63,8.68 6.79,8.75 6.97,8.79 7.11,8.79 7.22,8.75 7.38,8.66 7.47,8.57 7.62,8.34 7.84,7.90 7.99,7.66 8.17,7.43 8.41,7.19 8.71,6.98 8.96,6.85 9.09,6.80 9.23,6.76 9.37,6.74z</span></span><span class="value">"</span> /></span>
+<span class="lineno"> 13 </span><span class="tag">&lt;/vector></span>
+</pre>
+
+<span class="location"><a href="../../src/main/res/drawable/ic_launcher_foreground.xml">../../src/main/res/drawable/ic_launcher_foreground.xml</a>:15</span>: <span class="message">Very long vector path (7952 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.</span><br /><pre class="errorlines">
+<span class="lineno"> 12 </span>    <span class="tag">&lt;path</span><span class="attribute">
+</span><span class="lineno"> 13 </span><span class="attribute">        </span><span class="prefix">android:</span><span class="attribute">fillColor</span>=<span class="value">"#FFFFFFFF"</span>
+<span class="lineno"> 14 </span>        <span class="prefix">android:</span><span class="attribute">fillType</span>=<span class="value">"evenOdd"</span>
+<span class="caretline"><span class="lineno"> 15 </span>        <span class="prefix">android:</span><span class="attribute">pathData</span>=<span class="value">"</span><span class="warning"><span class="value">M63.72,49.86L63.38,49.86 62.99,49.96 62.59,50.18 62.28,50.47 62.04,50.79 61.89,51.06 61.72,51.48 61.60,52.03 61.57,52.49 61.62,52.88 61.74,53.29 61.88,53.58 62.05,53.83 62.41,54.13 62.67,54.27 63.12,54.39 63.50,54.39 63.82,54.32 64.11,54.20 64.47,53.93 64.71,53.64 64.89,53.33 65.04,52.94 65.13,52.55 65.18,52.00 65.15,51.47 65.04,51.05 64.92,50.74 64.73,50.47 64.44,50.17 64.12,49.97zM44.36,49.86L44.09,49.92 43.73,50.10 43.46,50.34 43.20,50.67 43.04,50.99 42.91,51.44 42.86,51.94 42.88,52.31 42.99,52.86 43.16,53.32 43.35,53.64 43.62,53.96 43.86,54.15 44.17,54.30 44.57,54.39 44.99,54.37 45.43,54.24 45.66,54.11 46.01,53.81 46.17,53.57 46.31,53.32 46.44,52.84 46.47,52.61 46.45,51.99 46.31,51.36 46.16,51.03 45.93,50.64 45.67,50.34 45.35,50.09 45.11,49.97 44.67,49.86zM37.75,30.02L37.52,30.18 37.27,30.41 36.77,31.06 36.33,31.89 35.97,32.89 35.77,33.73 35.67,34.60 35.67,35.51 35.77,36.33 35.94,37.04 36.31,38.01 36.76,38.79 37.26,39.45 37.74,39.94 38.51,40.53 39.36,41.00 40.34,41.36 40.35,41.43 40.19,41.75 39.92,42.14 39.76,42.29 39.55,42.43 39.29,42.49 39.00,42.47 38.46,42.28 37.22,41.75 36.38,41.45 34.97,41.08 34.03,40.94 33.36,40.88 32.31,40.88 31.41,40.95 30.50,41.12 29.37,41.44 28.46,41.79 27.37,42.33 26.57,42.80 26.04,43.14 25.20,43.76 24.65,44.27 24.53,44.46 24.46,44.69 24.44,44.85 24.50,45.12 24.82,45.85 25.40,46.79 26.21,47.85 26.75,48.44 27.60,49.26 28.28,49.80 29.16,50.35 30.08,50.77 30.64,50.95 31.18,51.09 32.15,51.22 32.92,51.22 33.67,51.13 34.36,50.96 35.30,50.62 35.90,50.33 36.77,49.81 38.00,48.98 38.45,48.73 38.52,48.72 38.58,48.76 38.62,48.95 38.69,50.48 38.87,52.49 39.06,53.83 39.34,55.23 39.67,56.49 40.19,58.03 41.79,61.73 42.05,62.51 42.29,63.43 42.53,64.75 42.65,66.22 42.63,67.16 42.59,67.73 42.51,68.34 42.19,69.12 41.93,69.84 41.80,70.35 41.68,70.97 41.59,71.84 41.59,72.39 41.62,72.85 41.71,73.45 41.88,74.16 42.33,75.21 42.91,76.08 43.18,76.39 43.57,76.75 44.15,77.16 44.44,77.32 45.31,77.69 46.28,77.94 47.37,78.07 48.38,78.07 49.31,77.98 50.19,77.83 51.89,77.46 52.81,77.34 53.62,77.30 54.46,77.30 55.59,77.39 56.27,77.49 57.92,77.85 58.72,77.98 59.95,78.08 60.66,78.07 61.39,77.99 62.28,77.82 62.83,77.64 63.62,77.29 64.22,76.90 64.67,76.53 65.06,76.13 65.49,75.55 65.84,74.90 66.03,74.45 66.32,73.36 66.42,72.36 66.42,71.87 66.34,71.02 66.07,69.83 65.52,68.38 65.43,67.80 65.37,67.00 65.37,66.00 65.47,64.80 65.71,63.49 65.88,62.80 66.16,61.91 66.62,60.76 67.75,58.24 68.30,56.68 68.59,55.61 68.78,54.81 69.12,52.77 69.28,51.07 69.37,49.16 69.43,48.76 69.52,48.72 69.91,48.92 71.16,49.77 72.25,50.40 72.77,50.65 73.75,51.00 74.72,51.19 75.07,51.22 75.77,51.22 76.61,51.13 77.50,50.91 78.47,50.54 79.44,49.99 79.96,49.62 80.57,49.12 81.43,48.27 82.51,46.92 82.91,46.32 83.25,45.73 83.41,45.41 83.55,44.96 83.55,44.70 83.47,44.43 83.35,44.25 83.05,43.97 82.11,43.24 81.09,42.59 80.40,42.20 79.47,41.76 78.37,41.34 77.58,41.13 76.71,40.97 75.75,40.88 74.71,40.88 73.35,41.03 72.48,41.21 71.46,41.51 70.64,41.81 69.23,42.41 68.94,42.49 68.67,42.49 68.50,42.44 68.26,42.32 68.11,42.18 67.84,41.79 67.67,41.46 67.66,41.37 68.71,40.97 69.22,40.70 69.76,40.35 70.13,40.05 70.75,39.45 71.18,38.91 71.67,38.09 72.07,37.06 72.24,36.29 72.33,35.62 72.35,35.23 72.32,34.29 72.18,33.44 72.05,32.90 71.88,32.38 71.43,31.39 71.07,30.82 70.61,30.28 70.35,30.07 70.13,29.96 69.96,29.92 69.83,29.94 69.71,30.01 69.61,30.15 69.54,31.70 69.36,32.57 69.25,32.94 68.99,33.60 68.67,34.22 68.37,34.68 67.96,35.22 67.61,35.59 67.12,36.04 66.61,36.43 66.03,36.78 65.41,37.09 64.92,37.26 64.44,37.40 63.83,37.49 63.37,37.49 62.30,37.05 61.17,36.64 60.21,36.35 59.10,36.09 57.91,35.87 56.71,35.71 55.72,35.62 54.68,35.58 52.91,35.59 51.83,35.67 50.64,35.80 49.18,36.05 48.16,36.27 46.85,36.65 45.83,37.00 44.63,37.49 44.02,37.47 43.63,37.41 43.15,37.28 42.26,36.93 41.31,36.37 40.56,35.75 40.11,35.29 39.71,34.78 39.42,34.35 39.13,33.83 38.90,33.31 38.67,32.61 38.52,31.96 38.45,31.44 38.43,30.31 38.40,30.15 38.30,30.01 38.16,29.93 37.97,29.93zM60.07,70.21L60.24,70.42 60.34,70.68 60.39,71.10 60.34,71.48 60.26,71.83 60.05,72.36 59.83,72.78 59.50,73.25 59.10,73.67 58.89,73.83 58.50,74.06 58.20,74.18 57.90,74.24 57.55,74.24 57.27,74.18 57.00,74.03 56.77,73.80 56.61,73.49 56.55,73.23 56.55,72.85 56.62,72.55 56.79,72.10 56.99,71.75 57.27,71.39 57.94,70.75 58.33,70.47 58.87,70.19 59.26,70.06 59.59,70.03 59.88,70.09zM47.99,70.19L48.22,70.07 48.50,70.03 48.77,70.06 49.16,70.19 49.68,70.47 50.15,70.81 50.63,71.26 50.90,71.59 51.12,71.93 51.31,72.30 51.42,72.62 51.47,72.90 51.46,73.23 51.39,73.52 51.27,73.75 51.02,74.03 50.76,74.17 50.45,74.24 50.10,74.24 49.71,74.15 49.34,73.97 49.00,73.75 48.70,73.46 48.25,72.88 48.05,72.54 47.82,71.99 47.70,71.58 47.66,71.28 47.66,70.86 47.69,70.68 47.79,70.41zM43.33,71.39L43.55,70.49 43.93,69.51 44.48,68.55 44.77,68.15 45.20,67.64 45.76,67.11 46.38,66.66 47.05,66.32 47.70,66.08 48.51,65.89 49.24,65.78 50.37,65.66 53.00,65.53 55.58,65.54 56.81,65.60 58.75,65.78 59.49,65.89 60.27,66.07 60.97,66.32 61.54,66.61 61.92,66.86 62.43,67.27 62.89,67.73 63.48,68.48 63.84,69.06 64.23,69.87 64.52,70.67 64.66,71.25 64.74,71.99 64.74,72.58 64.66,73.22 64.49,73.81 64.21,74.45 63.93,74.88 63.80,75.00 63.76,74.94 63.75,73.56 63.69,72.83 63.58,72.14 63.35,71.20 63.07,70.42 62.66,69.61 62.21,68.93 61.94,68.61 61.54,68.22 60.94,67.78 60.50,67.54 59.79,67.27 59.13,67.11 58.40,66.99 57.24,66.87 56.09,66.80 54.67,66.76 52.83,66.77 50.93,66.86 49.71,66.98 48.64,67.17 47.95,67.37 47.30,67.66 46.79,67.97 46.17,68.51 45.68,69.10 45.18,69.90 44.80,70.81 44.51,71.81 44.33,72.83 44.25,73.72 44.25,74.93 44.21,74.99 44.12,74.94 44.00,74.78 43.71,74.26 43.46,73.65 43.35,73.23 43.27,72.64 43.27,71.86zM61.56,38.46L61.82,38.46 62.34,38.55 62.76,38.68 63.11,38.83 64.04,39.34 64.89,40.04 65.42,40.60 65.95,41.30 66.50,42.23 67.09,43.39 67.36,43.79 67.74,44.19 68.21,44.43 68.47,44.50 68.83,44.51 69.09,44.48 69.42,44.38 69.97,44.14 70.54,43.82 71.44,43.37 72.22,43.04 72.87,42.84 74.14,42.58 75.24,42.50 76.05,42.55 76.87,42.66 77.56,42.83 78.50,43.14 78.89,43.30 79.86,43.80 80.76,44.36 81.08,44.59 81.15,44.69 80.96,44.87 79.39,46.06 78.39,46.76 77.59,47.25 76.53,47.75 75.77,48.01 75.33,48.12 74.62,48.22 73.88,48.24 72.85,48.12 71.70,47.81 70.96,47.54 70.00,47.13 69.44,46.96 69.07,46.95 68.83,47.00 68.63,47.08 68.36,47.32 68.12,47.74 67.99,48.25 67.90,49.05 67.80,51.02 67.67,52.32 67.48,53.45 67.19,54.68 66.88,55.68 66.52,56.65 65.41,59.14 64.97,60.26 64.61,61.39 64.33,62.47 64.10,63.79 63.95,65.37 63.92,66.84 63.88,66.88 63.73,66.80 62.65,65.86 62.10,65.34 61.42,64.60 60.57,63.50 59.70,62.14 58.26,59.58 57.69,58.43 57.34,57.61 57.06,56.87 56.85,56.19 56.72,55.56 56.61,54.67 56.61,53.36 56.71,52.32 56.84,51.45 57.03,50.57 57.45,48.99 58.35,46.04 58.60,45.09 58.88,43.78 59.24,41.59 59.49,40.60 59.85,39.72 60.29,39.08 60.55,38.84 60.82,38.65 61.17,38.52zM46.54,38.46L46.89,38.53 47.28,38.70 47.71,39.08 48.14,39.68 48.43,40.34 48.59,40.82 48.81,41.79 49.14,43.75 49.41,45.08 49.76,46.32 50.62,49.12 51.01,50.60 51.19,51.44 51.32,52.22 51.44,53.30 51.44,54.78 51.30,55.74 51.12,56.53 50.96,57.06 50.40,58.42 49.93,59.37 48.64,61.65 47.69,63.15 46.76,64.41 45.75,65.50 44.66,66.48 44.14,66.89 44.08,66.82 44.07,65.45 43.95,64.05 43.77,62.89 43.61,62.12 43.34,61.11 43.02,60.15 42.65,59.21 41.52,56.65 41.07,55.39 40.78,54.41 40.53,53.29 40.32,51.86 40.13,49.22 40.02,48.27 39.90,47.74 39.64,47.31 39.43,47.11 39.24,47.01 38.98,46.95 38.68,46.95 38.01,47.13 36.38,47.79 35.41,48.06 34.78,48.18 34.23,48.24 33.51,48.24 32.74,48.13 32.05,47.96 31.12,47.60 30.19,47.12 29.44,46.64 28.60,46.04 26.86,44.73 26.85,44.67 26.89,44.61 27.24,44.36 28.04,43.85 28.93,43.38 29.41,43.17 30.13,42.91 30.99,42.70 31.90,42.55 32.37,42.52 33.61,42.55 34.32,42.65 34.97,42.80 35.72,43.02 36.30,43.25 37.00,43.58 38.11,44.19 38.59,44.38 39.13,44.51 39.53,44.50 39.87,44.41 40.36,44.12 40.61,43.85 41.04,43.17 41.70,41.89 42.15,41.18 42.68,40.50 43.40,39.78 44.27,39.16 45.01,38.79 45.40,38.63 45.82,38.52 46.22,38.46z</span></span><span class="value">"</span> /></span>
+<span class="lineno"> 16 </span><span class="tag">&lt;/vector></span>
+</pre>
+
+<span class="location"><a href="../../src/main/res/drawable/logo_moncopulli.xml">../../src/main/res/drawable/logo_moncopulli.xml</a>:13</span>: <span class="message">Very long vector path (7861 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.</span><br /><pre class="errorlines">
+<span class="lineno"> 10 </span>    <span class="tag">&lt;path</span><span class="attribute">
+</span><span class="lineno"> 11 </span><span class="attribute">        </span><span class="prefix">android:</span><span class="attribute">fillColor</span>=<span class="value">"#FFFFFFFF"</span>
+<span class="lineno"> 12 </span>        <span class="prefix">android:</span><span class="attribute">fillType</span>=<span class="value">"evenOdd"</span>
+<span class="caretline"><span class="lineno"> 13 </span>        <span class="prefix">android:</span><span class="attribute">pathData</span>=<span class="value">"</span><span class="warning"><span class="value">M678.0,344.2L672.2,344.2 665.5,345.9 658.5,349.8 653.2,354.7 649.0,360.2 646.4,365.0 643.5,372.2 641.5,381.7 641.0,389.7 641.7,396.5 643.8,403.5 646.2,408.5 649.2,412.7 655.5,418.0 660.0,420.4 667.7,422.4 674.2,422.4 679.7,421.2 684.7,419.1 691.0,414.4 695.1,409.5 698.1,404.2 700.9,397.5 702.4,390.7 703.2,381.2 702.7,372.0 700.8,364.7 698.6,359.5 695.4,354.7 690.5,349.5 685.0,346.2zM343.7,344.2L339.2,345.3 333.0,348.3 328.2,352.5 323.8,358.2 321.0,363.7 318.7,371.5 318.0,380.2 318.2,386.5 320.0,396.0 323.2,404.0 326.3,409.5 331.0,415.0 335.2,418.4 340.5,420.9 347.5,422.4 354.7,422.2 362.2,419.9 366.2,417.5 372.2,412.5 375.1,408.2 377.4,404.0 379.7,395.7 380.2,391.7 379.9,381.0 377.4,370.2 374.9,364.5 370.9,357.7 366.5,352.5 361.0,348.2 356.7,346.0 349.2,344.2zM229.7,1.7L225.7,4.5 221.5,8.5 212.8,19.7 205.2,34.0 198.9,51.2 195.5,65.7 193.7,80.7 193.7,96.5 195.5,110.7 198.4,123.0 204.8,139.7 212.5,153.2 221.2,164.5 229.5,172.9 242.7,183.1 257.5,191.3 274.3,197.5 274.6,198.7 271.8,204.2 267.2,211.0 264.5,213.6 260.7,216.0 256.2,216.9 251.2,216.7 242.0,213.4 220.5,204.3 206.0,199.0 181.7,192.7 165.5,190.2 154.0,189.2 135.7,189.2 120.2,190.5 104.5,193.3 85.0,198.8 69.2,204.9 50.5,214.2 36.7,222.3 27.5,228.3 13.0,239.0 3.5,247.7 1.4,251.0 0.2,255.0 0.0,257.7 0.9,262.5 6.4,275.0 16.5,291.2 30.5,309.5 39.7,319.7 54.5,333.9 66.2,343.1 81.5,352.6 97.2,359.9 107.0,363.1 116.2,365.4 133.0,367.7 146.2,367.7 159.2,366.2 171.2,363.3 187.5,357.4 197.7,352.4 212.7,343.5 234.0,329.0 241.7,324.8 243.0,324.5 244.0,325.2 244.7,328.5 246.0,355.0 249.0,389.7 252.2,412.7 257.0,437.0 262.8,458.7 271.8,485.2 299.4,549.2 303.9,562.7 308.1,578.5 312.2,601.2 314.2,626.7 313.9,643.0 313.2,652.7 311.9,663.2 306.3,676.7 301.9,689.2 299.5,698.0 297.5,708.7 296.0,723.7 296.0,733.2 296.5,741.2 298.0,751.5 301.0,763.7 308.7,782.0 318.7,797.0 323.5,802.2 330.2,808.4 340.2,815.5 345.2,818.3 360.2,824.7 377.0,828.9 395.7,831.2 413.2,831.2 429.2,829.7 444.5,827.2 473.7,820.7 489.7,818.7 503.7,818.0 518.2,818.0 537.7,819.5 549.5,821.2 578.0,827.4 591.7,829.7 613.0,831.4 625.2,831.2 637.7,829.9 653.2,826.9 662.7,823.9 676.2,817.8 686.7,811.1 694.5,804.7 701.2,797.7 708.5,787.7 714.6,776.5 717.9,768.7 722.9,750.0 724.7,732.7 724.7,724.2 723.2,709.5 718.5,689.0 709.0,664.0 707.5,654.0 706.5,640.2 706.5,623.0 708.2,602.2 712.3,579.5 715.3,567.7 720.2,552.2 728.2,532.5 747.6,489.0 757.0,462.0 762.1,443.5 765.4,429.7 771.2,394.5 773.9,365.2 775.5,332.2 776.6,325.2 778.2,324.6 785.0,328.0 806.5,342.6 825.2,353.6 834.2,357.9 851.2,363.9 868.0,367.2 874.0,367.7 886.0,367.7 900.5,366.2 916.0,362.4 932.7,355.9 949.5,346.5 958.5,340.1 969.0,331.4 983.7,316.7 1002.4,293.5 1009.4,283.2 1015.2,273.0 1017.9,267.5 1020.4,259.7 1020.4,255.2 1019.0,250.5 1016.9,247.5 1011.7,242.5 995.5,230.0 978.0,218.8 966.0,212.0 950.0,204.4 931.0,197.2 917.2,193.5 902.2,190.7 885.7,189.2 867.7,189.2 844.2,191.7 829.2,195.0 811.7,200.0 797.5,205.3 773.2,215.6 768.2,216.9 763.5,216.9 760.5,216.2 756.5,214.1 753.7,211.7 749.2,205.0 746.2,199.2 746.1,197.7 764.2,190.8 773.0,186.1 782.2,180.1 788.7,174.9 799.4,164.5 806.8,155.2 815.3,141.0 822.1,123.2 825.2,110.0 826.7,98.5 826.9,91.7 826.4,75.5 824.1,60.7 821.9,51.5 818.9,42.5 811.1,25.5 804.9,15.5 797.0,6.2 792.5,2.6 788.7,0.6 785.7,0.0 783.5,0.3 781.5,1.5 779.7,4.0 778.4,30.7 775.4,45.7 773.5,52.2 769.0,63.5 763.5,74.2 758.4,82.2 751.2,91.5 745.2,98.0 736.7,105.7 728.0,112.4 718.0,118.5 707.2,123.8 698.7,126.8 690.5,129.2 680.0,130.7 672.0,130.6 653.5,123.0 634.0,116.0 617.5,111.0 598.2,106.5 577.7,102.7 557.0,100.0 540.0,98.5 522.0,97.7 491.5,98.0 472.7,99.2 452.2,101.5 427.0,105.7 409.5,109.5 386.7,116.1 369.2,122.3 348.5,130.7 338.0,130.4 331.2,129.4 323.0,127.1 307.5,121.0 291.2,111.4 278.2,100.7 270.5,92.7 263.5,84.0 258.5,76.5 253.5,67.5 249.5,58.5 245.5,46.5 243.0,35.2 241.7,26.2 241.4,6.7 240.9,4.0 239.2,1.5 236.7,0.2 233.5,0.2zM615.0,695.5L618.0,699.2 619.7,703.7 620.5,711.0 619.7,717.5 618.2,723.5 614.6,732.7 610.9,740.0 605.2,748.0 598.2,755.2 594.7,758.1 588.0,762.0 582.7,764.0 577.5,765.2 571.5,765.2 566.7,764.0 562.0,761.4 558.0,757.5 555.3,752.2 554.2,747.7 554.2,741.2 555.4,736.0 558.4,728.2 561.9,722.2 566.7,716.0 578.2,704.8 585.0,700.0 594.2,695.2 601.0,693.0 606.7,692.5 611.7,693.5zM406.5,695.2L410.5,693.1 415.2,692.5 420.0,693.0 426.7,695.3 435.7,700.0 443.7,706.0 451.9,713.7 456.7,719.5 460.5,725.2 463.8,731.7 465.6,737.2 466.4,742.0 466.4,747.7 465.1,752.7 463.1,756.7 458.7,761.4 454.2,763.9 449.0,765.2 443.0,765.2 436.2,763.5 429.7,760.5 424.0,756.6 418.7,751.7 411.0,741.7 407.5,735.7 403.5,726.2 401.5,719.2 400.7,714.0 400.7,706.7 401.2,703.7 403.0,699.0zM326.0,716.0L329.9,700.5 336.4,683.5 345.8,667.0 350.8,660.0 358.2,651.2 368.0,642.0 378.7,634.3 390.2,628.4 401.5,624.3 415.5,621.0 428.0,619.0 447.5,617.0 493.0,614.7 537.5,615.0 558.7,616.0 592.2,619.0 605.0,621.0 618.5,624.0 630.5,628.4 640.5,633.4 647.0,637.8 655.7,644.7 663.7,652.7 673.9,665.7 680.0,675.7 686.8,689.7 691.8,703.5 694.2,713.5 695.7,726.2 695.7,736.5 694.2,747.5 691.4,757.7 686.5,768.7 681.6,776.2 679.5,778.3 678.7,777.2 678.5,753.5 677.4,740.7 675.7,729.0 671.6,712.7 666.8,699.2 659.8,685.2 651.9,673.5 647.2,668.0 640.5,661.2 630.0,653.5 622.5,649.4 610.2,644.8 598.7,642.0 586.2,640.0 566.2,638.0 546.2,636.7 521.7,636.0 490.0,636.2 457.2,637.7 436.2,639.7 417.7,643.0 405.7,646.5 394.5,651.5 385.7,656.9 375.0,666.2 366.5,676.5 358.0,690.2 351.3,706.0 346.3,723.2 343.2,740.7 342.0,756.2 341.9,777.0 341.2,778.1 339.7,777.2 337.6,774.5 332.5,765.5 328.3,755.0 326.3,747.7 325.0,737.5 325.0,724.0zM640.7,147.5L645.2,147.5 654.2,149.0 661.5,151.2 667.5,153.8 683.5,162.6 698.2,174.7 707.4,184.5 716.5,196.5 726.0,212.5 736.2,232.5 740.8,239.5 747.5,246.4 755.5,250.5 760.0,251.7 766.2,251.9 770.7,251.4 776.5,249.7 786.0,245.5 795.7,239.9 811.2,232.2 824.7,226.5 836.0,223.0 858.0,218.5 877.0,217.2 891.0,218.0 905.0,220.0 917.0,222.8 933.2,228.3 940.0,231.0 956.7,239.5 972.2,249.3 977.7,253.2 978.9,255.0 975.7,258.2 948.5,278.6 931.2,290.7 917.5,299.1 899.2,307.9 886.0,312.4 878.5,314.2 866.2,315.9 853.5,316.2 835.7,314.2 815.7,308.9 803.0,304.1 786.5,297.0 776.7,294.2 770.5,294.0 766.2,294.8 762.7,296.3 758.0,300.5 754.0,307.7 751.7,316.5 750.2,330.2 748.4,364.2 746.2,386.7 742.9,406.2 737.9,427.5 732.6,444.7 726.4,461.5 707.2,504.5 699.5,523.7 693.3,543.2 688.5,562.0 684.5,584.7 682.0,612.0 681.4,637.5 680.7,638.1 678.2,636.7 659.5,620.4 650.0,611.5 638.2,598.7 623.5,579.7 608.5,556.2 583.8,512.0 573.9,492.2 567.8,478.0 563.0,465.2 559.5,453.5 557.2,442.7 555.2,427.2 555.2,404.7 557.0,386.7 559.2,371.7 562.5,356.5 569.8,329.2 585.4,278.2 589.6,262.0 594.4,239.2 600.7,201.5 605.0,184.5 611.3,169.2 618.7,158.2 623.2,154.0 628.0,150.8 634.0,148.5zM381.5,147.5L387.5,148.7 394.2,151.7 401.7,158.2 409.0,168.5 414.1,180.0 416.9,188.2 420.7,205.0 426.2,238.7 431.0,261.7 437.0,283.2 451.9,331.5 458.6,357.0 461.7,371.5 463.9,385.0 465.9,403.7 465.9,429.2 463.7,445.7 460.4,459.5 457.7,468.5 448.1,492.0 439.9,508.5 417.6,547.7 401.3,573.7 385.2,595.5 367.7,614.2 349.0,631.2 340.0,638.3 339.0,637.0 338.7,613.5 336.7,589.2 333.7,569.2 330.9,556.0 326.1,538.5 320.6,522.0 314.3,505.7 294.8,461.5 287.0,439.7 282.0,422.7 277.7,403.5 274.0,378.7 270.7,333.2 268.9,316.7 266.8,307.7 262.4,300.2 258.7,296.7 255.5,295.1 251.0,294.0 245.7,294.0 234.2,297.0 206.0,308.5 189.2,313.2 178.5,315.2 169.0,316.2 156.5,316.2 143.2,314.4 131.2,311.4 115.2,305.3 99.2,296.9 86.2,288.7 71.7,278.4 41.7,255.7 41.4,254.7 42.2,253.5 48.2,249.3 62.0,240.5 77.5,232.4 85.7,228.8 98.2,224.3 113.0,220.5 128.7,218.0 136.7,217.5 158.2,218.0 170.5,219.7 181.7,222.3 194.7,226.2 204.7,230.2 216.7,235.8 236.0,246.3 244.2,249.7 253.5,252.0 260.5,251.7 266.2,250.1 274.7,245.1 279.1,240.5 286.5,228.7 297.9,206.7 305.6,194.5 314.7,182.7 327.2,170.2 342.2,159.5 355.0,153.0 361.7,150.4 369.0,148.5 376.0,147.5z</span></span><span class="value">"</span> /></span>
+<span class="lineno"> 14 </span><span class="tag">&lt;/vector></span>
+</pre>
+
+</div>
+<div class="metadata"><div class="explanation" id="explanationVectorPath" style="display: none;">
+Using long vector paths is bad for performance. There are several ways to make the <code>pathData</code> shorter:<br/>
+* Using less precision<br/>
+* Removing some minor details<br/>
+* Using the Android Studio vector conversion tool<br/>
+* Rasterizing the image (converting to PNG)<br/>To suppress this error, use the issue id "VectorPath" as explained in the <a href="#SuppressInfo">Suppressing Warnings and Errors</a> section.<br/>
+<br/></div>
+</div>
+</div>
+<div class="chips">
+<span class="mdl-chip">
+    <span class="mdl-chip__text">VectorPath</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Performance</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Warning</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Priority 5/10</span>
+</span>
+</div>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+<button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="explanationVectorPathLink" onclick="reveal('explanationVectorPath');">
+Explain</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="VectorPathCardLink" onclick="hideid('VectorPathCard');">
+Dismiss</button>            </div>
+            </div>
+          </section><a name="UnusedResources"></a>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="UnusedResourcesCard" style="display: block;">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Unused resources</h2>
+  </div>
+              <div class="mdl-card__supporting-text">
+<div class="issue">
+<div class="warningslist">
+<span class="location"><a href="../../src/main/res/values/colors.xml">../../src/main/res/values/colors.xml</a>:3</span>: <span class="message">The resource <code>R.color.purple_200</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno">  1 </span><span class="prologue">&lt;?xml version="1.0" encoding="utf-8"?></span>
+<span class="lineno">  2 </span><span class="tag">&lt;resources></span>
+<span class="caretline"><span class="lineno">  3 </span>    <span class="tag">&lt;color</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"purple_200"</span></span>>#FFBB86FC<span class="tag">&lt;/color></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  4 </span>    <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"purple_500"</span>>#FF6200EE<span class="tag">&lt;/color></span>
+<span class="lineno">  5 </span>    <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"purple_700"</span>>#FF3700B3<span class="tag">&lt;/color></span>
+<span class="lineno">  6 </span>    <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"teal_200"</span>>#FF03DAC5<span class="tag">&lt;/color></span></pre>
+
+<span class="location"><a href="../../src/main/res/values/colors.xml">../../src/main/res/values/colors.xml</a>:4</span>: <span class="message">The resource <code>R.color.purple_500</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno">  1 </span><span class="prologue">&lt;?xml version="1.0" encoding="utf-8"?></span>
+<span class="lineno">  2 </span><span class="tag">&lt;resources></span>
+<span class="lineno">  3 </span>    <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"purple_200"</span>>#FFBB86FC<span class="tag">&lt;/color></span>
+<span class="caretline"><span class="lineno">  4 </span>    <span class="tag">&lt;color</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"purple_500"</span></span>>#FF6200EE<span class="tag">&lt;/color></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  5 </span>    <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"purple_700"</span>>#FF3700B3<span class="tag">&lt;/color></span>
+<span class="lineno">  6 </span>    <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"teal_200"</span>>#FF03DAC5<span class="tag">&lt;/color></span>
+<span class="lineno">  7 </span>    <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"teal_700"</span>>#FF018786<span class="tag">&lt;/color></span></pre>
+
+<span class="location"><a href="../../src/main/res/values/colors.xml">../../src/main/res/values/colors.xml</a>:5</span>: <span class="message">The resource <code>R.color.purple_700</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno">  2 </span><span class="tag">&lt;resources></span>
+<span class="lineno">  3 </span>    <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"purple_200"</span>>#FFBB86FC<span class="tag">&lt;/color></span>
+<span class="lineno">  4 </span>    <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"purple_500"</span>>#FF6200EE<span class="tag">&lt;/color></span>
+<span class="caretline"><span class="lineno">  5 </span>    <span class="tag">&lt;color</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"purple_700"</span></span>>#FF3700B3<span class="tag">&lt;/color></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  6 </span>    <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"teal_200"</span>>#FF03DAC5<span class="tag">&lt;/color></span>
+<span class="lineno">  7 </span>    <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"teal_700"</span>>#FF018786<span class="tag">&lt;/color></span>
+<span class="lineno">  8 </span>    <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"black"</span>>#FF000000<span class="tag">&lt;/color></span></pre>
+
+<span class="location"><a href="../../src/main/res/values/colors.xml">../../src/main/res/values/colors.xml</a>:6</span>: <span class="message">The resource <code>R.color.teal_200</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno">  3 </span>    <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"purple_200"</span>>#FFBB86FC<span class="tag">&lt;/color></span>
+<span class="lineno">  4 </span>    <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"purple_500"</span>>#FF6200EE<span class="tag">&lt;/color></span>
+<span class="lineno">  5 </span>    <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"purple_700"</span>>#FF3700B3<span class="tag">&lt;/color></span>
+<span class="caretline"><span class="lineno">  6 </span>    <span class="tag">&lt;color</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"teal_200"</span></span>>#FF03DAC5<span class="tag">&lt;/color></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  7 </span>    <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"teal_700"</span>>#FF018786<span class="tag">&lt;/color></span>
+<span class="lineno">  8 </span>    <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"black"</span>>#FF000000<span class="tag">&lt;/color></span>
+<span class="lineno">  9 </span>    <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"white"</span>>#FFFFFFFF<span class="tag">&lt;/color></span></pre>
+
+<span class="location"><a href="../../src/main/res/values/colors.xml">../../src/main/res/values/colors.xml</a>:7</span>: <span class="message">The resource <code>R.color.teal_700</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno">  4 </span>  <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"purple_500"</span>>#FF6200EE<span class="tag">&lt;/color></span>
+<span class="lineno">  5 </span>  <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"purple_700"</span>>#FF3700B3<span class="tag">&lt;/color></span>
+<span class="lineno">  6 </span>  <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"teal_200"</span>>#FF03DAC5<span class="tag">&lt;/color></span>
+<span class="caretline"><span class="lineno">  7 </span>  <span class="tag">&lt;color</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"teal_700"</span></span>>#FF018786<span class="tag">&lt;/color></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  8 </span>  <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"black"</span>>#FF000000<span class="tag">&lt;/color></span>
+<span class="lineno">  9 </span>  <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"white"</span>>#FFFFFFFF<span class="tag">&lt;/color></span>
+<span class="lineno"> 10 </span>  <span class="comment">&lt;!-- Mismo verde que Principal en ui/theme/Color.kt (el XML no puede leer colores de Compose). --></span></pre>
+
+<span class="location"><a href="../../src/main/res/values/colors.xml">../../src/main/res/values/colors.xml</a>:8</span>: <span class="message">The resource <code>R.color.black</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno">  5 </span>  <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"purple_700"</span>>#FF3700B3<span class="tag">&lt;/color></span>
+<span class="lineno">  6 </span>  <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"teal_200"</span>>#FF03DAC5<span class="tag">&lt;/color></span>
+<span class="lineno">  7 </span>  <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"teal_700"</span>>#FF018786<span class="tag">&lt;/color></span>
+<span class="caretline"><span class="lineno">  8 </span>  <span class="tag">&lt;color</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"black"</span></span>>#FF000000<span class="tag">&lt;/color></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno">  9 </span>  <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"white"</span>>#FFFFFFFF<span class="tag">&lt;/color></span>
+<span class="lineno"> 10 </span>  <span class="comment">&lt;!-- Mismo verde que Principal en ui/theme/Color.kt (el XML no puede leer colores de Compose). --></span>
+<span class="lineno"> 11 </span>  <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"principal"</span>>#FF1F5C3A<span class="tag">&lt;/color></span></pre>
+
+<span class="location"><a href="../../src/main/res/values/colors.xml">../../src/main/res/values/colors.xml</a>:9</span>: <span class="message">The resource <code>R.color.white</code> appears to be unused</span><br /><pre class="errorlines">
+<span class="lineno">  6 </span>  <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"teal_200"</span>>#FF03DAC5<span class="tag">&lt;/color></span>
+<span class="lineno">  7 </span>  <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"teal_700"</span>>#FF018786<span class="tag">&lt;/color></span>
+<span class="lineno">  8 </span>  <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"black"</span>>#FF000000<span class="tag">&lt;/color></span>
+<span class="caretline"><span class="lineno">  9 </span>  <span class="tag">&lt;color</span><span class="attribute"> </span><span class="warning"><span class="attribute">name</span>=<span class="value">"white"</span></span>>#FFFFFFFF<span class="tag">&lt;/color></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 10 </span>  <span class="comment">&lt;!-- Mismo verde que Principal en ui/theme/Color.kt (el XML no puede leer colores de Compose). --></span>
+<span class="lineno"> 11 </span>  <span class="tag">&lt;color</span><span class="attribute"> name</span>=<span class="value">"principal"</span>>#FF1F5C3A<span class="tag">&lt;/color></span>
+<span class="lineno"> 12 </span>  <span class="comment">&lt;!-- Mismo crema que Fondo en ui/theme/Color.kt: ventana y pantalla de arranque. --></span></pre>
+
+</div>
+<div class="metadata"><div class="explanation" id="explanationUnusedResources" style="display: none;">
+Unused resources make applications larger and slow down builds.<br/>
+<br/>
+<br/>
+The unused resource check can ignore tests. If you want to include resources that are only referenced from tests, consider packaging them in a test source set instead.<br/>
+<br/>
+You can include test sources in the unused resource check by setting the system property <code>lint.unused-resources.include-tests=true</code>, and to exclude them (usually for performance reasons), use <code>lint.unused-resources.exclude-tests=true</code>.<br/>
+<br/><br/>
+This check can be configured via the following options:<br/><br/>
+<div class="options">
+<b>skip-libraries</b> (default is true):<br/>
+Whether the unused resource check should skip reporting unused resources in libraries.<br/>
+<br/>
+Many libraries will declare resources that are part of the library surface; other modules depending on the library will also reference the resources. To avoid reporting all these resources as unused (in the context of a library), the unused resource check normally skips reporting unused resources in libraries. Instead, run the unused resource check on the consuming app module (along with <code>checkDependencies=true</code>).<br/>
+<br/>
+However, there are cases where you want to check that all the resources declared in a library are used; in that case, you can disable the skip option.<br/>
+<br/>
+To configure this option, use a `lint.xml` file in the project or source folder using an <code>&lt;option&gt;</code> block like the following:
+<pre class="errorlines">
+<span class="lineno"> 1 </span><span class="tag">&lt;lint></span>
+<span class="lineno"> 2 </span>    <span class="tag">&lt;issue</span><span class="attribute"> id</span>=<span class="value">"UnusedResources"</span>>
+<span class="caretline"><span class="lineno"> 3 </span>        <span class="tag">&lt;option</span><span class="attribute"> name</span>=<span class="warning"><span class="value">"skip-libraries"</span> <span class="attribute">value</span>=<span class="value">"true"</span></span> />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 4 </span>    <span class="tag">&lt;/issue></span>
+<span class="lineno"> 5 </span><span class="tag">&lt;/lint></span>
+</pre>
+</div>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+To suppress this error, use the issue id "UnusedResources" as explained in the <a href="#SuppressInfo">Suppressing Warnings and Errors</a> section.<br/>
+<br/></div>
+</div>
+</div>
+<div class="chips">
+<span class="mdl-chip">
+    <span class="mdl-chip__text">UnusedResources</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Performance</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Warning</span>
+</span>
+<span class="mdl-chip">
+    <span class="mdl-chip__text">Priority 3/10</span>
+</span>
+</div>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+<button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="explanationUnusedResourcesLink" onclick="reveal('explanationUnusedResources');">
+Explain</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="UnusedResourcesCardLink" onclick="hideid('UnusedResourcesCard');">
+Dismiss</button>            </div>
+            </div>
+          </section>
+<a name="ExtraIssues"></a>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="ExtraIssuesCard" style="display: block;">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Included Additional Checks</h2>
+  </div>
+              <div class="mdl-card__supporting-text">
+This card lists all the extra checks run by lint, provided from libraries,
+build configuration and extra flags. This is included to help you verify
+whether a particular check is included in analysis when configuring builds.
+(Note that the list does not include the hundreds of built-in checks into lint,
+only additional ones.)
+<div id="IncludedIssues" style="display: none;"><br/><br/><div class="issue">
+<div class="id">ArcAnimationSpecTypeIssue<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+ArcAnimationSpec is designed for 2D values. Particularly, for positional values such as Offset.<br/>
+Trying to use it for values of different dimensions (Float, Size, Color, etc.) will result in unpredictable animation behavior.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.animation.core<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">AutoboxingStateCreation<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Calling <code>mutableStateOf&lt;T>()</code> when <code>T</code> is either backed by a primitive type on the JVM or is a value class results in a state implementation that requires all state values to be boxed. This usually causes an additional allocation for each state write, and adds some additional work to auto-unbox values when reading the value of the state. Instead, prefer to use a specialized primitive state implementation for <code>Int</code>, <code>Long</code>, <code>Float</code>, and <code>Double</code> when the state does not need to track null values and does not override the default <code>SnapshotMutationPolicy</code>. See <code>mutableIntStateOf()</code>, <code>mutableLongStateOf()</code>, <code>mutableFloatStateOf()</code>, and <code>mutableDoubleStateOf()</code> for more information.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">AutoboxingStateValueProperty<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Avoid using the generic <code>value</code> property when using a specialized State type. Reading or writing to the state's generic <code>value</code> property will result in an unnecessary autoboxing operation. Prefer the specialized value property (e.g. <code>intValue</code> for <code>MutableIntState</code>), or use property delegation to avoid unnecessary allocations.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">BadConfigurationProvider<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+An <code>android.app.Application</code> must implement <code>androidx.work.Configuration.Provider</code><br/>
+for on-demand initialization.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.work<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=409906">https://issuetracker.google.com/issues/new?component=409906</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">BadPeriodicWorkRequestEnqueue<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+When using <code>enqueue()</code> for `PeriodicWorkRequest`s, you might end up enqueuing<br/>
+duplicate requests unintentionally. You should be using<br/>
+<code>enqueueUniquePeriodicWork</code> with an <code>ExistingPeriodicWorkPolicy.KEEP</code> instead.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.work<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=409906">https://issuetracker.google.com/issues/new?component=409906</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ComposableDestinationInComposeScope<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Composable destinations should only be constructed directly within a NavGraphBuilder scope. Composable destinations cannot be nested, and you should use the <code>navigation</code> function to create a nested graph instead.<br/><div class="vendor">
+Vendor: Jetpack Navigation Compose<br/>
+Identifier: androidx.navigation.compose<br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ComposableNaming<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+@Composable functions without a return type should use similar naming to classes, starting with an uppercase letter and ending with a noun. @Composable functions with a return type should be treated as normal Kotlin functions, starting with a lowercase letter.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ComposableNavGraphInComposeScope<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Composable destinations should only be constructed directly within a NavGraphBuilder scope.<br/><div class="vendor">
+Vendor: Jetpack Navigation Compose<br/>
+Identifier: androidx.navigation.compose<br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">CompositionLocalNaming<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+CompositionLocal properties should be prefixed with <code>Local</code>. This helps make it clear at their use site that these values are local to the current composition. Typically the full name will be <code>Local</code> + the type of the CompositionLocal, for example val LocalFoo = compositionLocalOf { Foo() }.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ConfigurationScreenWidthHeight<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Configuration.screenWidthDp and Configuration.screenHeightDp have different insets behaviour depending on target SDK version, and are rounded to the nearest Dp. This means that using these values in composition to size a layout can result in issues, as these values do not accurately represent the actual available window size. Instead it is recommended to use WindowInfo.containerSize which accurately represents the window size.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ConstantContentStateKeyInItemsCall<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+When using shared elements (<code>Modifier.sharedElement</code> or <code>Modifier.sharedBounds</code>) in a LazyList, each Composable within an <code>items</code> block should have its own unique key. Otherwise, only one item of the visible layout will be rendered, regardless if there's an ongoing shared element transition.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.animation<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ContextCastToActivity<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Casting Context to Activity is an error as Contexts are not always Activities. Use LocalActivity instead<br/><div class="vendor">
+Vendor: Jetpack Activity Compose<br/>
+Identifier: androidx.activity.compose<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">CoroutineCreationDuringComposition<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Creating a coroutine with <code>async</code> or <code>launch</code> during composition is often incorrect - this means that a coroutine will be created even if the composition fails / is rolled back, and it also means that multiple coroutines could end up mutating the same state, causing inconsistent results. Instead, use <code>LaunchedEffect</code> and create coroutines inside the suspending block. The block will only run after a successful composition, and will cancel existing coroutines when <code>key</code> changes, allowing correct cleanup.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">DeepLinkInActivityDestination<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Attaching a &lt;deeplink> to an &lt;activity> destination will never give                 the right behavior when using an implicit deep link on another app's task                 (where the system back should immediately take the user back to the app that                 triggered the deep link). Instead, attach the deep link directly to                 the second activity (either by manually writing the appropriate &lt;intent-filter>                 or by adding the &lt;deeplink> to the start destination of a nav host in that second                 activity).<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.navigation.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=409828">https://issuetracker.google.com/issues/new?component=409828</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">DetachAndAttachSameFragment<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+When doing a FragmentTransaction that includes both attach()                 and detach() operations being committed on the same fragment instance, it is a                 no-op. The reason for this is that the FragmentManager optimizes all operations                 within a single transaction so the attach() and detach() cancel each other out                 and neither is actually executed. To get the desired behavior, you should separate                 the attach() and detach() calls into separate FragmentTransactions.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.fragment<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=460964">https://issuetracker.google.com/issues/new?component=460964</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">DialogFragmentCallbacksDetector<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+When using a <code>DialogFragment</code>, the <code>setOnCancelListener</code> and                 <code>setOnDismissListener</code> callback functions within the <code>onCreateDialog</code> function                  __must not be used__ because the <code>DialogFragment</code> owns these callbacks.                  Instead the respective <code>onCancel</code> and <code>onDismiss</code> functions can be used to                  achieve the desired effect.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.fragment<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=460964">https://issuetracker.google.com/issues/new?component=460964</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">EmptyNavDeepLink<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Attempting to create an empty NavDeepLink will result in an IllegalStateException at runtime. You may set these arguments within the lambda of the call to navDeepLink.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.navigation.common<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=409828">https://issuetracker.google.com/issues/new?component=409828</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">EnsureInitializerMetadata<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+When a library defines a Initializer, it needs to be accompanied by a corresponding &lt;meta-data> entry in the AndroidManifest.xml file.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.startup<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=823348">https://issuetracker.google.com/issues/new?component=823348</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">EnsureInitializerNoArgConstr<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Every <code>Initializer</code> must have a no argument constructor.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.startup<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=823348">https://issuetracker.google.com/issues/new?component=823348</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ExperimentalAnnotationRetention<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Experimental annotations defined in Java source should use default (<code>CLASS</code>) retention, while Kotlin-sourced annotations should use <code>BINARY</code> retention.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.annotation.experimental<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=459778">https://issuetracker.google.com/issues/new?component=459778</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">FieldSiteTargetOnQualifierAnnotation<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+It's redundant to use 'field:' site-targets for qualifier annotations.<br/><div class="vendor">
+Vendor: Google<br/>
+Identifier: com.google.dagger:dagger-lint<br/>
+Contact: <a href="https://github.com/google/dagger">https://github.com/google/dagger</a><br/>
+Feedback: <a href="https://github.com/google/dagger/issues">https://github.com/google/dagger/issues</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">FlowOperatorInvokedInComposition<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Calling a Flow operator function within composition will result in a new Flow being created every recomposition, which will reset collectAsState() and cause other related problems. Instead Flow operators should be called inside <code>remember</code>, or a side effect such as LaunchedEffect.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">FragmentAddMenuProvider<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+The Fragment lifecycle can result in a Fragment being active                 longer than its view. This can lead to unexpected behavior from lifecycle aware                 objects remaining active longer than the Fragment's view. To solve this issue,                 getViewLifecycleOwner() should be used as a LifecycleOwner rather than the                 Fragment instance once it is safe to access the view lifecycle in a                 Fragment's onCreateView, onViewCreated, onActivityCreated, or                 onViewStateRestored methods.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.fragment<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=460964">https://issuetracker.google.com/issues/new?component=460964</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">FragmentBackPressedCallback<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+The Fragment lifecycle can result in a Fragment being active                 longer than its view. This can lead to unexpected behavior from lifecycle aware                 objects remaining active longer than the Fragment's view. To solve this issue,                 getViewLifecycleOwner() should be used as a LifecycleOwner rather than the                 Fragment instance once it is safe to access the view lifecycle in a                 Fragment's onCreateView, onViewCreated, onActivityCreated, or                 onViewStateRestored methods.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.fragment<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=460964">https://issuetracker.google.com/issues/new?component=460964</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">FragmentLiveDataObserve<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+When observing a LiveData object from a fragment's onCreateView,                 onViewCreated, onActivityCreated, or onViewStateRestored method                 getViewLifecycleOwner() should be used as the LifecycleOwner rather than the                 Fragment instance. The Fragment lifecycle can result in the Fragment being                 active longer than its view. This can lead to unexpected behavior from                 LiveData objects being observed longer than the Fragment's view is active.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.fragment<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=460964">https://issuetracker.google.com/issues/new?component=460964</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">FragmentTagUsage<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+FragmentContainerView replaces the &lt;fragment> tag as the preferred                 way of adding fragments via XML. Unlike the &lt;fragment> tag, FragmentContainerView                 uses a normal <code>FragmentTransaction</code> under the hood to add the initial fragment,                 allowing further FragmentTransaction operations on the FragmentContainerView                 and providing a consistent timing for lifecycle events.<br/><div class="moreinfo">More info: <a href="https://developer.android.com/reference/androidx/fragment/app/FragmentContainerView.html">https://developer.android.com/reference/androidx/fragment/app/FragmentContainerView.html</a>
+</div><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.fragment<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=460964">https://issuetracker.google.com/issues/new?component=460964</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">FrequentlyChangingValue<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Reading a value annotated with @FrequentlyChangingValue inside composition can cause performance issues due to frequent recompositions. To avoid frequent recompositions, instead consider:<br/>
+<br/>
+- Using derivedStateOf to filter state changes based on a provided calculation. For example, rather than recomposing on every scroll position change, only recomposing if the scroll position changes from 0 (at the top of the list) to greater than 0 (not at the top of the list), and vice versa.<br/>
+- Using snapshotFlow to create a flow of changes from a provided state. This can then be collected inside a LaunchedEffect, and used to make changes without needing to recompose.<br/>
+- If using Compose UI, read this value inside measure / layout / draw, depending on where it is needed. This will cause invalidation of the corresponding phase, instead of a recomposition. See developer.android.com for more information on Jetpack Compose phases.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">IdleBatteryChargingConstraints<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Some devices are never considered charging and idle at the same time.<br/>
+Consider removing one of these constraints.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.work<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=409906">https://issuetracker.google.com/issues/new?component=409906</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">InvalidColorHexValue<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Creating a Color with a hex value requires a 32 bit value (such as 0xFF000000), with 8 bits being used per channel (ARGB). Not passing a full 32 bit value will result in channels being undefined / incorrect.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui.graphics<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">InvalidFragmentVersionForActivityResult<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+In order to use the ActivityResult APIs you must upgrade your                 Fragment version to 1.3.0. Previous versions of FragmentActivity                 failed to call super.onRequestPermissionsResult() and used invalid request codes<br/><div class="moreinfo">More info: <a href="https://developer.android.com/training/permissions/requesting#make-the-request">https://developer.android.com/training/permissions/requesting#make-the-request</a>
+</div><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.activity<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=527362">https://issuetracker.google.com/issues/new?component=527362</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">InvalidLanguageTagDelimiter<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+A language tag must be compliant with IETF BCP47, specifically a sequence of subtags must be separated by hyphens (-) instead of underscores (_)<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui.text<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=779818">https://issuetracker.google.com/issues/new?component=779818</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">InvalidPeriodicWorkRequestInterval<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+The interval duration for a <code>PeriodicWorkRequest</code> must be at least 15 minutes.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.work<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=409906">https://issuetracker.google.com/issues/new?component=409906</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">InvalidUseOfOnBackPressed<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+You should not used OnBackPressedCallback for non-UI cases. If you<br/>
+                |add a callback, you have to handle back completely in the callback.<br/><div class="moreinfo">More info: <a href="https://developer.android.com/guide/navigation/custom-back/predictive-back-gesture#ui-logic">https://developer.android.com/guide/navigation/custom-back/predictive-back-gesture#ui-logic</a>
+</div><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.activity<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=527362">https://issuetracker.google.com/issues/new?component=527362</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">JvmStaticProvidesInObjectDetector<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+It's redundant to annotate @Provides functions in object classes with @JvmStatic.<br/><div class="vendor">
+Vendor: Google<br/>
+Identifier: com.google.dagger:dagger-lint<br/>
+Contact: <a href="https://github.com/google/dagger">https://github.com/google/dagger</a><br/>
+Feedback: <a href="https://github.com/google/dagger/issues">https://github.com/google/dagger/issues</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">LaunchDuringComposition<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Calling <code>launch</code> during composition is incorrect. Doing so will cause launch to be called multiple times resulting in a RuntimeException. Instead, use <code>SideEffect</code> and <code>launch</code> inside of the suspending block. The block will only run after a successful composition.<br/><div class="vendor">
+Vendor: Jetpack Activity Compose<br/>
+Identifier: androidx.activity.compose<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">LifecycleCurrentStateInComposition<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Calling Lifecycle.currentState within composition will not observe changes to the Lifecycle, so changes might not be reflected within the composition. Instead you should use lifecycle.currentStateAsState() to observe changes to the Lifecycle, and recompose when it changes.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.lifecycle<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=413132">https://issuetracker.google.com/issues/new?component=413132</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">LocalContextConfigurationRead<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Changes to the Configuration object will not cause LocalContext reads to be invalidated, so you may end up with stale values when the Configuration changes. Instead, use LocalConfiguration.current to retrieve the Configuration - this will recompose callers when the Configuration object changes.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">LocalContextGetResourceValueCall<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Changes to the Configuration object will not cause LocalContext.current reads to be invalidated, so calls to APIs such as Context.getString() will not be updated when the Configuration changes, and so stale values might be used. Instead, you can use Compose APIs such as stringResource, colorResource, and painterResource - or LocalResources.current and query properties from Resources directly. Using these APIs will invalidate callers when the Configuration changes, to ensure that these calls reflect the latest values.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">LocalContextResourcesRead<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Changes to the Configuration object will not cause LocalContext.current.resources reads to be invalidated, so calls to APIs such as Resources.getString() will not be updated when the Configuration changes. Instead, use LocalResources.current to retrieve the Resources - this will invalidate callers when the Configuration changes, to ensure that these calls reflect the latest values.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">MissingColorAlphaChannel<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Creating a Color with a hex value requires a 32 bit value (such as 0xFF000000), with 8 bits being used per channel (ARGB). Not passing a full 32 bit value will result in channels being undefined. For example, passing 0xFF0000 will result in a missing alpha channel, so the color will not appear visible.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui.graphics<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">MissingKeepAnnotation<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Type-safe nav arguments such as Enum types can get incorrectly obfuscated in minified builds when not referenced directly<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.navigation.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=409828">https://issuetracker.google.com/issues/new?component=409828</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">MissingKeepAnnotation<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Type-safe nav arguments such as Enum types can get incorrectly obfuscated in minified builds when not referenced directly<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.navigation.common<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=409828">https://issuetracker.google.com/issues/new?component=409828</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">MissingKeepAnnotation<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Type-safe nav arguments such as Enum types can get incorrectly obfuscated in minified builds when not referenced directly<br/><div class="vendor">
+Vendor: Jetpack Navigation Compose<br/>
+Identifier: androidx.navigation.compose<br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">MissingSerializableAnnotation<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+The destination needs to be annotated with @Serializable in order for Navigation library to convert the class or object declaration into a NavDestination.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.navigation.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=409828">https://issuetracker.google.com/issues/new?component=409828</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">MissingSerializableAnnotation<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+The destination needs to be annotated with @Serializable in order for Navigation library to convert the class or object declaration into a NavDestination.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.navigation.common<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=409828">https://issuetracker.google.com/issues/new?component=409828</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">MissingSerializableAnnotation<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+The destination needs to be annotated with @Serializable in order for Navigation library to convert the class or object declaration into a NavDestination.<br/><div class="vendor">
+Vendor: Jetpack Navigation Compose<br/>
+Identifier: androidx.navigation.compose<br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ModifierFactoryExtensionFunction<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Modifier factory functions should be defined as extension functions on Modifier to allow modifiers to be fluently chained.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ModifierFactoryReturnType<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Modifier factory functions should return Modifier as their type, and not a subtype of Modifier (such as Modifier.Element).<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ModifierFactoryUnreferencedReceiver<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Modifier factory functions are fluently chained to construct a chain of Modifier objects that will be applied to a layout. As a result, each factory function <i>must</i> use the receiver <code>Modifier</code> parameter, to ensure that the function is returning a chain that includes previous items in the chain. Make sure the returned chain either explicitly includes <code>this</code>, such as <code>return this.then(MyModifier)</code> or implicitly by returning a chain that starts with an implicit call to another factory function, such as <code>return myModifier()</code>, where <code>myModifier</code> is defined as <code>fun Modifier.myModifier(): Modifier</code>.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ModifierNodeInspectableProperties<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+ModifierNodeElements may override inspectableProperties() to provide information about the modifier in the layout inspector. The default implementation attempts to read all of the properties on the class reflectively, which may not comprehensively or effectively describe the modifier.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ModifierParameter<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+The first (or only) Modifier parameter in a Composable function should follow the following rules:<br/>
+- Be named <code>modifier</code><br/>
+- Have a type of <code>Modifier</code><br/>
+- Either have no default value, or have a default value of <code>Modifier</code><br/>
+- If optional, be the first optional parameter in the parameter list<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ModuleCompanionObjects<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Companion objects in @Module-annotated classes are considered part of the API.<br/><div class="vendor">
+Vendor: Google<br/>
+Identifier: com.google.dagger:dagger-lint<br/>
+Contact: <a href="https://github.com/google/dagger">https://github.com/google/dagger</a><br/>
+Feedback: <a href="https://github.com/google/dagger/issues">https://github.com/google/dagger/issues</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ModuleCompanionObjectsNotInModuleParent<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Companion objects in @Module-annotated classes are considered part of the API. This<br/>
+companion object is not a companion to an @Module-annotated class though, and should be<br/>
+moved to a top-level object declaration instead otherwise Dagger will ignore companion<br/>
+object.<br/><div class="vendor">
+Vendor: Google<br/>
+Identifier: com.google.dagger:dagger-lint<br/>
+Contact: <a href="https://github.com/google/dagger">https://github.com/google/dagger</a><br/>
+Feedback: <a href="https://github.com/google/dagger/issues">https://github.com/google/dagger/issues</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">MultipleAwaitPointerEventScopes<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Pointer Input events are queued inside awaitPointerEventScope. Multiple calls to awaitPointerEventScope may exit the scope. During this time there is no guarantee that the events will be queued and some events may be dropped. It is recommended to use a single top-level block and perform the pointer events processing within such block.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">MutableCollectionMutableState<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Writes to mutable collections inside a MutableState will not cause a recomposition - only writes to the MutableState itself will. In most cases you should either use a read-only collection (such as List or Map) and assign a new instance to the MutableState when your data changes, or you can use an snapshot-backed collection such as SnapshotStateList or SnapshotStateMap which will correctly cause a recomposition when their contents are modified.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">NoCollectCallFound<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+You must call collect on the progress in the onBack function. The collect call is what properly splits the callback so it knows what to do when the back gestures is started vs when it is completed. Failing to call collect will cause all code in the block to run when the gesture is started.<br/><div class="vendor">
+Vendor: Jetpack Activity Compose<br/>
+Identifier: androidx.activity.compose<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">NonObservableLocale<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Calling <code>java.util.Locale.getDefault()</code>, <code>android.os.LocaleList.getAdjustedDefault()</code> or <code>androidx.core.os.LocaleListCompat.getAdjustedDefault()</code> within a composable function is not recommended. Calling these functions does not read observable state and will not be updated if the user changes the locale. This can lead to subtle bugs in your UI where the wrong locale is used for formatting dates, times, numbers, and other locale-sensitive information. To fix this, you should use <code>androidx.compose.ui.platform.LocalLocale.current.platformLocale</code> instead. This will ensure that your UI is always up-to-date with the current locale.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">NullSafeMutableLiveData<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+This check ensures that LiveData values are not null when explicitly                 declared as non-nullable.<br/>
+<br/>
+                Kotlin interoperability does not support enforcing explicit null-safety when using                 generic Java type parameters. Since LiveData is a Java class its value can always                 be null even when its type is explicitly declared as non-nullable. This can lead                 to runtime exceptions from reading a null LiveData value that is assumed to be                 non-nullable.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.lifecycle<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=413132">https://issuetracker.google.com/issues/new?component=413132</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">OpaqueUnitKey<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Certain Compose functions including <code>remember</code>, <code>LaunchedEffect</code>, and <code>DisposableEffect</code> declare (and sometimes require) one or more key parameters. When a key parameter changes, it is a signal that the previous invocation is now invalid. In certain cases, it may be required to pass <code>Unit</code> as a key to one of these functions, indicating that the invocation never becomes invalid. Using <code>Unit</code> as a key should be done infrequently, and should always be done explicitly by passing the <code>Unit</code> literal. This inspection checks for invocations where <code>Unit</code> is being passed as a key argument in any form other than the <code>Unit</code> literal. This is usually done by mistake, and can harm readability. If a Unit expression is being passed as a key, it is always equivalent to move the expression before the function invocation and pass the <code>Unit</code> literal instead.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ProduceStateDoesNotAssignValue<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+produceState returns an observable State using values assigned inside the producer lambda. If the lambda never assigns (i.e <code>value = foo</code>), then the State will never change. Make sure to assign a value when the source you are producing values from changes / emits a new value. For sample usage see the produceState documentation.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">RememberInComposition<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+APIs annotated with @RememberInComposition must not be called inside composition. This can lead to correctness issues and / or performance issues. Instead, use <code>remember</code> to cache the value across compositions, or hoist this call outside of composition.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">RememberReturnType<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+A call to <code>remember</code> that returns <code>Unit</code> is always an error. This typically happens when using <code>remember</code> to mutate variables on an object. <code>remember</code> is executed during the composition, which means that if the composition fails or is happening on a separate thread, the mutated variables may not reflect the true state of the composition. Instead, use <code>SideEffect</code> to make deferred changes once the composition succeeds, or mutate <code>MutableState</code> backed variables directly, as these will handle composition failure for you.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">RememberSaveableSaverParameter<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+The first parameter to <code>rememberSaveable</code> is a vararg parameter for inputs that when changed will cause the state to reset. Passing a <code>Saver</code> object to this parameter is an error, as the intention is to pass the <code>Saver</code> object to the saver parameter. Since the saver parameter is not the first parameter, it must be explicitly named.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime.saveable<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">RemoveWorkManagerInitializer<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+If an <code>android.app.Application</code> implements <code>androidx.work.Configuration.Provider</code>,<br/>
+the default <code>androidx.startup.InitializationProvider</code> needs to be removed from the<br/>
+AndroidManifest.xml file.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.work<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=409906">https://issuetracker.google.com/issues/new?component=409906</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">RepeatOnLifecycleWrongUsage<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+The repeatOnLifecycle APIs should be used when the View is created,                 that is in the <code>onCreate</code> lifecycle method for Activities, or <code>onViewCreated</code> in                 case you're using Fragments.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.lifecycle<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=413132">https://issuetracker.google.com/issues/new?component=413132</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">RetainLeaksContext<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+The lifespan of a retained object or one of its keys can extend beyond the lifecycle of the host activity. Retaining a <code>Context</code> (or another type that holds a strong reference to a <code>Context</code>) as either the return type of <code>calculation</code> or as a key input to <code>retain</code> will leak the Context and prevent its memory from being properly reclaimed.<br/>
+<br/>
+If caching is necessary, consider remembering offending values instead of retaining them.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime.retain<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">RetainRememberObserver<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Objects that implement RememberObserver and not RetainObserver are unaware of the retainment lifecycle. They cannot be correctly retained because there is no valid way to dispatch the RememberObserver callbacks and are therefore prohibited as return values to the <code>calculation</code> lambda of <code>retain</code>. Attempting to retain a value that implements <code>RememberObserver</code> without also implementing <code>RetainObserver</code> will throw an exception. Either remember the value instead of retaining it, or implement RetainObserver on the object.<br/>
+<br/>
+Note that this inspection checks the statically declared return type to ensure it does not declare itself as implementing <code>RememberObserver</code> without also implementing <code>RetainObserver</code>. The actual runtime types are not checked, which may lead to false negatives or false positives if the <code>calculation</code> lambda returns a different type than the call to <code>retain</code>.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime.retain<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">RetainUnitType<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+A call to <code>retain</code> that returns <code>Unit</code> is always an error. This typically happens when using <code>retain</code> to perform an action or mutate variables on an object. Instead, use <code>SideEffect</code> (or <code>RetainedEffect</code>) to make deferred changes once the composition succeeds, or mutate <code>MutableState</code> backed variables directly, as these will handle composition failure for you.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime.retain<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">RetainingDoNotRetainType<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Objects annotated with <code>@DoNotRetain</code> are not intended to be used with retain. Types marked with this annotation are not designed for retention, generally because they have an independent lifecycle that exceeds the retention lifespan and will leak resources. The type'sdocumentation may have more information about why it does not support retention.<br/>
+<br/>
+This inspection checks that marked types are never directly returned by the <code>calculation</code> lambda of <code>retain</code> or as a key input to <code>retain</code>. Types marked with <code>@DoNotRetain</code> may optionally specify more information about why they should not be retained.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime.retain<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ReturnFromAwaitPointerEventScope<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Pointer Input events are queued inside awaitPointerEventScope. By using the return value of awaitPointerEventScope one might unexpectedly lose events. If another awaitPointerEventScope is restarted there is no guarantee that the events will persist between those calls. In this case you should keep all events inside the awaitPointerEventScope block<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">SpecifyForegroundServiceType<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+When using the setForegroundAsync() API, the application must override &lt;service /> entry for <code>SystemForegroundService</code> to include the foreground service type in the  <code>AndroidManifest.xml</code> file.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.work<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=409906">https://issuetracker.google.com/issues/new?component=409906</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">SpecifyJobSchedulerIdRange<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+When using <code>JobScheduler</code> APIs directly, <code>WorkManager</code> requires that developers specify a range of <code>JobScheduler</code> ids that are safe for <code>WorkManager</code> to use so the `id`s do not collide. <br/>
+For more information look at <code>androidx.work.Configuration.Builder.setJobSchedulerJobIdRange(int, int)</code>.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.work<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=409906">https://issuetracker.google.com/issues/new?component=409906</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">StateFlowValueCalledInComposition<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Calling StateFlow.value within composition will not observe changes to the StateFlow, so changes might not be reflected within the composition. Instead you should use stateFlow.collectAsState() to observe changes to the StateFlow, and recompose when it changes.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">SuspiciousCompositionLocalModifierRead<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Jetpack Compose is unable to send updated values of a CompositionLocal when it's read in a Modifier.Node's initializer and onAttach() or onDetach() callbacks. Modifier.Node's callbacks are not aware of snapshot reads, and their lifecycle callbacks are not invoked on every recomposition. If you read a CompositionLocal in onAttach() or onDetach(), you will only get the CompositionLocal's value once at the moment of the read, which may lead to unexpected behaviors. We recommend instead reading CompositionLocals at time-of-use in callbacks that apply your Modifier's behavior, like measure() for LayoutModifierNode, draw() for DrawModifierNode, and so on. To observe the value of the CompositionLocal manually, extend from the ObserverNode interface and place the read inside an observeReads {} block within the onObservedReadsChanged() callback.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">SuspiciousModifierThen<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Calling a Modifier factory function with an implicit receiver inside Modifier.then will result in the receiver (<code>this</code>) being added twice to the chain. For example, fun Modifier.myModifier() = this.then(otherModifier()) - the implementation of factory functions such as Modifier.otherModifier() will internally call this.then(...) to chain the provided modifier with their implementation. When you expand this.then(otherModifier()), it becomes: this.then(this.then(OtherModifierImplementation)) - so you can see that <code>this</code> is included twice in the chain, which results in modifiers such as padding being applied twice, for example. Instead, you should either remove the then() and directly chain the factory function on the receiver, this.otherModifier(), or add the empty Modifier as the receiver for the factory, such as this.then(Modifier.otherModifier())<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">TestManifestGradleConfiguration<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+The androidx.compose.ui:ui-test-manifest dependency is needed for launching a Compose host, such as with createComposeRule. However, it only needs to be present in testing configurations therefore use this dependency with the debugImplementation configuration<br/><div class="moreinfo">More info: <a href="https://developer.android.com/jetpack/compose/testing#setup">https://developer.android.com/jetpack/compose/testing#setup</a>
+</div><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.compose.ui.test.manifest<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=741505">https://issuetracker.google.com/issues/new?component=741505</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnnecessaryComposedModifier<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+<code>Modifier.composed</code> allows invoking @Composable functions when creating a <code>Modifier</code> instance - for example, using <code>remember</code> to have instance-specific state, allowing the same <code>Modifier</code> object to be safely used in multiple places. Using <code>Modifier.composed</code> without calling any @Composable functions inside is unnecessary, and since the Modifier is no longer skippable, this can cause a lot of extra work inside the composed body, leading to worse performance.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.ui<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnrememberedGetBackStackEntry<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Backstack entries retrieved during composition need to be `remember`ed, otherwise they will be retrieved from the navController again, and be changed. You also need to pass in a key of a NavBackStackEntry to the remember call or they will not be updated properly. If this is in a <code>NavGraphBuilder.composable</code> scope, you should pass in the lambda's given entry as the key. Either hoist the state to an object that is not created during composition, or wrap the state in a call to <code>remember</code> with a <code>NavBackStackEntry</code> as a key.<br/><div class="vendor">
+Vendor: Jetpack Navigation Compose<br/>
+Identifier: androidx.navigation.compose<br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnrememberedMutableState<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+State objects created during composition need to be `remember`ed, otherwise they will be recreated during recomposition, and lose their state. Either hoist the state to an object that is not created during composition, or wrap the state in a call to <code>remember</code>.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnsafeLifecycleWhenUsage<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+If the <code>Lifecycle</code> is destroyed within the block of                     <code>Lifecycle.whenStarted</code> or any similar <code>Lifecycle.when</code> method is suspended,                     the block will be cancelled, which will also cancel any child coroutine                     launched inside the block. As as a result, If you have a try finally block                     in your code, the finally might run after the Lifecycle moves outside                     the desired state. It is recommended to check the <code>Lifecycle.isAtLeast</code>                     before accessing UI in finally block. Similarly,                     if you have a catch statement that might catch <code>CancellationException</code>,                     you should check the <code>Lifecycle.isAtLeast</code> before accessing the UI. See                     documentation of <code>Lifecycle.whenStateAtLeast</code> for more details<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.lifecycle<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=413132">https://issuetracker.google.com/issues/new?component=413132</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnsafeOptInUsageError<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+This API has been flagged as opt-in with error-level severity.<br/>
+<br/>
+Any declaration annotated with this marker is considered part of an unstable or<br/>
+otherwise non-standard API surface and its call sites should accept the opt-in<br/>
+aspect of it by using the <code>@OptIn</code> annotation, using the marker annotation --<br/>
+effectively causing further propagation of the opt-in aspect -- or configuring<br/>
+the <code>UnsafeOptInUsageError</code> check's options for project-wide opt-in.<br/>
+<br/>
+To configure project-wide opt-in, specify the <code>opt-in</code> option value in <code>lint.xml</code><br/>
+as a comma-delimited list of opted-in annotations:<br/>
+
+<pre>
+&lt;lint>
+    &lt;issue id="UnsafeOptInUsageError">
+        &lt;option name="opt-in" value="com.foo.ExperimentalBarAnnotation" />
+    &lt;/issue>
+&lt;/lint>
+</pre>
+<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.annotation.experimental<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=459778">https://issuetracker.google.com/issues/new?component=459778</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnsafeOptInUsageWarning<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+This API has been flagged as opt-in with warning-level severity.<br/>
+<br/>
+Any declaration annotated with this marker is considered part of an unstable or<br/>
+otherwise non-standard API surface and its call sites should accept the opt-in<br/>
+aspect of it by using the <code>@OptIn</code> annotation, using the marker annotation --<br/>
+effectively causing further propagation of the opt-in aspect -- or configuring<br/>
+the <code>UnsafeOptInUsageWarning</code> check's options for project-wide opt-in.<br/>
+<br/>
+To configure project-wide opt-in, specify the <code>opt-in</code> option value in <code>lint.xml</code><br/>
+as a comma-delimited list of opted-in annotations:<br/>
+
+<pre>
+&lt;lint>
+    &lt;issue id="UnsafeOptInUsageWarning">
+        &lt;option name="opt-in" value="com.foo.ExperimentalBarAnnotation" />
+    &lt;/issue>
+&lt;/lint>
+</pre>
+<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.annotation.experimental<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=459778">https://issuetracker.google.com/issues/new?component=459778</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnsafeRepeatOnLifecycleDetector<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+The repeatOnLifecycle APIs should be used with the viewLifecycleOwner                 in Fragments as opposed to lifecycleOwner.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.fragment<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=460964">https://issuetracker.google.com/issues/new?component=460964</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnusedBoxWithConstraintsScope<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+The <code>content</code> lambda in BoxWithConstraints has a scope which will include the incoming constraints. If this scope is ignored, then the cost of subcomposition is being wasted and this BoxWithConstraints should be replaced with a Box.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.foundation<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnusedContentLambdaTargetStateParameter<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+<code>content</code> lambda in AnimatedContent works as a lookup function that returns the corresponding content based on the parameter (a state of type <code>T</code>). It is important for this lambda to return content <i>specific</i> to the input parameter, so that the different contents can be properly animated. Not using the input parameter to the content lambda will result in the same content for different input (i.e. target state) and therefore an erroneous transition between the exact same content.`<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.animation<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnusedCrossfadeTargetStateParameter<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+<code>content</code> lambda in Crossfade works as a lookup function that returns the corresponding content based on the parameter (a state of type <code>T</code>). It is important for this lambda to return content <i>specific</i> to the input parameter, so that the different contents can be properly crossfaded. Not using the input parameter to the content lambda will result in the same content for different input (i.e. target state) and therefore an erroneous crossfade between the exact same content.`<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.animation<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnusedMaterial3ScaffoldPaddingParameter<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+The <code>content</code> lambda in Scaffold has a padding parameter which will include any inner padding for the content due to app bars. If this parameter is ignored, then content may be obscured by the app bars resulting in visual issues or elements that can't be interacted with.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.material3<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnusedSharedTransitionModifierParameter<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+When using <code>SharedTransitionScope</code> the provided <code>Modifier</code> should always be used on the top-most child, as the <code>Modifier</code> both obtains the root coordinates and creates an overlay. Otherwise, consider using <code>SharedTransitionLayout</code>.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.animation<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnusedTargetStateInContentKeyLambda<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+In <code>AnimatedContent</code>, the <code>contentKey</code> lambda may be used when the <code>targetState</code> is expected to mutate frequently but not all mutations are desired to be considered a target state change. So <code>contentKey</code> is expected to always use the given <code>targetState</code> parameter to calculate its result.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.animation<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnusedTransitionTargetStateParameter<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Transition.animate* functions provide a target state parameter in the lambda that will be used to calculate the value for a given state. This target state parameter in the lambda may or may not be the same as the actual state, as the animation system occasionally needs to look up target values for other states to do proper seeking/tooling preview. Relying on other state than the provided <code>targetState</code> could also result in unnecessary recompositions. Therefore, it is generally considered an error if this <code>targetState</code> parameter is not used.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.animation.core<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UseGetLayoutInflater<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Using LayoutInflater.from(Context) can return a LayoutInflater                  that does not have the correct theme.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.fragment<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=460964">https://issuetracker.google.com/issues/new?component=460964</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UseOfNonLambdaOffsetOverload<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+<code>Modifier.offset()</code> is recommended to be used with static arguments only to avoid unnecessary recompositions. <code>Modifier.offset{ }</code> is preferred in the cases where the arguments are backed by a <code>State</code>.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.foundation<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UseRequireInsteadOfGet<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+AndroidX added new "require____()" versions of common "get___()" APIs, such as getContext/getActivity/getArguments/etc. Rather than wrap these in something like requireNotNull(), using these APIs will allow the underlying component to try to tell you _why_ it was null, and thus yield a better error message.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.fragment<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=460964">https://issuetracker.google.com/issues/new?component=460964</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UseRxSetProgress2<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Use <code>setCompletableProgress(...)</code> instead of `setProgress(...) in <code>RxWorker</code>.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.work<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=409906">https://issuetracker.google.com/issues/new?component=409906</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UsingMaterialAndMaterial3Libraries<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+material and material3 are separate design system libraries that are incompatible with each other, as they have their own distinct theming systems. Using components from both libraries concurrently can cause issues: for example material components will not pick up the correct content color from a material3 container, and vice versa.<br/><div class="vendor">
+Vendor: Jetpack Compose<br/>
+Identifier: androidx.compose.material3<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=612128">https://issuetracker.google.com/issues/new?component=612128</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ViewModelConstructorInComposable<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+View models should not be constructed directly inside composable functions. Instead you should use the lifecycle viewmodel extensionfunctions e.g. viewModel&lt;MyViewModel>()<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.lifecycle<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=413132">https://issuetracker.google.com/issues/new?component=413132</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">WorkerHasAPublicModifier<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+When you define a ListenableWorker which is constructed using the <br/>
+default WorkerFactory, the ListenableWorker sub-type needs to be public.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.work<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=409906">https://issuetracker.google.com/issues/new?component=409906</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">WrongNavigateRouteType<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+If the destination class contains arguments, the route is expected to be class instance with the arguments filled in.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.navigation.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=409828">https://issuetracker.google.com/issues/new?component=409828</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">WrongRequiresOptIn<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+Experimental features defined in Kotlin source code must be annotated with the Kotlin<br/>
+<code>@RequiresOptIn</code> annotation. Using <code>androidx.annotation.RequiresOptIn</code> will prevent the<br/>
+Kotlin compiler from enforcing its opt-in policies.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.annotation.experimental<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=459778">https://issuetracker.google.com/issues/new?component=459778</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">WrongStartDestinationType<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+If the startDestination contains arguments, the arguments must be provided to navigation via a fully formed route (a class instance with argumentsfilled in), or else it will be treated as a case of missing arguments.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.navigation.runtime<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=409828">https://issuetracker.google.com/issues/new?component=409828</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">WrongStartDestinationType<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+If the startDestination contains arguments, the arguments must be provided to navigation via a fully formed route (a class instance with argumentsfilled in), or else it will be treated as a case of missing arguments.<br/><div class="vendor">
+Vendor: Android Open Source Project<br/>
+Identifier: androidx.navigation.common<br/>
+Feedback: <a href="https://issuetracker.google.com/issues/new?component=409828">https://issuetracker.google.com/issues/new?component=409828</a><br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">WrongStartDestinationType<div class="issueSeparator"></div>
+</div>
+<div class="metadata"><div class="explanation">
+If the startDestination contains arguments, the arguments must be provided to navigation via a fully formed route (a class instance with argumentsfilled in), or else it will be treated as a case of missing arguments.<br/><div class="vendor">
+Vendor: Jetpack Navigation Compose<br/>
+Identifier: androidx.navigation.compose<br/>
+</div>
+<br/>
+<br/></div>
+</div>
+</div>
+</div>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+<button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="IncludedIssuesLink" onclick="reveal('IncludedIssues');">
+List Issues</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="ExtraIssuesCardLink" onclick="hideid('ExtraIssuesCard');">
+Dismiss</button>            </div>
+            </div>
+          </section>
+<a name="MissingIssues"></a>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="MissingIssuesCard" style="display: block;">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Disabled Checks</h2>
+  </div>
+              <div class="mdl-card__supporting-text">
+One or more issues were not run by lint, either
+because the check is not enabled by default, or because
+it was disabled with a command line flag or via one or
+more <code>lint.xml</code> configuration files in the project directories.
+<div id="SuppressedIssues" style="display: none;"><br/><br/><div class="issue">
+<div class="id">AppCompatMethod<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+When using the appcompat library, there are some methods you should be calling instead of the normal ones; for example, <code>getSupportActionBar()</code> instead of <code>getActionBar()</code>. This lint check looks for calls to the wrong method.<br/><div class="moreinfo">More info: <a href="https://developer.android.com/topic/libraries/support-library/">https://developer.android.com/topic/libraries/support-library/</a>
+</div>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">AppLinksAutoVerify<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Ensures that app links are correctly set and associated with website.<br/><div class="moreinfo">More info: <a href="https://g.co/appindexing/applinks">https://g.co/appindexing/applinks</a>
+</div><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">BackButton<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+According to the Android Design Guide,<br/>
+<br/>
+"Other platforms use an explicit back button with label to allow the user to navigate up the application's hierarchy. Instead, Android uses the main action bar's app icon for hierarchical navigation and the navigation bar's back button for temporal navigation."<br/>
+<br/>
+This check is not very sophisticated (it just looks for buttons with the label "Back"), so it is disabled by default to not trigger on common scenarios like pairs of Back/Next buttons to paginate through screens.<br/><div class="moreinfo">More info: <a href="https://d.android.com/r/studio-ui/designer/material/design">https://d.android.com/r/studio-ui/designer/material/design</a>
+</div><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ComposableLambdaParameterNaming<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Composable functions with only one composable lambda parameter should use the name <code>content</code> for the parameter.<br/><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ComposableLambdaParameterPosition<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Composable functions with only one composable lambda parameter should place the parameter at the end of the parameter list, so it can be used as a trailing lambda.<br/><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ConvertToWebp<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+The WebP format is typically more compact than PNG and JPEG. As of Android 4.2.1 it supports transparency and lossless conversion as well. Note that there is a quickfix in the IDE which lets you perform conversion.<br/>
+<br/>
+Previously, launcher icons were required to be in the PNG format but that restriction is no longer there, so lint now flags these.<br/>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">DefaultEncoding<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Some APIs will implicitly use the default system character encoding instead of UTF-8 when converting to or from bytes, such as when creating a default <code>FileReader</code>.<br/>
+<br/>
+This is <i>usually</i> not correct; you only want to do this if you need to read files created by other programs where they have deliberately written in the same encoding. The default encoding varies from platform to platform and can vary from locale to locale, so this makes it difficult to interpret files containing non-ASCII characters.<br/>
+<br/>
+We recommend using UTF-8 everywhere.<br/>
+<br/>
+Note that on Android, the default file encoding is always UTF-8 (see <a href="https://developer.android.com/reference/java/nio/charset/Charset#defaultCharset(">https://developer.android.com/reference/java/nio/charset/Charset#defaultCharset(</a>) for more), so this lint check deliberately does not flag any problems in Android code, since it is always safe to rely on the default character encoding there.<br/><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">DuplicateStrings<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Duplicate strings can make applications larger unnecessarily.<br/>
+<br/>
+This lint check looks for duplicate strings, including differences for strings where the only difference is in capitalization. Title casing and all uppercase can all be adjusted in the layout or in code.<br/><div class="moreinfo">More info: <a href="https://developer.android.com/reference/android/widget/TextView.html#attr_android:inputType">https://developer.android.com/reference/android/widget/TextView.html#attr_android:inputType</a>
+</div><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">EasterEgg<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+An "easter egg" is code deliberately hidden in the code, both from potential users and even from other developers. This lint check looks for code which looks like it may be hidden from sight.<br/><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ExpensiveAssertion<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+In Kotlin, assertions are not handled the same way as from the Java programming language. In particular, they're just implemented as a library call, and inside the library call the error is only thrown if assertions are enabled.<br/>
+<br/>
+This means that the arguments to the <code>assert</code> call will <b>always</b> be evaluated. If you're doing any computation in the expression being asserted, that computation will unconditionally be performed whether or not assertions are turned on. This typically turns into wasted work in release builds.<br/>
+<br/>
+This check looks for cases where the assertion condition is nontrivial, e.g. it is performing method calls or doing more work than simple comparisons on local variables or fields.<br/>
+<br/>
+You can work around this by writing your own inline assert method instead:<br/>
+
+<pre>
+@Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
+inline fun assert(condition: () -> Boolean) {
+    if (_Assertions.ENABLED &amp;&amp; !condition()) {
+        throw AssertionError()
+    }
+}
+</pre>
+<br/>
+In Android, because assertions are not enforced at runtime, instead use this:<br/>
+
+<pre>
+inline fun assert(condition: () -> Boolean) {
+    if (BuildConfig.DEBUG &amp;&amp; !condition()) {
+        throw AssertionError()
+    }
+}
+</pre>
+<br/>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">GuardedBy<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+The GuardedBy analysis checks that fields or methods annotated with <code>@GuardedBy(lock)</code> are only accessed when the specified lock is held.<br/><div class="moreinfo">More info: <a href="https://errorprone.info/bugpattern/GuardedBy">https://errorprone.info/bugpattern/GuardedBy</a>
+</div><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">IconExpectedSize<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+There are predefined sizes (for each density) for launcher icons. You should follow these conventions to make sure your icons fit in with the overall look of the platform.<br/><div class="moreinfo">More info: <a href="https://d.android.com/r/studio-ui/designer/material/iconography">https://d.android.com/r/studio-ui/designer/material/iconography</a>
+</div><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">Immutable<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+This check validates that all classes annotated with Error Prone's @Immutable annotation are deeply immutable. It also checks that any class extending an @Immutable-annotated class or implementing an @Immutable-annotated interface are also immutable.<br/><div class="moreinfo">More info: <a href="https://errorprone.info/bugpattern/Immutable">https://errorprone.info/bugpattern/Immutable</a>
+</div><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">InvalidPackage<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+This check scans through libraries looking for calls to APIs that are not included in Android.<br/>
+<br/>
+When you create Android projects, the classpath is set up such that you can only access classes in the API packages that are included in Android. However, if you add other projects to your libs/ folder, there is no guarantee that those .jar files were built with an Android specific classpath, and in particular, they could be accessing unsupported APIs such as java.applet.<br/>
+<br/>
+This check scans through library jars and looks for references to API packages that are not included in Android and flags these. This is only an error if your code calls one of the library classes which wind up referencing the unsupported package.<br/><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">KotlinPropertyAccess<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+For a method to be represented as a property in Kotlin, strict &#8220;bean&#8221;-style prefixing must be used.<br/>
+<br/>
+Accessor methods require a <code>get</code> prefix or for boolean-returning methods an <code>is</code> prefix can be used.<br/><div class="moreinfo">More info: <a href="https://android.github.io/kotlin-guides/interop.html#property-prefixes">https://android.github.io/kotlin-guides/interop.html#property-prefixes</a>
+</div><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">KotlincFE10<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+K2, the new version of Kotlin compiler, which encompasses the new frontend, is coming. Try to avoid using internal APIs from the old frontend if possible.<br/><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">LambdaLast<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+To improve calling this code from Kotlin, parameter types eligible for SAM conversion should be last.<br/><div class="moreinfo">More info: <a href="https://android.github.io/kotlin-guides/interop.html#lambda-parameters-last">https://android.github.io/kotlin-guides/interop.html#lambda-parameters-last</a>
+</div><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">LintDocExample<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Lint's tool for generating documentation for each issue has special support for including a code example which shows how to trigger the report. It will pick the first unit test it can find and pick out the source file referenced from the error message, but you can instead designate a unit test to be the documentation example, and in that case, all the files are included.<br/>
+<br/>
+To designate a unit test as the documentation example for an issue, name the test <code>testDocumentationExample</code>, or if your detector reports multiple issues, <code>testDocumentationExample</code>&lt;Id>, such as <code>testDocumentationExampleMyId</code>.<br/><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">LintImplPsiEquals<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+You should never compare two PSI elements for equality with <code>equals</code>; use <code>PsiEquivalenceUtil.areElementsEquivalent(PsiElement, PsiElement)</code> instead.<br/><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">LintImplUnexpectedDomain<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+This checks flags URLs to domains that have not been explicitly allowed for use as a documentation source.<br/><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">LogConditional<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+The <code>BuildConfig</code> class provides a constant, <code>DEBUG</code>, which indicates whether the code is being built in release mode or in debug mode. In release mode, you typically want to strip out all the logging calls. Since the compiler will automatically remove all code which is inside a <code>if (false)</code> check, surrounding your logging calls with a check for <code>BuildConfig.DEBUG</code> is a good idea.<br/>
+<br/>
+If you <b>really</b> intend for the logging to be present in release mode, you can suppress this warning with a <code>@SuppressLint</code> annotation for the intentional logging calls.<br/><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">MangledCRLF<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+On Windows, line endings are typically recorded as carriage return plus newline: \r\n.<br/>
+<br/>
+This detector looks for invalid line endings with repeated carriage return characters (without newlines). Previous versions of the ADT plugin could accidentally introduce these into the file, and when editing the file, the editor could produce confusing visual artifacts.<br/><div class="moreinfo">More info: <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=375421">https://bugs.eclipse.org/bugs/show_bug.cgi?id=375421</a>
+</div><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">MemberExtensionConflict<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+When both member and extension declarations are applicable, the resolution takes the member. This also implies that, if an extension existed first, but then a member is added later, the same call-site may end up with different call resolutions depending on target environment. This results in a potential runtime exception if the generated binary (library or app) targets earlier environment (i.e., without the new member, but only extension). More concrete example is found at: <a href="https://issuetracker.google.com/issues/350432371">https://issuetracker.google.com/issues/350432371</a><br/><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">MinSdkTooLow<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+The value of the <code>minSdkVersion</code> property is too low and can be incremented without noticeably reducing the number of supported devices.<br/>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">NegativeMargin<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Margin values should be positive. Negative values are generally a sign that you are making assumptions about views surrounding the current one, or may be tempted to turn off child clipping to allow a view to escape its parent. Turning off child clipping to do this not only leads to poor graphical performance, it also results in wrong touch event handling since touch events are based strictly on a chain of parent-rect hit tests. Finally, making assumptions about the size of strings can lead to localization problems.<br/><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">NoHardKeywords<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Do not use Kotlin&#8217;s hard keywords as the name of methods or fields. These require the use of backticks to escape when calling from Kotlin. Soft keywords, modifier keywords, and special identifiers are allowed.<br/>
+<br/>
+For example, ActionEvent's <code>getWhen()</code> method requires backticks when used from Kotlin:
+<pre>
+val timestamp = event.`when`
+</pre>
+<br/><div class="moreinfo">More info: <a href="https://android.github.io/kotlin-guides/interop.html#no-hard-keywords">https://android.github.io/kotlin-guides/interop.html#no-hard-keywords</a>
+</div><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">NoOp<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+This check looks for code which looks like it's a no-op -- usually leftover expressions from interactive debugging, but in some cases bugs where you had intended to do something with the expression such as assign it to a field.<br/><br/>
+This check can be configured via the following options:<br/><br/>
+<div class="options">
+<b>pure-getters</b> (default is false):<br/>
+Whether to assume methods with getter-names have no side effects.<br/>
+<br/>
+Getter methods (where names start with <code>get</code> or <code>is</code>, and have non-void return types, and no arguments) should not have side effects. With this option turned on, lint will assume that is the case and will list any getter calls whose results are ignored as suspicious code.<br/>
+<br/>
+To configure this option, use a `lint.xml` file in the project or source folder using an <code>&lt;option&gt;</code> block like the following:
+<pre class="errorlines">
+<span class="lineno"> 1 </span><span class="tag">&lt;lint></span>
+<span class="lineno"> 2 </span>    <span class="tag">&lt;issue</span><span class="attribute"> id</span>=<span class="value">"NoOp"</span>>
+<span class="caretline"><span class="lineno"> 3 </span>        <span class="tag">&lt;option</span><span class="attribute"> name</span>=<span class="warning"><span class="value">"pure-getters"</span> <span class="attribute">value</span>=<span class="value">"false"</span></span> />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 4 </span>    <span class="tag">&lt;/issue></span>
+<span class="lineno"> 5 </span><span class="tag">&lt;/lint></span>
+</pre>
+</div><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">PermissionNamingConvention<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Permissions should be prefixed with an app's package name, using reverse-domain-style naming. This prefix should be followed by <code>.permission.</code>, and then a description of the capability that the permission represents, in upper SNAKE_CASE. For example, <code>com.example.myapp.permission.ENGAGE_HYPERSPACE</code>.<br/>
+<br/>
+Following this recommendation avoids naming collisions, and helps clearly identify the owner and intention of a custom permission.<br/><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ReflectionAnnotation<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+When methods are using reflection to access APIs, they should declare what APIs they are accessing using the new <code>@UsesReflectionToAccessMethod</code> and <code>@UsesReflectionToAccessField</code> annotations. This makes it possible for the shrinker (R8) to correctly remove unused code and resources without accidentally also removing reflectively accessed code, which can lead to program crashes.<br/><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">Registered<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Activities, services and content providers should be registered in the <code>AndroidManifest.xml</code> file using <code>&lt;activity></code>, <code>&lt;service></code> and <code>&lt;provider></code> tags.<br/>
+<br/>
+If your activity is simply a parent class intended to be subclassed by other "real" activities, make it an abstract class.<br/><div class="moreinfo">More info: <a href="https://developer.android.com/guide/topics/manifest/manifest-intro.html">https://developer.android.com/guide/topics/manifest/manifest-intro.html</a>
+</div><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">RequiredSize<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+All views must specify an explicit <code>layout_width</code> and <code>layout_height</code> attribute. There is a runtime check for this, so if you fail to specify a size, an exception is thrown at runtime.<br/>
+<br/>
+It's possible to specify these widths via styles as well. GridLayout, as a special case, does not require you to specify a size.<br/><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">SelectableText<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+If a <code>&lt;TextView></code> is used to display data, the user might want to copy that data and paste it elsewhere. To allow this, the <code>&lt;TextView></code> should specify <code>android:textIsSelectable="true"</code>.<br/>
+<br/>
+This lint check looks for TextViews which are likely to be displaying data: views whose text is set dynamically.<br/>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">StopShip<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Using the comment <code>// STOPSHIP</code> can be used to flag code that is incomplete but checked in. This comment marker can be used to indicate that the code should not be shipped until the issue is addressed, and lint will look for these. In Gradle projects, this is only checked for non-debug (release) builds.<br/>
+<br/>
+In Kotlin, the <code>TODO()</code> method is also treated as a stop ship marker; you can use it to make incomplete code compile, but it will throw an exception at runtime and therefore should be fixed before shipping releases.<br/>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">StringFormatTrivial<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Every call to <code>String.format</code> creates a new <code>Formatter</code> instance, which will decrease the performance of your app. <code>String.format</code> should only be used when necessary--if the formatted string contains only trivial conversions (e.g. <code>b</code>, <code>s</code>, <code>c</code>) and there are no translation concerns, it will be more efficient to replace them and concatenate with <code>+</code>.<br/><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">SyntheticAccessor<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+A private inner class which is accessed from the outer class will force the compiler to insert a synthetic accessor; this means that you are causing extra overhead. This is not important in small projects, but is important for large apps running up against the 64K method handle limit, and especially for <b>libraries</b> where you want to make sure your library is as small as possible for the cases where your library is used in an app running up against the 64K limit.<br/>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">TypographyQuotes<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Straight single quotes and double quotes, when used as a pair, can be replaced by "curvy quotes" (or directional quotes). Use the right single quotation mark for apostrophes. Never use generic quotes ", ' or free-standing accents `, ´ for quotation marks, apostrophes, or primes. This can make the text more readable.<br/><div class="moreinfo">More info: <a href="https://en.wikipedia.org/wiki/Quotation_mark">https://en.wikipedia.org/wiki/Quotation_mark</a>
+</div>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnknownNullness<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+To improve referencing this code from Kotlin, consider adding explicit nullness information here with either <code>@NonNull</code> or <code>@Nullable</code>.<br/><br/>
+This check can be configured via the following options:<br/><br/>
+<div class="options">
+<b>ignore-deprecated</b> (default is false):<br/>
+Whether to ignore classes and members that have been annotated with <code>@Deprecated</code>.<br/>
+<br/>
+Normally this lint check will flag all unannotated elements, but by setting this option to <code>true</code> it will skip any deprecated elements.<br/>
+<br/>
+To configure this option, use a `lint.xml` file in the project or source folder using an <code>&lt;option&gt;</code> block like the following:
+<pre class="errorlines">
+<span class="lineno"> 1 </span><span class="tag">&lt;lint></span>
+<span class="lineno"> 2 </span>    <span class="tag">&lt;issue</span><span class="attribute"> id</span>=<span class="value">"UnknownNullness"</span>>
+<span class="caretline"><span class="lineno"> 3 </span>        <span class="tag">&lt;option</span><span class="attribute"> name</span>=<span class="warning"><span class="value">"ignore-deprecated"</span> <span class="attribute">value</span>=<span class="value">"false"</span></span> />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 4 </span>    <span class="tag">&lt;/issue></span>
+<span class="lineno"> 5 </span><span class="tag">&lt;/lint></span>
+</pre>
+</div><div class="moreinfo">More info: <a href="https://developer.android.com/kotlin/interop#nullability_annotations">https://developer.android.com/kotlin/interop#nullability_annotations</a>
+</div>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnsupportedChromeOsHardware<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+The <code>&lt;uses-feature></code> element should not require this unsupported large screen hardware feature. Any &lt;uses-feature> not explicitly marked with <code>required="false"</code> is necessary on the device to be installed on. Ensure that any features that might prevent it from being installed on a ChromeOS, large screen, or foldable device are reviewed and marked as not required in the manifest.<br/><div class="moreinfo">More info: <a href="https://developer.android.com/topic/arc/manifest.html#incompat-entries">https://developer.android.com/topic/arc/manifest.html#incompat-entries</a>
+</div>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">UnusedIds<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+This resource id definition appears not to be needed since it is not referenced from anywhere. Having id definitions, even if unused, is not necessarily a bad idea since they make working on layouts and menus easier, so there is not a strong reason to delete these.<br/>
+<br/>
+<br/>
+The unused resource check can ignore tests. If you want to include resources that are only referenced from tests, consider packaging them in a test source set instead.<br/>
+<br/>
+You can include test sources in the unused resource check by setting the system property <code>lint.unused-resources.include-tests=true</code>, and to exclude them (usually for performance reasons), use <code>lint.unused-resources.exclude-tests=true</code>.<br/>
+<br/>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">ValidActionsXml<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Ensures that an actions XML file is properly formed<br/>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">VulnerableCordovaVersion<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+The version of Cordova used in the app is vulnerable to security issues. Please update to the latest Apache Cordova version.<br/><div class="moreinfo">More info: <a href="https://cordova.apache.org/announcements/2015/11/20/security.html">https://cordova.apache.org/announcements/2015/11/20/security.html</a>
+</div><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">WatchFaceEditor<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Watch face editor activities must be able to launch in the Wear OS companion app activity task in order to work correctly. Thus only <code>launchMode="standard"</code> is allowed. The watch face will not be shown on the watch if it does not satisfy this requirement.<br/>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">WatchFaceForAndroidX<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+If the package depends on <code>androidx.wear:wear-watchface</code>, and an AndroidX watch face declares the <code>wearableConfigurationAction</code> metadata, its value should be <code>androidx.wear.watchface.editor.action.WATCH_FACE_EDITOR</code>.<br/><div class="moreinfo">More info: <a href="https://developer.android.com/training/wearables/watch-faces/configuration">https://developer.android.com/training/wearables/watch-faces/configuration</a>
+</div>Note: This issue has an associated quickfix operation in Android Studio and IntelliJ IDEA.<br>
+<br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">WearableActionDuplicate<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+If and only if a watch face service defines <code>wearableConfigurationAction</code> metadata, with the value <code>WATCH_FACE_EDITOR</code>, there should be an activity in the same package, which has an intent filter for <code>WATCH_FACE_EDITOR</code> (with com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION if minSdkVersion is less than 30).<br/><div class="moreinfo">More info: <a href="https://developer.android.com/training/wearables/watch-faces/configuration">https://developer.android.com/training/wearables/watch-faces/configuration</a>
+</div><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">WearableConfigurationAction<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Only when a watch face service defines <code>wearableConfigurationAction</code> metadata, with the value <code>WATCH_FACE_EDITOR</code>, there should be an activity in the same package, which has an intent filter for <code>WATCH_FACE_EDITOR</code> (with <code>com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION</code> if <code>minSdkVersion</code> is less than 30).<br/><div class="moreinfo">More info: <a href="https://developer.android.com/training/wearables/watch-faces/configuration">https://developer.android.com/training/wearables/watch-faces/configuration</a>
+</div><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">WrongThread<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Ensures that a method which expects to be called on a specific thread, is actually called from that thread. For example, calls on methods in widgets should always be made on the UI thread.<br/><div class="moreinfo">More info: <a href="https://developer.android.com/guide/components/processes-and-threads.html#Threads">https://developer.android.com/guide/components/processes-and-threads.html#Threads</a>
+</div><br/>
+<br/></div>
+</div>
+</div>
+<div class="issue">
+<div class="id">WrongThreadInterprocedural<div class="issueSeparator"></div>
+</div>
+<div class="metadata">Disabled By: Default<br/>
+<div class="explanation">
+Searches for interprocedural call paths that violate thread annotations in the program. Tracks the flow of instantiated types and lambda expressions to increase accuracy across method boundaries.<br/><div class="moreinfo">More info: <a href="https://developer.android.com/guide/components/processes-and-threads.html#Threads">https://developer.android.com/guide/components/processes-and-threads.html#Threads</a>
+</div><br/>
+<br/></div>
+</div>
+</div>
+</div>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+<button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="SuppressedIssuesLink" onclick="reveal('SuppressedIssues');">
+List Missing Issues</button><button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="MissingIssuesCardLink" onclick="hideid('MissingIssuesCard');">
+Dismiss</button>            </div>
+            </div>
+          </section>
+<a name="SuppressInfo"></a>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="SuppressCard" style="display: block;">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Suppressing Warnings and Errors</h2>
+  </div>
+              <div class="mdl-card__supporting-text">
+Lint errors can be suppressed in a variety of ways:<br/>
+<br/>
+1. With a <code>@SuppressLint</code> annotation in the Java code<br/>
+2. With a <code>tools:ignore</code> attribute in the XML file<br/>
+3. With a //noinspection comment in the source code<br/>
+4. With ignore flags specified in the <code>build.gradle</code> file, as explained below<br/>
+5. With a <code>lint.xml</code> configuration file in the project<br/>
+6. With a <code>lint.xml</code> configuration file passed to lint via the --config flag<br/>
+7. With the --ignore flag passed to lint.<br/>
+<br/>
+To suppress a lint warning with an annotation, add a <code>@SuppressLint("id")</code> annotation on the class, method or variable declaration closest to the warning instance you want to disable. The id can be one or more issue id's, such as <code>"UnusedResources"</code> or <code>{"UnusedResources","UnusedIds"}</code>, or it can be <code>"all"</code> to suppress all lint warnings in the given scope.<br/>
+<br/>
+To suppress a lint warning with a comment, add a <code>//noinspection id</code> comment on the line before the statement with the error.<br/>
+<br/>
+To suppress a lint warning in an XML file, add a <code>tools:ignore="id"</code> attribute on the element containing the error, or one of its surrounding elements. You also need to define the namespace for the tools prefix on the root element in your document, next to the <code>xmlns:android</code> declaration:<br/>
+<code>xmlns:tools="http://schemas.android.com/tools"</code><br/>
+<br/>
+To suppress a lint warning in a <code>build.gradle</code> file, add a section like this:<br/>
+
+<pre>
+android {
+    lintOptions {
+        disable 'TypographyFractions','TypographyQuotes'
+    }
+}
+</pre>
+<br/>
+Here we specify a comma separated list of issue id's after the disable command. You can also use <code>warning</code> or <code>error</code> instead of <code>disable</code> to change the severity of issues.<br/>
+<br/>
+To suppress lint warnings with a configuration XML file, create a file named <code>lint.xml</code> and place it at the root directory of the module in which it applies.<br/>
+<br/>
+The format of the <code>lint.xml</code> file is something like the following:<br/>
+
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?>
+&lt;lint>
+    &lt;!-- Ignore everything in the test source set -->
+    &lt;issue id="all">
+        &lt;ignore path="\*/test/\*" />
+    &lt;/issue>
+
+    &lt;!-- Disable this given check in this project -->
+    &lt;issue id="IconMissingDensityFolder" severity="ignore" />
+
+    &lt;!-- Ignore the ObsoleteLayoutParam issue in the given files -->
+    &lt;issue id="ObsoleteLayoutParam">
+        &lt;ignore path="res/layout/activation.xml" />
+        &lt;ignore path="res/layout-xlarge/activation.xml" />
+        &lt;ignore regexp="(foo|bar)\.java" />
+    &lt;/issue>
+
+    &lt;!-- Ignore the UselessLeaf issue in the given file -->
+    &lt;issue id="UselessLeaf">
+        &lt;ignore path="res/layout/main.xml" />
+    &lt;/issue>
+
+    &lt;!-- Change the severity of hardcoded strings to "error" -->
+    &lt;issue id="HardcodedText" severity="error" />
+&lt;/lint>
+</pre>
+<br/>
+To suppress lint checks from the command line, pass the --ignore flag with a comma separated list of ids to be suppressed, such as:<br/>
+<code>$ lint --ignore UnusedResources,UselessLeaf /my/project/path</code><br/>
+<br/>
+For more information, see <a href="https://developer.android.com/studio/write/lint.html#config">https://developer.android.com/studio/write/lint.html#config</a><br/>
+
+            </div>
+            </div>
+          </section>    </div>
+  </main>
+</div>
+</body>
+</html>

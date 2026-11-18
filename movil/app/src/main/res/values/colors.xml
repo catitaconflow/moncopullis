@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Mismo verde que Principal en ui/theme/Color.kt (el XML no puede leer colores de Compose). -->
+    <color name="principal">#FF1F5C3A</color>
+    <!-- Mismo fondo que Fondo en ui/theme/Color.kt: ventana y pantalla de arranque. -->
+    <color name="fondo">#FFF3F5F1</color>
+</resources>

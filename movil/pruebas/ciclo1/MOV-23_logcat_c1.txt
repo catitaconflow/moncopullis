@@ -1,0 +1,2 @@
+--------- beginning of main
+11-16 15:30:43.367 I/MoncopulliEscritura( 8676): Enviado APLICAR_DOSIS cee5113c-e6d2-4da7-8daf-6b02f90be956 (ya_registrado=false)

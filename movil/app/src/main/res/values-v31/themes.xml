@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 12+ (API 31): el sistema muestra su propia pantalla de arranque. Sin la librería core-splashscreen:
+     solo atributos de la plataforma. Android elige este archivo en vez de values/ cuando API >= 31. -->
+<resources>
+
+    <style name="Theme.Moncopulli" parent="Base.Theme.Moncopulli">
+        <!-- Mismo crema que la app. El ícono por defecto es el del lanzador (vaca blanca sobre verde),
+             que ya contrasta con el crema: no hace falta windowSplashScreenAnimatedIcon ni IconBackgroundColor. -->
+        <item name="android:windowSplashScreenBackground">@color/fondo</item>
+    </style>
+</resources>

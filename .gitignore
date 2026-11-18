@@ -26,3 +26,17 @@ Thumbs.db
 # CLI de Supabase (estado local del proyecto enlazado)
 supabase/.temp/
 pruebas/carga/reporte/
+
+# Android (movil/): configuración local, firma y artefactos de build
+movil/**/local.properties
+*.jks
+*.keystore
+movil/.gradle/
+movil/**/build/
+movil/.kotlin/
+movil/**/.cxx/
+movil/captures/
+movil/**/*.apk
+movil/**/*.aab
+*.hprof
+entrega_movil/
