@@ -56,7 +56,7 @@ async function icono(Comp, color, size = 256) {
     title: "CONTENIDO", background: { color: "FFFFFF" },
     margin: [0.4, M, 0.7, M],
     objects: [
-      { placeholder: { options: { name: "title", type: "title", x: M, y: 0.35, w: W - 2 * M - 3.9, h: 0.85, fontSize: 30, bold: true, color: C.text2, fontFace: THEME.headFontFace, valign: "middle", align: "left", margin: 0 }, text: "" } },
+      { placeholder: { options: { name: "title", type: "title", x: M, y: 0.35, w: W - 2 * M - 4.7, h: 0.85, fontSize: 30, bold: true, color: C.text2, fontFace: THEME.headFontFace, valign: "middle", align: "left", margin: 0 }, text: "" } },
       { text: { text: "Moncopulli · Proyecto Integrado · Evaluación 3", options: { x: M, y: H - 0.5, w: 6, h: 0.3, fontSize: 10, color: C.accent6, margin: 0 } } },
     ],
     slideNumber: { x: W - 1.1, y: H - 0.5, w: 0.6, h: 0.3, fontSize: 10, color: C.accent6, align: "right" },
@@ -83,15 +83,32 @@ async function icono(Comp, color, size = 256) {
     s.addText(text, { x, y, w, h, fontSize: 15, color: C.text1, margin: 0, valign: "top", isTextBox: true, objectName: name, ...opts });
   const vinetas = (items) => items.map((t, i) => ({ text: t, options: { bullet: true, breakLine: i < items.length - 1, paraSpaceAfter: 6 } }));
   const rubrica = (s, txt) => {
-    s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: W - M - 3.6, y: 0.5, w: 3.6, h: 0.5, rectRadius: 0.25, fill: { color: C.background2 }, line: { type: "none" }, objectName: "Criterio de rúbrica (fondo)" });
-    s.addText(txt, { x: W - M - 3.6, y: 0.5, w: 3.6, h: 0.5, fontSize: 12, bold: true, color: C.accent1, align: "center", valign: "middle", margin: 0, isTextBox: true, objectName: "Criterio de rúbrica" });
+    s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: W - M - 4.4, y: 0.5, w: 3.6, h: 0.5, rectRadius: 0.25, fill: { color: C.background2 }, line: { type: "none" }, objectName: "Criterio de rúbrica (fondo)" });
+    s.addText(txt, { x: W - M - 4.4, y: 0.5, w: 3.6, h: 0.5, fontSize: 12, bold: true, color: C.accent1, align: "center", valign: "middle", margin: 0, isTextBox: true, objectName: "Criterio de rúbrica" });
   };
-  const titulo = (s, t) => s.addText(t, { placeholder: "title" });
+  const PERSONAS = { AT: ["Andy Timbles", C.accent1], LB: ["Liliana Bravo", C.accent3], CP: ["Catalina Pérez", C.accent2], CJ: ["Cristóbal Jara", C.accent4] };
+  const ASIG = {
+    "El problema: todo se anotaba a mano": "CJ", "Una base de datos, tres canales": "AT", "Cómo respondemos a la rúbrica": "CJ",
+    "Cada proceso tiene su pantalla": "CP", "App móvil v2 para el terreno": "LB", "Modelo real de Supabase": "CP", "3FN con dos excepciones a propósito": "CP",
+    "Seguridad en varias capas": "CP", "Scrumban, pull requests y CI": "AT", "Herramientas usadas y reemplazadas": "AT", "Documentación para repetirlo": "AT",
+    "Plan que cubre cada caso de uso": "CJ", "Ejecución documentada": "LB", "Resultados comprobados dos veces": "LB", "21 diferencias, 18 corregidas": "CJ",
+    "Recomendaciones con cierre": "LB",
+  };
+  // Iniciales de quien presenta, arriba a la derecha (en divisores: quienes presentan esa sección)
+  const quien = (s, inis, oscuro = false) => {
+    const d = 0.62; let x = W - M - d;
+    for (const ini of [...inis].reverse()) {
+      s.addShape(pres.shapes.OVAL, { x, y: 0.44, w: d, h: d, fill: { color: oscuro ? C.background1 : PERSONAS[ini][1] }, line: { type: "none" }, objectName: "Presenta " + PERSONAS[ini][0] + " (círculo)" });
+      s.addText(ini, { x, y: 0.44, w: d, h: d, fontSize: 14, bold: true, color: oscuro ? PERSONAS[ini][1] : C.background1, align: "center", valign: "middle", margin: 0, isTextBox: true, objectName: "Presenta " + PERSONAS[ini][0] });
+      x -= d + 0.12;
+    }
+  };
+  const titulo = (s, t) => { s.addText(t, { placeholder: "title" }); if (ASIG[t]) quien(s, [ASIG[t]]); };
 
   // =============================================== 1 PORTADA
   pres.addSection({ title: "Inicio" });
   let s = pres.addSlide({ masterName: "PORTADA", sectionTitle: "Inicio" });
-  s.addText("Moncopulli", { placeholder: "title" });
+  s.addText("Moncopulli", { placeholder: "title" }); quien(s, ["AT", "LB", "CP", "CJ"], true);
   s.addText([
     { text: "Trazabilidad de tratamientos veterinarios e inventario de medicamentos", options: { breakLine: true, fontSize: 22 } },
     { text: " ", options: { breakLine: true, fontSize: 8 } },
@@ -104,7 +121,7 @@ async function icono(Comp, color, size = 256) {
 
   // =============================================== 2 PROBLEMA
   s = pres.addSlide({ masterName: "CONTENIDO", sectionTitle: "Inicio" });
-  titulo(s, "El problema: el predio anotaba todo a mano", W - 2 * M);
+  titulo(s, "El problema: todo se anotaba a mano", W - 2 * M);
   const prob = [
     [fa.FaBoxes, "El stock no cuadra", "Cuadernos, planillas y WhatsApp: nadie descontaba el frasco usado."],
     [fa.FaSearch, "Sin trazabilidad", "Responder al SAG qué recibió un animal, de qué lote y quién lo aplicó tomaba días."],
@@ -150,12 +167,12 @@ async function icono(Comp, color, size = 256) {
     sub(s, mapa[i][0], x + 0.3, y + 0.65, 3.2, "Tema " + mapa[i][0], C.text2, 20);
     texto(s, mapa[i][2], x + 0.3, y + 1.25, 3.2, 0.8, "Evidencia " + mapa[i][0], { fontSize: 15, color: C.accent6 });
   }
-  s.addNotes("Esta es la agenda. Cada bloque responde a criterios de la rúbrica; el informe tiene el mismo mapa al inicio con la sección exacta de cada evidencia. El criterio 14 son estas preguntas y el 15 es el informe final.");
+  s.addNotes("Reparto: Andy (AT) arquitectura, equipo, herramientas y documentación; Liliana (LB) app, ejecución, validación y recomendaciones; Catalina (CP) interfaces, base de datos y seguridad; Cristóbal (CJ) problema, rúbrica, plan de pruebas y diferencias. Esta es la agenda. Cada bloque responde a criterios de la rúbrica; el informe tiene el mismo mapa al inicio con la sección exacta de cada evidencia. El criterio 14 son estas preguntas y el 15 es el informe final.");
 
   // =============================================== SECCIÓN A
   pres.addSection({ title: "Interfaces" });
   s = pres.addSlide({ masterName: "SECCION", sectionTitle: "Interfaces" });
-  s.addText("Interfaces que resuelven el trabajo diario", { placeholder: "title" });
+  s.addText("Interfaces que resuelven el trabajo diario", { placeholder: "title" }); quien(s, ["CP", "LB"], true);
   s.addText("Criterios 3.1.1.1 y 3.1.1.2 · coherencia con el negocio y lineamientos", { placeholder: "body" });
 
   // 6 PROCESOS → INTERFAZ
@@ -194,7 +211,7 @@ async function icono(Comp, color, size = 256) {
   // =============================================== SECCIÓN B
   pres.addSection({ title: "Base de datos" });
   s = pres.addSlide({ masterName: "SECCION", sectionTitle: "Base de datos" });
-  s.addText("Una base que se defiende sola", { placeholder: "title" });
+  s.addText("Una base que se defiende sola", { placeholder: "title" }); quien(s, ["CP"], true);
   s.addText("Criterios 3 y 4 · estructura, normalización y optimización", { placeholder: "body" });
 
   // 9 ER
@@ -235,7 +252,7 @@ async function icono(Comp, color, size = 256) {
   // =============================================== SECCIÓN C
   pres.addSection({ title: "Seguridad y equipo" });
   s = pres.addSlide({ masterName: "SECCION", sectionTitle: "Seguridad y equipo" });
-  s.addText("Seguridad en capas y trabajo en equipo", { placeholder: "title" });
+  s.addText("Seguridad en capas y trabajo en equipo", { placeholder: "title" }); quien(s, ["CP", "AT"], true);
   s.addText("Criterios 3.1.3.5 y 3.1.3.6", { placeholder: "body" });
 
   // 12 SEGURIDAD
@@ -275,7 +292,7 @@ async function icono(Comp, color, size = 256) {
   // =============================================== SECCIÓN D
   pres.addSection({ title: "Entorno" });
   s = pres.addSlide({ masterName: "SECCION", sectionTitle: "Entorno" });
-  s.addText("Entorno reproducible y documentado", { placeholder: "title" });
+  s.addText("Entorno reproducible y documentado", { placeholder: "title" }); quien(s, ["AT"], true);
   s.addText("Criterios 3.1.4.7 y 3.1.4.8", { placeholder: "body" });
 
   // 15 HERRAMIENTAS
@@ -312,7 +329,7 @@ async function icono(Comp, color, size = 256) {
   // =============================================== SECCIÓN E
   pres.addSection({ title: "Pruebas" });
   s = pres.addSlide({ masterName: "SECCION", sectionTitle: "Pruebas" });
-  s.addText("Sin evidencia no hay prueba aprobada", { placeholder: "title" });
+  s.addText("Sin evidencia no hay prueba aprobada", { placeholder: "title" }); quien(s, ["CJ", "LB"], true);
   s.addText("Criterios 3.1.5.9, 3.1.5.10 y 3.1.5.11 · plan, ejecución y validación", { placeholder: "body" });
 
   // 18 PLAN
@@ -367,7 +384,7 @@ async function icono(Comp, color, size = 256) {
   // =============================================== SECCIÓN F
   pres.addSection({ title: "Resultados" });
   s = pres.addSlide({ masterName: "SECCION", sectionTitle: "Resultados" });
-  s.addText("Lo que falló, por qué y qué hicimos", { placeholder: "title" });
+  s.addText("Lo que falló, por qué y qué hicimos", { placeholder: "title" }); quien(s, ["CJ", "LB"], true);
   s.addText("Criterios 3.1.6.12 y 3.1.6.13 · comparación y recomendaciones", { placeholder: "body" });
 
   // 22 ESPERADO VS OBTENIDO
@@ -412,7 +429,7 @@ async function icono(Comp, color, size = 256) {
   // =============================================== CIERRE
   pres.addSection({ title: "Cierre" });
   s = pres.addSlide({ masterName: "PORTADA", sectionTitle: "Cierre" });
-  s.addText("Listo para el predio", { placeholder: "title" });
+  s.addText("Listo para el predio", { placeholder: "title" }); quien(s, ["AT", "LB", "CP", "CJ"], true);
   s.addText([
     { text: "Stock por lote, dosis con resguardo y trazabilidad para el SAG, desde la oficina, el potrero o Telegram.", options: { breakLine: true, fontSize: 20 } },
     { text: " ", options: { breakLine: true, fontSize: 8 } },
